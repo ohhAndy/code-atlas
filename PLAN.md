@@ -197,7 +197,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Project skeleton: `pyproject.toml`, ruff, `mypy --strict`, pytest, GitHub Actions CI.
+- [x] Project skeleton: `pyproject.toml`, ruff, `mypy --strict`, pytest, GitHub Actions CI.
 - [x] Load SWE-bench Lite, inspect per-repo counts, choose the subset, and write the dev/test split to a file (ADR 001).
 - [ ] Repo cache: clone each repo once and check out each `base_commit` into a working directory.
 - [ ] Parse `patch` into modified files and old-file line ranges per hunk. A diff library such as `unidiff` is fine here.
