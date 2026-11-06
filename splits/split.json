@@ -1,0 +1,514 @@
+{
+  "dataset": "princeton-nlp/SWE-bench_Lite",
+  "dataset_revision": "6ec7bb89b9342f664a54a6e0a6ea6501d3437cc2",
+  "hf_split": "test",
+  "seed": 42,
+  "dev_fraction": 0.3,
+  "quotas": {
+    "django/django": 46,
+    "sympy/sympy": 31,
+    "scikit-learn/scikit-learn": 23
+  },
+  "instances": [
+    {
+      "instance_id": "django__django-11049",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11179",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11422",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11564",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11583",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-11630",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11797",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-11848",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-11999",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-12284",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-12308",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-12453",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-12497",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-12708",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-12747",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-12915",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13033",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13321",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-13447",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13551",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13757",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13768",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-13964",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-14382",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-14411",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-14667",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-14730",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-14752",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-14855",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-14915",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15202",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15388",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-15400",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15695",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-15738",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-15781",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15814",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15819",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15851",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-15902",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-16139",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-16379",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "django__django-16820",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-16873",
+      "repo": "django/django",
+      "split": "dev"
+    },
+    {
+      "instance_id": "django__django-17051",
+      "repo": "django/django",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10508",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10949",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11040",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11281",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12471",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13142",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13241",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13496",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13497",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13584",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14087",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14092",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14894",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14983",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-15512",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-15535",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25500",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25570",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25638",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "test"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25747",
+      "repo": "scikit-learn/scikit-learn",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-12171",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-12419",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-12454",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-13031",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-13043",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-14024",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-14396",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-15308",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-15345",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-15346",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-17630",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-18189",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-18199",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-18532",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-18835",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-19007",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-20154",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-20212",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-20322",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-21171",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-21614",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-22714",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-22840",
+      "repo": "sympy/sympy",
+      "split": "dev"
+    },
+    {
+      "instance_id": "sympy__sympy-23262",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-24102",
+      "repo": "sympy/sympy",
+      "split": "test"
+    },
+    {
+      "instance_id": "sympy__sympy-24152",
+      "repo": "sympy/sympy",
+      "split": "test"
+    }
+  ]
+}

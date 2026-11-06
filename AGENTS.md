@@ -6,7 +6,7 @@ How AI assistants and agents work with me on **CodeAtlas**.
 
 ## 1. Context (Read First)
 
-- Read `PLAN.md` before helping. Check the latest entry in `docs/log.md` to know the current phase.
+- Read `PLAN.md` before helping. Check the last phase section in `docs/log.md` to know the current phase.
 - Do not suggest work from later phases or from the non-goals list unless I ask.
 - **About me.** I'm a CS student with production experience in Rails, Go and React.
   - I'm new to information retrieval, Tree-sitter and embeddings.

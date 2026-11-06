@@ -43,25 +43,16 @@ Anything outside this list goes in `docs/later.md`, not into the current phase.
 ## 2. Time Budget
 
 - **5 to 6 hours/week.** Career priority #2, after DSA (7 to 8 h/week).
-- **Start:** Nov 23, 2026, after the resume pass and story bank are done.
-- Track actual hours per session in `docs/log.md`. All estimates below are guesses. Revise them after Phase 0.
+- All estimates below are rough guesses.
 
-| Phase | Est. hours | Target finish |
-|---|---|---|
-| 0. Evaluation harness | 10 to 15 | Dec 13, 2026 |
-| 1. Parsing and chunking | 15 to 20 | Jan 17, 2027 (includes holiday slack) |
-| 2. Lexical search | 15 to 20 | Feb 21, 2027 |
-| 3. Semantic and hybrid | 20 to 25 | Apr 4, 2027 |
-| 4. Graph expansion (stretch) | 15 to 20 | After MVP |
-| 5. Interface (stretch) | 5 to 10 | After MVP |
-
-The MVP target of early April leaves time to put results on the resume before Fall 2027 and Winter 2028 application deadlines (expected May to August 2027, unverified).
-
-### Re-scope triggers
-
-- **A phase runs 50% over its upper estimate:** stop, write down why in the log, and cut scope before continuing.
-- **Under 3 project hours/week for 3 weeks in a row:** revisit this project's priority in Career Context.
-- **DSA falls below 7 hours/week for 2 weeks:** the project gives up hours, not DSA.
+| Phase | Est. hours |
+|---|---|
+| 0. Evaluation harness | 10 to 15 |
+| 1. Parsing and chunking | 15 to 20 |
+| 2. Lexical search | 15 to 20 |
+| 3. Semantic and hybrid | 20 to 25 |
+| 4. Graph expansion (stretch) | 15 to 20 |
+| 5. Interface (stretch) | 5 to 10 |
 
 ---
 
@@ -142,7 +133,7 @@ benchmarks/
 results/       generated JSON, never hand-edited
 docs/
   decisions/   ADRs
-  log.md       session log: date, hours, done, blocked
+  log.md       per-phase log: work, decisions, findings, problems, retro
   later.md     parked ideas
 ```
 
@@ -207,7 +198,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 **Tasks**
 
 - [ ] Project skeleton: `pyproject.toml`, ruff, `mypy --strict`, pytest, GitHub Actions CI.
-- [ ] Load SWE-bench Lite, inspect per-repo counts, choose the subset, and write the dev/test split to a file (ADR 001).
+- [x] Load SWE-bench Lite, inspect per-repo counts, choose the subset, and write the dev/test split to a file (ADR 001).
 - [ ] Repo cache: clone each repo once and check out each `base_commit` into a working directory.
 - [ ] Parse `patch` into modified files and old-file line ranges per hunk. A diff library such as `unidiff` is fine here.
 - [ ] Implement metrics, with unit tests against hand-computed examples.
