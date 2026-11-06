@@ -1,0 +1,48 @@
+[project]
+name = "code-atlas"
+version = "0.1.0"
+description = "A Python code retrieval engine, evaluated on real bug reports (SWE-bench Lite)."
+readme = "README.md"
+authors = [
+    { name = "ohhAndy", email = "andy.hujze@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=5.1.0",
+    "unidiff>=1.0.1",
+]
+
+[project.scripts]
+codeatlas = "code_atlas.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.4",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+# Third-party packages without type hints.
+module = ["datasets.*", "unidiff.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"

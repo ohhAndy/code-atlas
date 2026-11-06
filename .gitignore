@@ -1,0 +1,33 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Large local data (rebuildable): dataset downloads, repo checkouts,
+# built indexes, embedding cache. Keep these out of git.
+.cache/
+data/
+*.npy
+*.npz
+
+# Secrets (embedding API keys)
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
