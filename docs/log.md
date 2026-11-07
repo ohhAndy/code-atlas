@@ -50,6 +50,10 @@ happened and why.
 - Test files are excluded from the corpus: a path is a test file if a directory component is
   exactly `tests`. One dev-only ripgrep run with tests included will measure the effect.
   See [ADR 002](decisions/002-gold-labels.md).
+- Query category precedence: 1 (traceback or file path) > 2 (names an identifier) >
+  3 (behavior only). Each query gets the strongest lexical signal it contains, so every
+  query where a path may leak the answer lands in category 1 and can be reported separately.
+  Categories are mutually exclusive, so per-category counts sum to the total.
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
@@ -83,7 +87,8 @@ happened and why.
   Fix: restart kernel and run all before trusting or committing notebook output.
 
 ### Open questions
-- Query category precedence: a traceback usually also names identifiers. Which category wins?
+- ~~Query category precedence: a traceback usually also names identifiers. Which category wins?~~
+  Resolved: 1 > 2 > 3 (see Decisions).
 - ~~Test files in the index: keep, exclude, or report both?~~ Resolved: exclude.
   See [ADR 002](decisions/002-gold-labels.md).
 
