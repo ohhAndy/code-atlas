@@ -54,6 +54,13 @@ happened and why.
   3 (behavior only). Each query gets the strongest lexical signal it contains, so every
   query where a path may leak the answer lands in category 1 and can be reported separately.
   Categories are mutually exclusive, so per-category counts sum to the total.
+- Repo cache: one bare clone per repo plus one git worktree per base commit, built on first
+  use. A worktree keeps every snapshot on disk and stays verifiable (HEAD and clean status).
+  A done-marker next to each worktree is written last, so an interrupted build is never
+  reused. Snapshots keep test files; corpus policy (ADR 002) is applied at indexing time.
+- Changed lines from a patch: `-` lines record their old line; a pure insertion records
+  both old neighbors; context records nothing; added files are skipped.
+  See [ADR 002 Part 2](decisions/002-gold-labels.md).
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
@@ -78,6 +85,19 @@ happened and why.
 - Every subset instance's `patch` changes exactly one file (100 files across 100 instances,
   from `notebooks/test_file_rule.ipynb`). File-level gold is always a single file, so
   file-level Recall@k is "is that file in the top k" and MRR is 1 / its rank.
+- Repo cache, dev split (30 snapshots, `codeatlas prepare --split dev`, measured with `du -sh`):
+
+  | Repo | Bare clone | Dev snapshots | Avg per snapshot |
+  |---|---|---|---|
+  | django | 317 MB | 729 MB (14) | ~52 MB |
+  | sympy | 224 MB | 277 MB (9) | ~31 MB |
+  | scikit-learn | 202 MB | 129 MB (7) | ~18 MB |
+
+  1.8 GB total on disk. Estimate (not measured) for all 100 snapshots: ~4.5 GB. Worktrees
+  store history once per repo; 46 separate django clones would hold ~14.6 GB of history alone.
+  All 30 snapshots verified clean on macOS (no case-collision failures).
+- 0 of the 100 subset patches add or delete a file (checked with unidiff `is_added_file` /
+  `is_removed_file`), so excluding added files from gold changes no current numbers.
 - Test-file rule check (`notebooks/test_file_rule.ipynb`): 0 / 100 `patch` files excluded;
   1 / 127 `test_patch` files not excluded (`sympy/testing/quality_unicode.py`).
 
