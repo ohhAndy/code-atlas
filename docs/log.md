@@ -47,6 +47,9 @@ happened and why.
   to their SWE-bench counts). Sampled randomly with a fixed seed; dev/test split 30/70 within
   each repo. Why: limits indexing cost while keeping a realistic mix of real issues.
   scikit-learn over matplotlib because it's the larger codebase.
+- Test files are excluded from the corpus: a path is a test file if a directory component is
+  exactly `tests`. One dev-only ripgrep run with tests included will measure the effect.
+  See [ADR 002](decisions/002-gold-labels.md).
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
@@ -68,19 +71,21 @@ happened and why.
   (tests included). This overestimates size at the older base commits; use only for relative comparison.
 - Sphinx contains deliberately mis-encoded fixture files (`tests/roots/*/wrongenc.inc`); git warned
   on checkout. Real repos have unusual encodings, which is relevant to the Phase 1 non-ASCII tests.
+- Every subset instance's `patch` changes exactly one file (100 files across 100 instances,
+  from `notebooks/test_file_rule.ipynb`). File-level gold is always a single file, so
+  file-level Recall@k is "is that file in the top k" and MRR is 1 / its rank.
+- Test-file rule check (`notebooks/test_file_rule.ipynb`): 0 / 100 `patch` files excluded;
+  1 / 127 `test_patch` files not excluded (`sympy/testing/quality_unicode.py`).
 
 ### Problems and dead ends
--
+- Notebook first reported 0 / 127 for check (a). Root cause: an earlier version of a later
+  cell reused the same counter, and the kernel kept that value after the cell was renamed.
+  Fix: restart kernel and run all before trusting or committing notebook output.
 
 ### Open questions
 - Query category precedence: a traceback usually also names identifiers. Which category wins?
-- Test files in the index: test files that exist at `base_commit` get indexed, but gold never
-  includes them, so a test-file hit always counts as a miss (and tests repeat the names of the
-  functions they test, so they often rank high). Options:
-  A) exclude test files (needs a "what is a test file" rule),
-  B) keep and count as misses (realistic, but penalizes lexical more than semantic),
-  C) keep and report both (more informative, more tables).
-  Decide and defend in ADR 001.
+- ~~Test files in the index: keep, exclude, or report both?~~ Resolved: exclude.
+  See [ADR 002](decisions/002-gold-labels.md).
 
 ### Retro (at phase end)
 -
