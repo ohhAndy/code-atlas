@@ -166,7 +166,8 @@ This is defined in Phase 0 and frozen before Phase 2 starts.
 
 ### Metrics
 
-- Recall@1, Recall@5, Recall@10 and MRR, at file level and function level.
+- Recall@1, Recall@5, Recall@10 and MRR@10, at file level and function level. MRR is cut at 10 so it does not depend on how many results a retriever returns.
+- Hit@1, Hit@5, Hit@10 at function level only (an instance can have several gold functions; at file level Hit@k = Recall@k).
 - File-level scores for chunk retrievers: rank each file by its best-ranked chunk.
 
 ### Query categories

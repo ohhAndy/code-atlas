@@ -61,6 +61,23 @@ happened and why.
 - Changed lines from a patch: `-` lines record their old line; a pure insertion records
   both old neighbors; context records nothing; added files are skipped.
   See [ADR 002 Part 2](decisions/002-gold-labels.md).
+- Metrics are computed per query and macro-averaged over queries by the runner.
+- Metric input rules: empty `gold`, duplicates in `ranking`, or `k < 1` raise `ValueError`
+  (they mean the caller has a bug and would silently corrupt scores, e.g. a duplicated gold
+  item counted twice gives recall above its true value). An empty `ranking` is legitimate
+  and scores 0. Instances with no function-level gold are scored at file level only.
+- Hit@k is reported at function level only. With several gold functions, Recall@k gives
+  partial credit (1 of 3 found = 0.33) while Hit@k asks "did retrieval surface any entry
+  point into the fix?". At file level gold is always one file, so Hit@k = Recall@k there
+  and is not reported.
+- File ranking from a chunk ranking: each file takes the rank of its best-ranked chunk
+  (first occurrence wins), so chunk retrievers get file-level scores without a separate run.
+  A chunk id without `::` raises, which catches passing a file ranking by mistake.
+- MRR is MRR@10, with the cutoff inside the metric (`reciprocal_rank_at_k`). Without it a
+  gold item at rank 50 scores 0.02 from a top-100 retriever and 0 from a top-10 one, so MRR
+  would reward longer output, not better ranking. Putting it in the metric rather than the
+  runner means no caller can forget it. Cost: a hit at rank 11+ is worth nothing, same as
+  Recall@10.
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
@@ -84,7 +101,7 @@ happened and why.
   on checkout. Real repos have unusual encodings, which is relevant to the Phase 1 non-ASCII tests.
 - Every subset instance's `patch` changes exactly one file (100 files across 100 instances,
   from `notebooks/test_file_rule.ipynb`). File-level gold is always a single file, so
-  file-level Recall@k is "is that file in the top k" and MRR is 1 / its rank.
+  file-level Recall@k is "is that file in the top k" and MRR@10 is 1 / its rank (0 past 10).
 - Repo cache, dev split (30 snapshots, `codeatlas prepare --split dev`, measured with `du -sh`):
 
   | Repo | Bare clone | Dev snapshots | Avg per snapshot |
@@ -107,6 +124,8 @@ happened and why.
   Fix: restart kernel and run all before trusting or committing notebook output.
 
 ### Open questions
+- ~~MRR depends on how many results the retriever returns. Where does the cutoff live?~~
+  Resolved: in the metric, MRR@10 (see Decisions).
 - ~~Query category precedence: a traceback usually also names identifiers. Which category wins?~~
   Resolved: 1 > 2 > 3 (see Decisions).
 - ~~Test files in the index: keep, exclude, or report both?~~ Resolved: exclude.
