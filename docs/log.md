@@ -176,6 +176,24 @@ happened and why.
 - Consistency check after labeling: a script flagged labels that disagreed with the
   mechanical category-1 signals (traceback, repo path, `django.`/`sklearn.`/`sympy.` dotted
   names). 5 of 8 flags were labeling slips (category 2 -> 1), fixed before any results.
+- Ripgrep baseline, file level (k = 10, ripgrep 15.2.0):
+
+  | Split | Commit | n | R@1 | R@5 | R@10 | MRR@10 | File |
+  |---|---|---|---|---|---|---|---|
+  | dev | `bd05c00` | 30 | 0.333 | 0.567 | 0.600 | 0.419 | `results/rg_dev_20261108T215637Z.json` |
+  | test | `384b6fe` | 70 | 0.371 | 0.557 | 0.643 | 0.454 | `results/rg_test_20261108T220107Z.json` |
+
+  Per-repo and per-category rows are in the results files. Between the two commits only the
+  results metadata changed (ripgrep version added). The dev run was reproduced from a fresh
+  clone at `384b6fe` with identical per-instance rankings.
+- Same method, different split: django MRR@10 is 0.309 on dev (n = 14) and 0.595 on test
+  (n = 32). With this few queries per repo, per-repo differences of this size can be split
+  noise; no per-repo claim without more data.
+
+### Test-split runs
+- 2026-11-08, commit `384b6fe`, `rg`, `results/rg_test_20261108T220107Z.json`. Why: final
+  Phase 0 baseline. ripgrep baseline is frozen from here; any change to it needs a new
+  logged test run and a reason.
 
 ### Problems and dead ends
 
