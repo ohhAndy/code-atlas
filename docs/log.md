@@ -78,6 +78,9 @@ happened and why.
   would reward longer output, not better ranking. Putting it in the metric rather than the
   runner means no caller can forget it. Cost: a hit at rank 11+ is worth nothing, same as
   Recall@10.
+- Retriever interface: each retriever declares `level` ("file" or "chunk") so the runner
+  scores against the matching gold, and is constructed once per snapshot so indexing
+  happens in the constructor. See [ADR 003](decisions/003-retriever-interface.md).
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
