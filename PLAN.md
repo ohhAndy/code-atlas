@@ -205,7 +205,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 - [x] Parse `patch` into modified files and old-file line ranges per hunk. A diff library such as `unidiff` is fine here.
 - [x] Implement metrics, with unit tests against hand-computed examples.
 - [x] Define the `Retriever` protocol and a ripgrep baseline: extract identifiers from the issue text, count `rg` hits per file, rank files.
-- [ ] Build the runner: `codeatlas eval --method rg --split dev` writes JSON and prints a table.
+- [x] Build the runner: `codeatlas eval --method rg --split dev` writes JSON and prints a table.
 - [x] Label query categories.
 
 **Done when**
