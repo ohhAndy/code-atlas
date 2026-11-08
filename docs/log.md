@@ -31,7 +31,7 @@ happened and why.
 
 ## Phase 0: Evaluation Harness
 
-**Status:** done (2026-11-08). Defense checklist: two answers still open, see Retro.
+**Status:** done (2026-11-08)
 
 ### Work done
 - Wrote PLAN.md and AGENTS.md. Created package skeleton with empty module stubs.
@@ -236,4 +236,8 @@ happened and why.
   See [ADR 002](decisions/002-gold-labels.md).
 
 ### Retro (at phase end)
--
+- What I'd do differently: most of the time went to learning and understanding
+  (retrieval metrics, eval design, git worktrees), not to writing code. I found out only
+  after the subset was fixed that it has no behavior-only queries, and only after the
+  baseline that 16 / 100 fixes add a new method. Next time I'd run quick counts over the
+  data before committing to a subset or a labeling rule.
