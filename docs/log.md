@@ -136,9 +136,7 @@ happened and why.
   1 / 127 `test_patch` files not excluded (`sympy/testing/quality_unicode.py`).
 
 ### Problems and dead ends
-- Notebook first reported 0 / 127 for check (a). Root cause: an earlier version of a later
-  cell reused the same counter, and the kernel kept that value after the cell was renamed.
-  Fix: restart kernel and run all before trusting or committing notebook output.
+
 
 ### Open questions
 - ~~MRR depends on how many results the retriever returns. Where does the cutoff live?~~
