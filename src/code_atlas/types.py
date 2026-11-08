@@ -1,4 +1,4 @@
-"""Shared types for retrievers. See ADR 003."""
+"""Shared types for retrievers."""
 
 from __future__ import annotations
 

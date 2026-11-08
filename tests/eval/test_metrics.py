@@ -144,7 +144,7 @@ def test_files_from_chunks_keeps_first_occurrence() -> None:
 
 
 def test_files_from_chunks_module_chunk() -> None:
-    # Module chunks use "<module>" as the qualified name (PLAN §3).
+    # Module chunks use "<module>" as the qualified name.
     assert files_from_chunks(["a.py::<module>", "a.py::f"]) == ["a.py"]
 
 

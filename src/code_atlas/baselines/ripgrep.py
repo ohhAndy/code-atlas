@@ -1,7 +1,4 @@
-"""Ripgrep baseline: rank files by how often they contain identifiers from the issue text.
-
-See the identifier rule in docs/log.md (Phase 0 Decisions) and ADR 003 for the interface.
-"""
+"""Ripgrep baseline: rank files by how often they contain identifiers from the issue text."""
 
 from __future__ import annotations
 
@@ -77,7 +74,7 @@ class RipgrepRetriever:
 def _count_matches(repo_dir: Path, identifier: str) -> dict[str, int]:
     """Run ripgrep for one identifier; return {repo-relative path: matching line count}.
 
-    Searches .py files outside `tests` directories (ADR 002) for the identifier as a
+    Searches .py files outside `tests` directories for the identifier as a
     literal whole word. rg exits 0 on matches, 1 on none (not an error), 2 on error.
     """
     cmd = [
@@ -88,7 +85,7 @@ def _count_matches(repo_dir: Path, identifier: str) -> dict[str, int]:
         "--type",
         "py",  # only .py files
         "--glob",
-        "!**/tests/**",  # ADR 002: skip any directory named exactly `tests`
+        "!**/tests/**",  # skip any directory named exactly `tests`
         "--",  # everything after this is a pattern or path, never a flag
         identifier,
         ".",  # search the current dir; with no path, rg reads stdin and can hang

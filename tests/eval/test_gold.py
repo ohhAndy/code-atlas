@@ -149,5 +149,5 @@ NEW_FILE = """\
 
 
 def test_new_file_is_excluded() -> None:
-    # The file does not exist at base_commit, so no retriever can return it (ADR 002).
+    # The file does not exist at base_commit, so no retriever can return it.
     assert changed_lines(NEW_FILE) == {}

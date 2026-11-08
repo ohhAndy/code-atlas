@@ -4,7 +4,7 @@
 - The dict keys are the file-level gold.
 - The line numbers are matched against chunk line ranges in Phase 1 for function-level gold.
 
-Line rules (ADR 002):
+Line rules:
 - A "-" line records its own old line number.
 - A run of "+" lines with no "-" lines (pure insertion) records both old neighbors:
   the old line before it and the old line after it. Line 0 does not exist.

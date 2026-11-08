@@ -12,8 +12,8 @@ Invariants:
   is checked out and verified, so an interrupted build never leaves a folder that looks valid.
 - The marker sits next to the worktree, not inside it, so it never shows up as an
   untracked file in `git status`.
-- Snapshots are exact copies of the commit. Corpus policy (e.g. excluding test files,
-  ADR 002) is applied later, when the corpus is built, never here.
+- Snapshots are exact copies of the commit. Corpus policy (e.g. excluding test files)
+  is applied later, when the corpus is built, never here.
 - Not safe for two processes building the same snapshot at the same time.
 """
 
