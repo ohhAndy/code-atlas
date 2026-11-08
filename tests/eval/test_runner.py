@@ -138,5 +138,6 @@ def test_write_results_json(tmp_path: Path) -> None:
     assert data["meta"]["split"] == "dev"
     assert len(data["meta"]["codeatlas"]["commit"]) == 40
     assert data["meta"]["skipped_no_gold"] == ["skipped-1"]
+    assert data["meta"]["ripgrep"].startswith("ripgrep ")
     assert data["summary"]["overall"]["recall@1"] == 1.0
     assert data["instances"][0]["instance_id"] == "x-1"

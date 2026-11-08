@@ -157,6 +157,16 @@ def git_state() -> dict[str, Any]:
     return {"commit": commit, "dirty": bool(status.strip())}
 
 
+def ripgrep_version() -> str | None:
+    """Installed ripgrep version, e.g. "ripgrep 15.2.0"; a different version could count
+    matches differently, so it is part of a result's provenance."""
+    try:
+        out = subprocess.run(["rg", "--version"], capture_output=True, text=True, check=True)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+    return out.stdout.splitlines()[0].strip()
+
+
 def write_results(
     method: str,
     split: str,
@@ -175,6 +185,7 @@ def write_results(
             "created_at": now.isoformat(timespec="seconds"),
             "codeatlas": git_state(),
             "dataset_revision": DATASET_REVISION,
+            "ripgrep": ripgrep_version(),
             "skipped_no_gold": list(skipped),
         },
         "summary": summarize(results),
