@@ -81,6 +81,20 @@ happened and why.
 - Retriever interface: each retriever declares `level` ("file" or "chunk") so the runner
   scores against the matching gold, and is constructed once per snapshot so indexing
   happens in the constructor. See [ADR 003](decisions/003-retriever-interface.md).
+- Ripgrep baseline, identifier rule: keep a word from the issue text only if its shape
+  shows it is code: it contains `_` (`get_or_create`), has a capital after the first
+  character (`QuerySet`, `assertEqual`), or is a dotted name (`models.Model`, searched
+  whole as a fixed string). Everything else is dropped (`Value`, `count`, `self`, `the`).
+  Why: English words match thousands of lines and drown the counts. Dropping them loses
+  some real identifiers that look like English (`count`); a baseline accepts that for a
+  rule that is simple and explainable.
+  A dotted name also adds each part that passes the rule on its own
+  (`QuerySet.get_or_create` -> also `QuerySet`, `get_or_create`), because code rarely
+  spells the dotted form out (it writes `self.get_or_create`), so the whole string alone
+  usually matches nothing. Decided before any baseline results were seen.
+  The inner-capital rule also needs a lowercase letter, so prose acronyms (`HTTP`, `OK`,
+  `API`, `README`) are dropped. Cost: all-caps constants without `_` (`DEBUG`) are dropped
+  too; ones with `_` (`SECRET_KEY`) still pass. Also decided before any results.
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
