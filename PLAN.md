@@ -3,7 +3,7 @@
 > A Python code retrieval engine, evaluated on real bug reports.
 > **Stack:** Python 3.12+, Tree-sitter, NumPy, pytest, ruff, mypy
 > **Collaboration rules:** see [AGENTS.md](AGENTS.md)
-> **Last updated:** 2026-11-05
+> **Last updated:** 2026-11-08
 
 ---
 
@@ -122,8 +122,9 @@ The harness depends only on `Retriever`. A new method is a new class plus one re
 ## 4. Repository Layout
 
 ```text
-codeatlas/
-  eval/        dataset loading, repo checkout, gold labels, metrics, runner
+src/code_atlas/
+  eval/        dataset loading, repo checkout, gold labels, metrics, runner, categories
+  baselines/   ripgrep baseline
   parse/       tree-sitter parsing, symbol extraction, chunking
   lexical/     tokenizer, inverted index, BM25
   semantic/    embedding client, cache, vector search
@@ -132,6 +133,8 @@ codeatlas/
 tests/
 benchmarks/
 results/       generated JSON, never hand-edited
+splits/        dev/test split and query categories
+notebooks/     data exploration
 docs/
   decisions/   ADRs
   log.md       per-phase log: work, decisions, findings, problems, retro
@@ -224,7 +227,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 - [ ] Integrate `tree-sitter` with the Python grammar.
 - [ ] Walk the tree and extract functions, methods, classes and decorated definitions. Build qualified names with a scope stack.
-- [ ] Chunking policy (ADR 003):
+- [ ] Chunking policy (ADR 004):
   - One chunk per function or method.
   - Class chunk = header, docstring and class-level attributes, without method bodies.
   - Module chunk = top-level code outside definitions.
@@ -252,7 +255,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Tokenizer (ADR 004):
+- [ ] Tokenizer (ADR 005):
   - Split on non-alphanumerics, `camelCase` and `snake_case`.
   - Lowercase.
   - Keep the full identifier alongside its parts.
@@ -281,13 +284,13 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Choose an embedding model (ADR 005):
+- [ ] Choose an embedding model (ADR 006):
   - At most 2 candidates, e.g. one local open model and one API such as Cohere Embed.
   - Compare dev quality, cost, speed and reproducibility.
 - [ ] Decide what text gets embedded per chunk (path, qualified name, code) and how to handle the model's input-length limit.
 - [ ] Build an embedding cache keyed by a hash of (chunk text, model id). Most functions are unchanged across commits of the same repo, so this cache matters.
 - [ ] Brute-force vector search: normalize the vectors, do a matrix-vector product, use `argpartition` for top-k.
-- [ ] RRF fusion of BM25 and semantic results, with `k` tuned on dev (ADR 006). Comparing against min-max score fusion is optional.
+- [ ] RRF fusion of BM25 and semantic results, with `k` tuned on dev (ADR 007). Comparing against min-max score fusion is optional.
 - [ ] Optional: a reranker on the top N results, only if time allows.
 - [ ] Final test-set run.
 - [ ] Write the results table, the per-category breakdown and the analysis with examples in the README.
@@ -327,10 +330,11 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 |---|---|
 | 001 | Eval subset and dev/test split |
 | 002 | Gold label mapping |
-| 003 | Chunking policy |
-| 004 | Tokenizer |
-| 005 | Embedding model |
-| 006 | Fusion method |
+| 003 | Retriever interface |
+| 004 | Chunking policy |
+| 005 | Tokenizer |
+| 006 | Embedding model |
+| 007 | Fusion method |
 
 ---
 

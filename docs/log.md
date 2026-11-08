@@ -31,13 +31,25 @@ happened and why.
 
 ## Phase 0: Evaluation Harness
 
-**Status:** in progress
+**Status:** done (2026-11-08). Defense checklist: two answers still open, see Retro.
 
 ### Work done
 - Wrote PLAN.md and AGENTS.md. Created package skeleton with empty module stubs.
-- Configured pyproject: uv, ruff, mypy --strict, pytest. No CI or tests/ yet.
+- Configured pyproject: uv, ruff, mypy --strict, pytest. Added GitHub Actions CI running
+  ruff, ruff format, mypy and pytest on every push.
 - Loaded SWE-bench Lite (HF `test` split) into `notebooks/explore.ipynb`.
 - Dropped columns not needed for retrieval eval.
+- Sampled the 100-instance subset and wrote the dev/test split to `splits/split.json`
+  (ADR 001).
+- Repo cache: bare clone per repo, git worktree per base commit (`codeatlas prepare`).
+- Patch parsing into changed old-file lines per file (ADR 002 Part 2).
+- Metrics: Recall@k, Hit@k, MRR@10, and chunk-to-file ranking, with hand-computed tests.
+- `Retriever` protocol (ADR 003) and the ripgrep baseline.
+- Runner and CLI: `codeatlas eval --method rg --split dev|test [--final]` prints a table
+  and writes a results JSON with commit, config and split.
+- Labeled query categories for all 100 instances (`splits/categories.json`).
+- Ripgrep baseline runs on dev and on test (final, logged). Reproduced dev from a fresh
+  clone.
 
 ### Decisions
 - Dropped `hints_text`: Mostly noisy text like automated bot messages, or pings to ask maintainers to look at. Could also contain leakage. 
@@ -152,6 +164,17 @@ happened and why.
   All 30 snapshots verified clean on macOS (no case-collision failures).
 - 0 of the 100 subset patches add or delete a file (checked with unidiff `is_added_file` /
   `is_removed_file`), so excluding added files from gold changes no current numbers.
+- Pure insertions in the subset patches (one-off unidiff script over the 100 `patch`es,
+  patch text only, no chunker; 2026-11-08). A pure-insertion run is a run of `+` lines with
+  no `-` lines, whose gold is its two old neighbor lines.
+  - 85 runs in 60 / 100 instances.
+  - 18 runs in 16 / 100 instances insert a new `def` / `class` / decorator. The new
+    definition is excluded from gold (it doesn't exist at base_commit), so these
+    instances' function-level gold leans on whatever code happens to sit next to it.
+  - 5 more runs have a `def` / `class` / decorator line as an old neighbor.
+  - 21 more runs have only a blank-line neighbor. Many of these blanks are inside function
+    bodies, so this count is an upper bound on real boundary cases.
+  - Exact effect on function-level gold needs the Phase 1 chunker; re-measure then.
 - Test-file rule check (`notebooks/test_file_rule.ipynb`): 0 / 100 `patch` files excluded;
   1 / 127 `test_patch` files not excluded (`sympy/testing/quality_unicode.py`).
 - Query categories (`splits/categories.json`, all 100 labeled before any results):
@@ -196,9 +219,15 @@ happened and why.
   logged test run and a reason.
 
 ### Problems and dead ends
-
+- Query category labeling slips: a consistency check against the mechanical category-1
+  signals flagged 8 labels; 5 were real slips (category 2 should have been 1). Root cause:
+  labeling by hand misses dotted module paths and import lines on a quick read. Fixed
+  before any results were seen (see Findings).
 
 ### Open questions
+- How should function-level gold handle a fix that adds a new method? The new method is
+  excluded from gold, so gold falls back to its neighbors (16 / 100 instances, see
+  Findings). Decide in ADR 002 during Phase 1.
 - ~~MRR depends on how many results the retriever returns. Where does the cutoff live?~~
   Resolved: in the metric, MRR@10 (see Decisions).
 - ~~Query category precedence: a traceback usually also names identifiers. Which category wins?~~
