@@ -1,0 +1,402 @@
+{
+  "django__django-11049": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-11179": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11422": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11564": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11583": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11630": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-11797": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11848": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-11999": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-12284": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-12308": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-12453": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-12497": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-12708": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-12747": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-12915": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-13033": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-13321": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-13447": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-13551": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-13757": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-13768": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-13964": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-14382": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-14411": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-14534": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-14667": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-14730": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-14752": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-14855": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-14915": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15202": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-15388": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15400": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15695": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-15738": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15781": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15814": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-15819": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15851": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-15902": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-16139": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-16379": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-16820": {
+    "category": 2,
+    "note": ""
+  },
+  "django__django-16873": {
+    "category": 1,
+    "note": ""
+  },
+  "django__django-17051": {
+    "category": 2,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-10297": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-10508": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-10949": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-11040": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-11281": {
+    "category": 2,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-12471": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13142": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13241": {
+    "category": 2,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13439": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13496": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13497": {
+    "category": 2,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13584": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-13779": {
+    "category": 2,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-14087": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-14092": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-14894": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-14983": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-15512": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-15535": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-25500": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-25570": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-25638": {
+    "category": 1,
+    "note": ""
+  },
+  "scikit-learn__scikit-learn-25747": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-12171": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-12419": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-12454": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-13031": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-13043": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-13177": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-13480": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-14024": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-14396": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-15308": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-15345": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-15346": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-17139": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-17630": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-17655": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-18189": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-18199": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-18532": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-18835": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-19007": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-20154": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-20212": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-20322": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-21171": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-21612": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-21614": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-22714": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-22840": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-23262": {
+    "category": 2,
+    "note": ""
+  },
+  "sympy__sympy-24102": {
+    "category": 1,
+    "note": ""
+  },
+  "sympy__sympy-24152": {
+    "category": 1,
+    "note": ""
+  }
+}

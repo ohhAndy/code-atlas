@@ -54,6 +54,26 @@ happened and why.
   3 (behavior only). Each query gets the strongest lexical signal it contains, so every
   query where a path may leak the answer lands in category 1 and can be reported separately.
   Categories are mutually exclusive, so per-category counts sum to the total.
+- Query category labeling rule. Judge the issue text only (never the patch, never the repo).
+  Ask in order and stop at the first yes:
+  1. **Traceback or path.** Any traceback (`Traceback (most recent call last)` or
+     `File "...", line N`, even if every frame is `<stdin>` or user code); a file path in the
+     repo (`django/db/models/query.py`); or a dotted name whose parts spell out repo
+     directories/modules, with or without the top-level package (`django.utils.autoreload`,
+     `contrib.admin.views.autocomplete`, `tests.model_fields.test_jsonfield...`,
+     `sklearn.linear_model`). Import lines count (`from sklearn.utils.validation import ...`).
+  2. **Names project code.** A function, class, method, attribute, setting or management
+     command of the project (`QuerySet.none()`, `db_table`, `TEMPLATES`, `dbshell`), in
+     prose, the title, or a code snippet that uses the API.
+  3. **Otherwise:** behavior only.
+
+  Not a path: two-part attribute access (`models.Model`), the top-level package alone
+  (`from sympy import *`, `sympy.sympify`), model labels (`app.Model.field`), the reporter's
+  own files (`manage.py`, `settings.py`), bare filenames without a directory (`default.html`),
+  CLI flags (`--traceback`). Not an identifier: the reporter's own names (classes and
+  variables the snippet defines), code-sounding words in plain prose without backticks or
+  `()`, and an exception class name on its own. Why the lean toward 1: a query that may leak
+  a path must not inflate category 2, the category whose results matter most.
 - Repo cache: one bare clone per repo plus one git worktree per base commit, built on first
   use. A worktree keeps every snapshot on disk and stays verifiable (HEAD and clean status).
   A done-marker next to each worktree is written last, so an interrupted build is never
@@ -134,6 +154,28 @@ happened and why.
   `is_removed_file`), so excluding added files from gold changes no current numbers.
 - Test-file rule check (`notebooks/test_file_rule.ipynb`): 0 / 100 `patch` files excluded;
   1 / 127 `test_patch` files not excluded (`sympy/testing/quality_unicode.py`).
+- Query categories (`splits/categories.json`, all 100 labeled before any results):
+
+  | Split | Cat 1 | Cat 2 | Cat 3 |
+  |---|---|---|---|
+  | dev | 16 | 14 | 0 |
+  | test | 38 | 32 | 0 |
+
+  By repo (cat 1 / cat 2): django 20 / 26, sympy 15 / 16, scikit-learn 19 / 4.
+- No issue is behavior-only: every one names some project code. Per-category results are
+  therefore cat 1 vs cat 2 only, and this subset cannot say anything about behavior-only
+  queries. scikit-learn is nearly all cat 1 (mostly `from sklearn.x import` lines), so its
+  cat 2 numbers rest on 4 issues.
+- Category 1 mixes strong and weak leaks: tracebacks and paths to the fixed file
+  (`Django.db.models.deletion:276-281`, `django.contrib.admin.utils.display_for_field`)
+  next to import lines that only name a package (`from sklearn.preprocessing import`).
+- Several category-2 issues quote source text verbatim (an error format string, check ids
+  `models.E028` / `fields.E304`, a `hint=` message, the body of `Mod.eval`). Not paths, but
+  a grep for them hits the file directly. Hypothesis, untested: these make some category-2
+  queries easier for lexical search than the category suggests.
+- Consistency check after labeling: a script flagged labels that disagreed with the
+  mechanical category-1 signals (traceback, repo path, `django.`/`sklearn.`/`sympy.` dotted
+  names). 5 of 8 flags were labeling slips (category 2 -> 1), fixed before any results.
 
 ### Problems and dead ends
 
