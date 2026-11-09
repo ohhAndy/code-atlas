@@ -26,7 +26,6 @@ happened and why.
 
 ### Retro (at phase end)
 - What I'd do differently:
-- Defense checklist (PLAN §8) answered without notes: yes / no
 -->
 
 ## Phase 0: Evaluation Harness
@@ -127,6 +126,13 @@ happened and why.
   The inner-capital rule also needs a lowercase letter, so prose acronyms (`HTTP`, `OK`,
   `API`, `README`) are dropped. Cost: all-caps constants without `_` (`DEBUG`) are dropped
   too; ones with `_` (`SECRET_KEY`) still pass. Also decided before any results.
+- Test-file exclusion effect counts as large: an MRR@10 drop of 0.18 (0.419 -> 0.239) on dev
+  (see Findings). So, per ADR 002, BM25 (Phase 2) and semantic search (Phase 3) each get one
+  dev run with test files included, reported next to their tests-excluded numbers. ADR 002
+  never set a threshold for "large"; this drop is far past any reasonable one, but a
+  smaller effect would have needed a rule fixed in advance.
+- `rg-with-tests` is a separate registered method (not a flag on `rg`) so the results JSON
+  records which variant ran. The CLI refuses it on the test split.
 
 ### Findings
 - SWE-bench Lite (HF `test` split): 300 instances across 12 repos.
@@ -212,6 +218,24 @@ happened and why.
 - Same method, different split: django MRR@10 is 0.309 on dev (n = 14) and 0.595 on test
   (n = 32). With this few queries per repo, per-repo differences of this size can be split
   noise; no per-repo claim without more data.
+- Test-file exclusion effect (ADR 002 Part 1), dev only, file level (k = 10, ripgrep 15.2.0).
+  `rg-with-tests` is the `rg` baseline without the `tests` glob:
+
+  | Method | n | R@1 | R@5 | R@10 | MRR@10 | File |
+  |---|---|---|---|---|---|---|
+  | rg | 30 | 0.333 | 0.567 | 0.600 | 0.419 | `results/rg_dev_20261108T215637Z.json` |
+  | rg-with-tests | 30 | 0.167 | 0.300 | 0.433 | 0.239 | `results/rg-with-tests_dev_20261109T011552Z.json` |
+
+  - Per repo, MRR@10 drops most on django: 0.309 -> 0.070 (n = 14). scikit-learn
+    0.548 -> 0.476 (n = 7), sympy 0.489 -> 0.317 (n = 9).
+  - MRR@10 changed on 13 / 30 instances, and never went up: test files only push gold
+    files down. 159 of the 300 top-10 slots were test files.
+  - The run was made at `781982d` with the `rg-with-tests` change not yet committed
+    (`dirty: true` in the file). In the same session, `rg` re-run on that tree gave
+    per-instance rankings identical to the committed dev run, so the default baseline
+    did not change.
+  - Only ripgrep was measured. Whether BM25 (IDF) or embeddings are distracted as much is a
+    hypothesis.
 
 ### Test-split runs
 - 2026-11-08, commit `384b6fe`, `rg`, `results/rg_test_20261108T220107Z.json`. Why: final
@@ -241,3 +265,73 @@ happened and why.
   after the subset was fixed that it has no behavior-only queries, and only after the
   baseline that 16 / 100 fixes add a new method. Next time I'd run quick counts over the
   data before committing to a subset or a labeling rule.
+
+## Phase 1: Parsing and Chunking
+
+**Status:** in progress (started 2026-11-08)
+
+### Work done
+- Added `tree-sitter` 0.26.0 and `tree-sitter-python` 0.25.0. Both ship type hints; no mypy
+  override needed.
+- `code_atlas.parse.parser.parse(bytes) -> Tree`, and `code_atlas.parse.files`:
+  `is_test_file` (ADR 002 rule, now in code) and `iter_corpus_files` (corpus `.py` files as
+  raw bytes, sorted, skipping test dirs, `.git` and symlinks).
+- `extract_definitions` stub with the `Definition` type (qualified name, kind, 1-based
+  inclusive lines).
+- Counted where dev fixes land relative to nested functions
+  (`notebooks/nested_functions.py`, Python `ast`, not the Phase 1 chunker).
+- `extract_definitions`: tree walk with the enclosing class's qualified name as the prefix
+  (the scope stack). Tests in `tests/parse/test_definitions.py`: async, decorators, nested
+  classes, nested functions, non-ASCII, syntax errors, definitions under `if` / `except`.
+
+### Decisions
+- Nested functions are part of their parent: the walker descends into class bodies
+  (methods and nested classes get their own entries) but not into function bodies. Any
+  definition inside a function, including a class, stays inside the enclosing function's
+  chunk. Why: only 2 / 30 dev instances change a line inside a nested function (see
+  Findings), so the choice moves dev function-level gold by at most 2 instances, and
+  this is the simpler walker. Decision rule fixed before the count was run: 0–2 of 30 ->
+  part of parent; 3 or more -> read those instances and decide. To be recorded in ADR 004.
+  - Cost: the gold for a fix inside a nested helper is the whole parent (`tree_cse`,
+    143 lines, in sympy__sympy-22840), so the retrieved unit is coarser than the change.
+  - Nested functions get no qualified name, so the `<locals>` naming question does not
+    arise.
+- A decorated definition's span starts at its first decorator, not at `def` / `class`.
+  Why: a fix that only changes a decorator (`@cached_property` -> `@property`) then maps
+  to the function it decorates, not to the code above it. To be recorded in ADR 004.
+- Only `def` and `class` create a scope. The walker looks through every other node
+  (`if`, `try` / `except`, `with`, `for`, ...) with the prefix unchanged, so a function
+  under `if TYPE_CHECKING:` is a module-level function and a method under `if` in a class
+  body is a method. Why: these patterns (compat shims, import fallbacks) are common in the
+  subset repos, and missing them would turn their gold into module code.
+
+### Findings
+- Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
+  `async def` is a `function_definition` whose first child is an `async` token;
+  decorators wrap the definition in `decorated_definition`, and the inner definition
+  starts on the `def` line, after the decorators; columns and `start_byte` count UTF-8
+  bytes, rows are 0-based lines; a syntax error does not stop the parse (it may show up as
+  a repaired `MISSING` node, not only an `ERROR` node; only `root.has_error` is reliable).
+- Where dev fixes land (`notebooks/nested_functions.py`, 30 dev instances, changed lines
+  from `changed_lines`, innermost enclosing definition per line, counted per instance; an
+  instance can be in several buckets):
+
+  | Changed line is inside | Instances |
+  |---|---|
+  | a function, method or class (not nested in a function) | 29 |
+  | module-level code (no definition) | 4 |
+  | a function nested in a function | 2 |
+
+  - The 2 nested cases: sympy__sympy-17630 (`_postprocessor`, 33 lines, inside
+    `get_postprocessor`, 35 lines: the nested function is almost the whole parent) and
+    sympy__sympy-22840 (`_find_repeated`, 32 lines, inside `tree_cse`, 143 lines).
+  - `ast` parsed every changed file at its base commit; no failures.
+  - n = 30, both nested cases in sympy: no claim about how common nested-function fixes
+    are outside this sample.
+  - 4 / 30 instances change module-level code, which the module chunk rule (ADR 004) has
+    to cover.
+
+### Open questions
+- Duplicate qualified names: the walker returns two `compat` entries for
+  `if PY3: def compat()` / `else: def compat()`, but chunk ids (`path::QualifiedName`) must
+  be unique. Keep both with a suffix, merge them, or keep the first? Decide in ADR 004.
