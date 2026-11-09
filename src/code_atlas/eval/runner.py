@@ -36,6 +36,8 @@ METRICS = ("recall@1", "recall@5", "recall@10", "mrr@10")
 # Method name -> how to build a retriever for one snapshot directory.
 RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg": RipgrepRetriever,
+    # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
+    "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
 }
 
 

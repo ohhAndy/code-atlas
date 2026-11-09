@@ -47,12 +47,17 @@ def _looks_like_code(word: str) -> bool:
 
 class RipgrepRetriever:
     """File-level retriever: one per snapshot. Has no index, so the constructor only
-    remembers which directory to search."""
+    remembers which directory to search.
+
+    `include_tests=True` also searches files inside `tests` directories. It exists only to
+    measure how much excluding test files changes the scores; the default is the baseline.
+    """
 
     level: Level = "file"
 
-    def __init__(self, repo_dir: Path) -> None:
+    def __init__(self, repo_dir: Path, include_tests: bool = False) -> None:
         self.repo_dir = repo_dir
+        self.include_tests = include_tests
 
     def search(self, query: str, k: int) -> list[Hit]:
         """Score each file by its total matching lines over all identifiers; top k first.
@@ -62,7 +67,7 @@ class RipgrepRetriever:
         identifiers = extract_identifiers(query)
         total_counts: dict[str, int] = {}
         for identifier in identifiers:
-            counts = _count_matches(self.repo_dir, identifier)
+            counts = _count_matches(self.repo_dir, identifier, self.include_tests)
             for key, v in counts.items():
                 total_counts[key] = total_counts.get(key, 0) + v
 
@@ -71,11 +76,12 @@ class RipgrepRetriever:
         return top_k_files
 
 
-def _count_matches(repo_dir: Path, identifier: str) -> dict[str, int]:
+def _count_matches(repo_dir: Path, identifier: str, include_tests: bool = False) -> dict[str, int]:
     """Run ripgrep for one identifier; return {repo-relative path: matching line count}.
 
-    Searches .py files outside `tests` directories for the identifier as a
-    literal whole word. rg exits 0 on matches, 1 on none (not an error), 2 on error.
+    Searches .py files (outside `tests` directories unless `include_tests`) for the
+    identifier as a literal whole word. rg exits 0 on matches, 1 on none (not an error),
+    2 on error.
     """
     cmd = [
         "rg",
@@ -84,8 +90,10 @@ def _count_matches(repo_dir: Path, identifier: str) -> dict[str, int]:
         "--word-regexp",  # "get" must not match inside "get_or_create"
         "--type",
         "py",  # only .py files
-        "--glob",
-        "!**/tests/**",  # skip any directory named exactly `tests`
+    ]
+    if not include_tests:
+        cmd += ["--glob", "!**/tests/**"]  # skip any directory named exactly `tests`
+    cmd += [
         "--",  # everything after this is a pattern or path, never a flag
         identifier,
         ".",  # search the current dir; with no path, rg reads stdin and can hang

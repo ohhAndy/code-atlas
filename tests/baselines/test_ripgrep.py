@@ -114,6 +114,17 @@ def test_test_directories_excluded(repo: Path) -> None:
     assert all("/tests/" not in i for i in ids)
 
 
+def test_include_tests_searches_test_directories(repo: Path) -> None:
+    # test_query.py: 1 matching line (rg counts lines), so it ties pkg/other.py and the
+    # tie is broken by path.
+    hits = RipgrepRetriever(repo, include_tests=True).search("QuerySet", k=10)
+    assert hits == [
+        Hit(id="pkg/query.py", score=2.0),
+        Hit(id="pkg/other.py", score=1.0),
+        Hit(id="pkg/tests/test_query.py", score=1.0),
+    ]
+
+
 def test_count_is_lines_not_occurrences(tmp_path: Path) -> None:
     (tmp_path / "a.py").write_text("QuerySet(QuerySet(QuerySet()))\n")
     assert RipgrepRetriever(tmp_path).search("QuerySet", k=10) == [Hit(id="a.py", score=1.0)]
