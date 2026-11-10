@@ -308,6 +308,11 @@ happened and why.
 - Function-level ripgrep baseline: `RipgrepChunkRetriever`, registered as `rg-chunks`.
   Same identifiers and rg search as `rg`; each matching line is credited to the chunk that
   owns it. Tests in `tests/baselines/test_ripgrep.py`. Dev run (see Findings).
+- Parse and chunk benchmark: `benchmarks/parse_bench.py` (added `benchmarks` to mypy's
+  checked files). Run on the largest dev corpus (see Findings).
+- `rg-chunks` test-split run deferred until ADR 002 Part 3 is accepted and ADR 004 is
+  written: function-level gold and chunk ids depend on both, and a test run made before
+  they are settled could go stale and need a second logged run.
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -449,6 +454,29 @@ happened and why.
     over the whole file also loses signal spread over many chunks.
   - Module chunks are not dominating: 3 / 29 top-1 chunks are `<module>`, 30 / 268
     top-10 slots (1 instance returned nothing).
+- Largest corpus among the dev snapshots (test files excluded): sympy__sympy-22840, 903
+  files, 523,634 lines, 19.5 MB. The largest snapshot on disk overall is a test-split
+  sympy commit (904 files, 532,895 lines); the dev one is used so the benchmark needs
+  only dev snapshots and never touches the test split.
+- Parse and chunk benchmark (`results/parse_bench_20261110T031038Z.json`, commit
+  `9b9f111`): sympy__sympy-22840, Apple M4 Pro, 24 GB, macOS, Python 3.12.15,
+  tree-sitter 0.26.0, tree-sitter-python 0.25.0. 5 runs after 1 discarded warm-up (warm
+  OS page cache), each in a fresh process.
+
+  | Step | Median (5 runs) | Range | Per file p50 / p95 / max (median run) |
+  |---|---|---|---|
+  | read 903 files | 0.08 s | 0.08–0.09 s | |
+  | parse only | 1.91 s | 1.90–1.91 s | 0.49 / 6.5 / 149 ms |
+  | `chunk_file` (parse + definitions + text) | 4.14 s | 4.13–4.15 s | 0.84 / 15.0 / 461 ms |
+
+  - 31,502 chunks. Peak RSS 223 MiB, of which 126 MiB is the interpreter and imports
+    before any file is read, so about 97 MiB for the file bytes, the trees and the chunks.
+  - Chunking costs more than parsing (4.14 s vs 1.91 s, and `chunk_file` parses too).
+    The worst file, `sympy/integrals/rubi/constraints.py` (11,117 lines, 2,040 chunks),
+    takes 38 ms to parse and 462 ms to chunk. Cause: `chunk_texts` calls `owner` once
+    per line, and `owner` scans every span, so a file costs lines × spans comparisons
+    (here about 22.7 million). Not fixed: 4 s per snapshot is acceptable for now. A fix
+    is a single pass that tracks the innermost open span (lines × nesting depth).
 
 ### Problems and dead ends
 - Function-level gold stats: first counted "gold chunks with no `-` line" (19 in 14

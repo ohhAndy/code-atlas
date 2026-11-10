@@ -239,7 +239,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
   - decorators and `async def`
   - files with syntax errors (`ERROR` nodes)
   - non-ASCII source, since tree-sitter uses byte offsets and Python `str` uses characters
-- [ ] Benchmark parse and chunk time, plus peak memory, on the largest repo in the subset.
+- [x] Benchmark parse and chunk time, plus peak memory, on the largest repo in the subset.
 
 **Done when**
 

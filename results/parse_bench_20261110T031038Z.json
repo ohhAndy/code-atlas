@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "benchmark": "parse_bench",
+    "instance": "sympy__sympy-22840",
+    "base_commit": "d822fcba181155b85ff2b29fe525adbafb22b448",
+    "runs": 5,
+    "warmup_runs": 1,
+    "cache": "warm (OS page cache, after 1 discarded run)",
+    "created_at": "2026-11-10T03:10:38+00:00",
+    "codeatlas": {
+      "commit": "9b9f111b5e71c8d28b3d2049671ee6d580673893",
+      "dirty": false
+    },
+    "python": "3.12.15",
+    "tree_sitter": "0.26.0",
+    "tree_sitter_python": "0.25.0",
+    "hardware": {
+      "machine": "arm64",
+      "system": "macOS-26.6.2-arm64-arm-64bit",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": "25769803776"
+    }
+  },
+  "summary": {
+    "corpus": {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502
+    },
+    "read_seconds": {
+      "median": 0.08062212495133281,
+      "min": 0.08025200001429766,
+      "max": 0.08936887502204627
+    },
+    "parse_seconds": {
+      "median": 1.9087200043722987,
+      "min": 1.8971942295320332,
+      "max": 1.91322184499586
+    },
+    "chunk_seconds": {
+      "median": 4.140562908898573,
+      "min": 4.129155271628406,
+      "max": 4.154543313139584
+    },
+    "parse_per_file": {
+      "p50_ms": 0.4936670302413404,
+      "p95_ms": 6.450665998272598,
+      "max_ms": 148.86900002602488
+    },
+    "chunk_per_file": {
+      "p50_ms": 0.8398329955525696,
+      "p95_ms": 14.997582999058068,
+      "max_ms": 460.9182919957675
+    },
+    "peak_rss_mib": 223.21875,
+    "rss_after_imports_mib": 126.296875
+  },
+  "runs": [
+    {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502,
+      "read_seconds": 0.08062212495133281,
+      "parse_seconds": 1.8971942295320332,
+      "chunk_seconds": 4.140562908898573,
+      "rss_after_imports_bytes": 132431872,
+      "peak_rss_bytes": 234061824
+    },
+    {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502,
+      "read_seconds": 0.08144537499174476,
+      "parse_seconds": 1.91322184499586,
+      "chunk_seconds": 4.151992455823347,
+      "rss_after_imports_bytes": 132431872,
+      "peak_rss_bytes": 234029056
+    },
+    {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502,
+      "read_seconds": 0.08936887502204627,
+      "parse_seconds": 1.9087200043722987,
+      "chunk_seconds": 4.154543313139584,
+      "rss_after_imports_bytes": 132497408,
+      "peak_rss_bytes": 234143744
+    },
+    {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502,
+      "read_seconds": 0.08053004200337455,
+      "parse_seconds": 1.9077725650276989,
+      "chunk_seconds": 4.129155271628406,
+      "rss_after_imports_bytes": 132497408,
+      "peak_rss_bytes": 234209280
+    },
+    {
+      "files": 903,
+      "lines": 523634,
+      "bytes": 19476795,
+      "chunks": 31502,
+      "read_seconds": 0.08025200001429766,
+      "parse_seconds": 1.9123069383203983,
+      "chunk_seconds": 4.130110277154017,
+      "rss_after_imports_bytes": 132399104,
+      "peak_rss_bytes": 233930752
+    }
+  ]
+}
