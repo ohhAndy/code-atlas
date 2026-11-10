@@ -286,6 +286,10 @@ happened and why.
 - Settled the chunking policy decisions (see Decisions); ADR 004 not written yet.
 - `code_atlas.eval.gold.owner(line, spans)`: the smallest span containing a line, or `None`
   if no span contains it. Tests in `tests/eval/test_gold.py`.
+- `code_atlas.parse.chunks.chunk_spans(source)`: `<module>` span `1..N` first, then each
+  definition in source order, duplicates suffixed `#2`, `#3`. Tests in
+  `tests/parse/test_chunks.py` (trailing newline, empty file, property getter / setter,
+  `if` / `elif` / `else` shims, owner of a line in a setter, class spanning the whole file).
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -344,6 +348,14 @@ happened and why.
   a pure insertion at end of file records `last_old + 1` past the last line, and a file
   with no module chunk leaves its blank lines between definitions unowned. The caller drops
   `None`.
+- Ties in `owner`: a class spanning the whole file has the same span as `<module>`. Spans
+  are in source order, where a container always comes before what it contains, so on a tie
+  the later span is the inner one and wins (`owner` takes the min over the reversed list).
+  Cost: `owner` is only correct for source-ordered input; its docstring states this.
+- Line count N is `len(source.splitlines())` on bytes, not on decoded text. Why: it must
+  match tree-sitter's rows. `str.splitlines()` also splits on form feed (`\x0c`, used as a
+  page break in older Python files), which would shift every later line number by one;
+  `bytes.splitlines()` does not.
 
 ### Findings
 - Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
@@ -370,6 +382,12 @@ happened and why.
     are outside this sample.
   - 4 / 30 instances change module-level code, which the module chunk rule (ADR 004) has
     to cover.
+
+### Problems and dead ends
+- Known limitation, not fixed: a lone `\r` (old Mac line ending) counts as a line break
+  for `bytes.splitlines()` but not for tree-sitter or git diffs, so N comes out too large
+  for such files. Checked by hand on `b"x=1\ry=2\n"` (splitlines: 2, tree-sitter: 1 row).
+  Not counted in the subset; expected to be rare.
 
 ### Open questions
 - ~~Duplicate qualified names: the walker returns two `compat` entries for

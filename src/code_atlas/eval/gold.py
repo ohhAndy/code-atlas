@@ -62,7 +62,10 @@ def changed_lines(patch: str) -> dict[str, set[int]]:
 def owner(line: int, spans: list[tuple[str, int, int]]) -> str | None:
     """spans: (name, start_line, end_line), 1-based inclusive.
     Return the name of the smallest span containing `line`, or None if no span contains it
-    (e.g. a pure insertion at the end of a file records a line past the last one)."""
-    containing = [span for span in spans if span[1] <= line <= span[2]]
+    (e.g. a pure insertion at the end of a file records a line past the last one).
+
+    spans must list a container before anything inside it (source order, as chunk_spans
+    returns them): on a tie in length, the later span is the inner one and wins."""
+    containing = [span for span in reversed(spans) if span[1] <= line <= span[2]]
     best = min(containing, key=lambda span: span[2] - span[1], default=None)
     return best[0] if best is not None else None
