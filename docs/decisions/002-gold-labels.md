@@ -1,6 +1,6 @@
 # ADR 002: Gold labels and corpus scope
 
-**Status:** Parts 1 and 2 accepted; Part 3 proposed (2026-11-09)
+**Status:** Accepted (Parts 1 and 2 on 2026-11-06; Part 3 on 2026-11-09)
 **Date:** 2026-11-06
 
 ## Part 1: Test files in the corpus

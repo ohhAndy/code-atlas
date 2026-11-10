@@ -227,7 +227,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 - [x] Integrate `tree-sitter` with the Python grammar.
 - [x] Walk the tree and extract functions, methods, classes and decorated definitions. Build qualified names with a scope stack.
-- [ ] Chunking policy (ADR 004):
+- [x] Chunking policy (ADR 004):
   - One chunk per function or method.
   - Class chunk = header, docstring and class-level attributes, without method bodies.
   - Module chunk = top-level code outside definitions.
