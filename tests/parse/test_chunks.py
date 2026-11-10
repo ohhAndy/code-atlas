@@ -1,10 +1,10 @@
-"""Tests for chunk_spans. Line numbers are 1-based and inclusive; each source line is
-numbered in a comment."""
+"""Tests for chunk_spans, chunk_texts and chunk_file. Line numbers are 1-based and
+inclusive; each source line is numbered in a comment."""
 
 from __future__ import annotations
 
 from code_atlas.eval.gold import owner
-from code_atlas.parse.chunks import chunk_spans
+from code_atlas.parse.chunks import chunk_file, chunk_spans, chunk_texts
 
 BASIC = b"""\
 import os
@@ -105,3 +105,68 @@ def test_owner_of_line_in_setter() -> None:
 
 def test_owner_of_class_header_when_class_spans_whole_file() -> None:
     assert owner(1, chunk_spans(PROPERTY)) == "C"
+
+
+# chunk_texts: each chunk's text is the lines it owns, newlines kept.
+
+
+def test_texts_follow_line_ownership() -> None:
+    assert chunk_texts(BASIC, chunk_spans(BASIC)) == {
+        "<module>": "import os\n\n\n",  # lines 1, 2, 8
+        "Foo": "class Foo:\n    x = 1\n\n",  # lines 3, 4, 5 (not the method)
+        "Foo.bar": "    def bar(self):\n        return 1\n",  # lines 6, 7
+        "baz": "def baz():\n    pass\n",  # lines 9, 10
+    }
+
+
+def test_texts_contain_every_character_exactly_once() -> None:
+    texts = chunk_texts(BASIC, chunk_spans(BASIC))
+    assert sum(len(t) for t in texts.values()) == len(BASIC.decode("utf-8"))
+
+
+NON_ASCII = 'def café():\n    return "naïve"\n'.encode()
+
+
+def test_texts_of_non_ascii_source() -> None:
+    assert chunk_texts(NON_ASCII, chunk_spans(NON_ASCII)) == {
+        "<module>": "",
+        "café": 'def café():\n    return "naïve"\n',
+    }
+
+
+def test_text_of_property_setter() -> None:
+    texts = chunk_texts(PROPERTY, chunk_spans(PROPERTY))
+    assert texts["C.name#2"] == "    @name.setter\n    def name(self, v):\n        pass\n"
+
+
+# chunk_file
+
+
+def test_chunk_file_ids_and_kinds() -> None:
+    chunks = chunk_file("pkg/a.py", BASIC)
+    assert [(c.id, c.kind) for c in chunks] == [
+        ("pkg/a.py::<module>", "module"),
+        ("pkg/a.py::Foo", "class"),
+        ("pkg/a.py::Foo.bar", "method"),
+        ("pkg/a.py::baz", "function"),
+    ]
+
+
+def test_chunk_file_skips_whitespace_only_module() -> None:
+    chunks = chunk_file("pkg/a.py", PROPERTY)
+    assert [c.qualified_name for c in chunks] == ["C", "C.name", "C.name#2"]
+
+
+def test_chunk_file_empty_source() -> None:
+    assert chunk_file("pkg/__init__.py", b"") == []
+
+
+# A form feed (\x0c) is a line break for str.splitlines() but not for tree-sitter.
+FORM_FEED = b"x = 1\x0c\n\ndef f():\n    return 1\n"
+
+
+def test_texts_with_form_feed_keep_tree_sitter_lines() -> None:
+    assert chunk_texts(FORM_FEED, chunk_spans(FORM_FEED)) == {
+        "<module>": "x = 1\x0c\n\n",
+        "f": "def f():\n    return 1\n",
+    }

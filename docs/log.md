@@ -290,6 +290,10 @@ happened and why.
   definition in source order, duplicates suffixed `#2`, `#3`. Tests in
   `tests/parse/test_chunks.py` (trailing newline, empty file, property getter / setter,
   `if` / `elif` / `else` shims, owner of a line in a setter, class spanning the whole file).
+- `Chunk` dataclass (PLAN §3 fields), `chunk_texts` (each chunk's text = the lines it owns,
+  via `owner`) and `chunk_file` (ids `path::name`, kinds, sha256 `content_hash`, module
+  chunk skipped when whitespace-only). Tests in `tests/parse/test_chunks.py`, including
+  non-ASCII source and a form feed.
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -356,6 +360,14 @@ happened and why.
   match tree-sitter's rows. `str.splitlines()` also splits on form feed (`\x0c`, used as a
   page break in older Python files), which would shift every later line number by one;
   `bytes.splitlines()` does not.
+- Chunk text: split the source into lines as bytes, then decode each line. Decoding first
+  and splitting the `str` broke on a form feed: the next function's text took the module's
+  blank line and lost its own last line (caught by a test). Splitting bytes on `\n` is safe
+  for UTF-8 because `0x0A` never occurs inside a multi-byte character.
+- Decode with `errors="replace"`: an invalid byte becomes U+FFFD instead of raising. Why:
+  real repos contain mis-encoded files (sphinx fixtures, see Phase 0), and one bad byte
+  should not stop a whole snapshot from being indexed. Cost: those characters are lost for
+  search, with no count of how often it happens.
 
 ### Findings
 - Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
