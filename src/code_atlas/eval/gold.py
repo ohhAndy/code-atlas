@@ -63,12 +63,6 @@ def owner(line: int, spans: list[tuple[str, int, int]]) -> str | None:
     """spans: (name, start_line, end_line), 1-based inclusive.
     Return the name of the smallest span containing `line`, or None if no span contains it
     (e.g. a pure insertion at the end of a file records a line past the last one)."""
-    min_span = None
-    min_span_length = float("infinity")
-    for name, start_line, end_line in spans:
-        if line <= end_line and line >= start_line:
-            length = end_line - start_line
-            if min_span_length > length:
-                min_span_length = length
-                min_span = name
-    return min_span
+    containing = [span for span in spans if span[1] <= line <= span[2]]
+    best = min(containing, key=lambda span: span[2] - span[1], default=None)
+    return best[0] if best is not None else None
