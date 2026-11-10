@@ -7,7 +7,7 @@ Old line numbers are noted in comments as (N).
 
 from __future__ import annotations
 
-from code_atlas.eval.gold import changed_lines
+from code_atlas.eval.gold import changed_lines, owner
 
 SAVE_INSERT = """\
 --- a/app/models.py
@@ -151,3 +151,36 @@ NEW_FILE = """\
 def test_new_file_is_excluded() -> None:
     # The file does not exist at base_commit, so no retriever can return it.
     assert changed_lines(NEW_FILE) == {}
+
+
+# owner: spans are (name, start_line, end_line), 1-based inclusive.
+OWNER_SPANS = [
+    ("<module>", 1, 100),
+    ("Foo", 10, 60),
+    ("Foo.bar", 20, 30),
+]
+
+
+def test_owner_line_in_method() -> None:
+    assert owner(25, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_line_in_class_body_outside_methods() -> None:
+    assert owner(15, OWNER_SPANS) == "Foo"
+
+
+def test_owner_top_level_line() -> None:
+    assert owner(5, OWNER_SPANS) == "<module>"
+
+
+def test_owner_first_line_of_method() -> None:
+    assert owner(20, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_last_line_of_method() -> None:
+    assert owner(30, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_line_in_no_span_is_none() -> None:
+    # e.g. a pure insertion at the end of a hunk records last_old + 1, past the file end.
+    assert owner(150, OWNER_SPANS) is None

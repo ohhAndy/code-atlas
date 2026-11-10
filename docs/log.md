@@ -283,6 +283,9 @@ happened and why.
 - `extract_definitions`: tree walk with the enclosing class's qualified name as the prefix
   (the scope stack). Tests in `tests/parse/test_definitions.py`: async, decorators, nested
   classes, nested functions, non-ASCII, syntax errors, definitions under `if` / `except`.
+- Settled the chunking policy decisions (see Decisions); ADR 004 not written yet.
+- `code_atlas.eval.gold.owner(line, spans)`: the smallest span containing a line, or `None`
+  if no span contains it. Tests in `tests/eval/test_gold.py`.
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -304,6 +307,43 @@ happened and why.
   under `if TYPE_CHECKING:` is a module-level function and a method under `if` in a class
   body is a method. Why: these patterns (compat shims, import fallbacks) are common in the
   subset repos, and missing them would turn their gold into module code.
+- Line ownership: every line of a file belongs to exactly one chunk, the innermost
+  definition that contains it (the smallest containing span); the module chunk spans
+  `1..N` and owns whatever no definition contains. Definition spans never partially
+  overlap (they are nested or disjoint), so "smallest containing span" is always the
+  innermost one. Why: a fix inside `Foo.bar` should make `Foo.bar` gold, not also `Foo`
+  and the module. Consequence: `Chunk` keeps a single `start_line` / `end_line`; the class
+  and module chunks have "holes" only in their text, not in their line range. Function-level
+  gold = owners of the changed lines. To be recorded in ADR 004 and ADR 002 Part 3.
+- Class chunk text: header, docstring and class-level code, without methods (no method
+  bodies and no method signatures). Why: a query naming a method should rank the method
+  chunk, not the class; copying signatures into the class chunk lets the class compete with
+  its own methods, more so for large classes. Cost: the class chunk no longer lists what the
+  class can do. To be recorded in ADR 004.
+- Lines between definitions (blank lines, comments above a `def`, imports) belong to the
+  enclosing class or module, which follows from the ownership rule with no extra code.
+  Cost: a pure insertion right between two methods can make the class gold as well (ADR 002
+  Part 2 records both neighbors). Count how often once the chunker exists. To be recorded in
+  ADR 004.
+- No oversized-function rule in Phase 1. BM25 already handles long documents through
+  length normalization (`b`); embedding models silently truncate input past their token
+  limit, and that limit depends on the model chosen in Phase 3. So the rule is decided with
+  ADR 006. Phase 1 records the distribution of chunk lengths so that decision has data.
+- Duplicate qualified names get an ordinal suffix in source order: `Model.name`,
+  `Model.name#2`. Why: common in practice (`@property` getter plus `@name.setter` share a
+  name, plus `if PY3` / `else` shims); every definition stays its own chunk, so the
+  ownership rule still holds. Merging would create chunks with two line ranges. Cost: ids
+  can shift across commits if a same-name definition is added earlier in the class. That
+  matters little: the Phase 3 embedding cache is keyed by chunk text, not id. To be
+  recorded in ADR 004.
+- A module chunk is emitted only if its text is non-empty after stripping whitespace. An
+  empty `__init__.py` has nothing to search; a file with imports still gets one, so a
+  changed import line has an owner. To be recorded in ADR 004.
+- `owner` returns `None` for a line no span contains; it does not raise. Why: same rule as
+  the metrics (raise only when the input means a caller bug). An unowned line is legitimate:
+  a pure insertion at end of file records `last_old + 1` past the last line, and a file
+  with no module chunk leaves its blank lines between definitions unowned. The caller drops
+  `None`.
 
 ### Findings
 - Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
@@ -332,6 +372,7 @@ happened and why.
     to cover.
 
 ### Open questions
-- Duplicate qualified names: the walker returns two `compat` entries for
+- ~~Duplicate qualified names: the walker returns two `compat` entries for
   `if PY3: def compat()` / `else: def compat()`, but chunk ids (`path::QualifiedName`) must
-  be unique. Keep both with a suffix, merge them, or keep the first? Decide in ADR 004.
+  be unique. Keep both with a suffix, merge them, or keep the first?~~ Resolved: ordinal
+  suffix (see Decisions).
