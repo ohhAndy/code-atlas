@@ -2,7 +2,8 @@
 
 `changed_lines` maps each file the patch changes to the old-file line numbers it touches.
 - The dict keys are the file-level gold.
-- The line numbers are matched against chunk line ranges in Phase 1 for function-level gold.
+- The line numbers are mapped to the chunks that own them (`function_gold`) for
+  function-level gold.
 
 Line rules:
 - A "-" line records its own old line number.
@@ -14,7 +15,11 @@ Line rules:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from unidiff.patch import PatchSet
+
+from code_atlas.parse.chunks import chunk_file, owner
 
 
 def changed_lines(patch: str) -> dict[str, set[int]]:
@@ -59,13 +64,22 @@ def changed_lines(patch: str) -> dict[str, set[int]]:
     return result
 
 
-def owner(line: int, spans: list[tuple[str, int, int]]) -> str | None:
-    """spans: (name, start_line, end_line), 1-based inclusive.
-    Return the name of the smallest span containing `line`, or None if no span contains it
-    (e.g. a pure insertion at the end of a file records a line past the last one).
+def function_gold(patch: str, repo_dir: Path) -> set[str]:
+    """Chunk ids ("path::name") of the chunks that own a line the patch changes.
 
-    spans must list a container before anything inside it (source order, as chunk_spans
-    returns them): on a tie in length, the later span is the inner one and wins."""
-    containing = [span for span in reversed(spans) if span[1] <= line <= span[2]]
-    best = min(containing, key=lambda span: span[2] - span[1], default=None)
-    return best[0] if best is not None else None
+    `repo_dir` is the snapshot at base_commit. Changed lines that no chunk owns (past the
+    end of the file, or blank lines of a file with no module chunk) add nothing, so the
+    result can be empty: that instance is then scored at file level only.
+    """
+    gold: set[str] = set()
+    for path, lines in changed_lines(patch).items():
+        source = (repo_dir / path).read_bytes()
+        chunks = chunk_file(path, source)
+        spans = [(c.qualified_name, c.start_line, c.end_line) for c in chunks]
+
+        for line_no in lines:
+            name = owner(line_no, spans)
+            if name is not None:
+                gold.add(f"{path}::{name}")
+
+    return gold

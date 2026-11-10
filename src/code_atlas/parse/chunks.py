@@ -6,7 +6,6 @@ import hashlib
 from dataclasses import dataclass
 from typing import Literal
 
-from code_atlas.eval.gold import owner
 from code_atlas.parse.definitions import Definition, extract_definitions
 
 MODULE_NAME = "<module>"
@@ -53,6 +52,18 @@ def _spans(source: bytes, definitions: list[Definition]) -> list[Span]:
         spans.append((name, d.start_line, d.end_line))
 
     return spans
+
+
+def owner(line: int, spans: list[Span]) -> str | None:
+    """spans: (name, start_line, end_line), 1-based inclusive.
+    Return the name of the smallest span containing `line`, or None if no span contains it
+    (e.g. a pure insertion at the end of a file records a line past the last one).
+
+    spans must list a container before anything inside it (source order, as chunk_spans
+    returns them): on a tie in length, the later span is the inner one and wins."""
+    containing = [span for span in reversed(spans) if span[1] <= line <= span[2]]
+    best = min(containing, key=lambda span: span[2] - span[1], default=None)
+    return best[0] if best is not None else None
 
 
 def chunk_texts(source: bytes, spans: list[Span]) -> dict[str, str]:

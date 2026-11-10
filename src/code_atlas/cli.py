@@ -43,7 +43,14 @@ def evaluate(method: str, split: str, final: bool) -> None:
     )
     path = runner.write_results(method, split, results, skipped)
     print()
+    print("File level")
     print(runner.format_table(runner.summarize(results)))
+    if any(r.gold_chunks is not None for r in results):
+        print("\nFunction level")
+        print(runner.format_table(runner.summarize(results, "function")))
+        no_fn_gold = [r.instance_id for r in results if r.gold_chunks == []]
+        if no_fn_gold:
+            print(f"\nFile level only (no function-level gold): {', '.join(no_fn_gold)}")
     if skipped:
         print(f"\nSkipped (no file-level gold): {', '.join(skipped)}")
     print(f"\nWrote {path.relative_to(Path.cwd()) if path.is_relative_to(Path.cwd()) else path}")

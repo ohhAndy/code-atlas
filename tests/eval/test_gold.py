@@ -7,7 +7,9 @@ Old line numbers are noted in comments as (N).
 
 from __future__ import annotations
 
-from code_atlas.eval.gold import changed_lines, owner
+from pathlib import Path
+
+from code_atlas.eval.gold import changed_lines, function_gold
 
 SAVE_INSERT = """\
 --- a/app/models.py
@@ -153,34 +155,166 @@ def test_new_file_is_excluded() -> None:
     assert changed_lines(NEW_FILE) == {}
 
 
-# owner: spans are (name, start_line, end_line), 1-based inclusive.
-OWNER_SPANS = [
-    ("<module>", 1, 100),
-    ("Foo", 10, 60),
-    ("Foo.bar", 20, 30),
-]
+# function_gold: the base_commit file is written to a temporary snapshot directory.
+
+MODELS = """\
+import os
+
+class Foo:
+    x = 1
+
+    def bar(self):
+        return 1
+
+def baz():
+    pass
+"""
+# (1) import os
+# (2)
+# (3) class Foo:
+# (4)     x = 1
+# (5)
+# (6)     def bar(self):
+# (7)         return 1
+# (8)
+# (9) def baz():
+# (10)    pass
 
 
-def test_owner_line_in_method() -> None:
-    assert owner(25, OWNER_SPANS) == "Foo.bar"
+def _snapshot(tmp_path: Path, files: dict[str, str]) -> Path:
+    for rel, text in files.items():
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text(text)
+    return tmp_path
 
 
-def test_owner_line_in_class_body_outside_methods() -> None:
-    assert owner(15, OWNER_SPANS) == "Foo"
+CHANGE_IN_METHOD = """\
+--- a/app/models.py
++++ b/app/models.py
+@@ -6,2 +6,2 @@
+     def bar(self):
+-        return 1
++        return 2
+"""
 
 
-def test_owner_top_level_line() -> None:
-    assert owner(5, OWNER_SPANS) == "<module>"
+def test_change_in_method_is_the_method_only(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/models.py": MODELS})
+    assert function_gold(CHANGE_IN_METHOD, repo) == {"app/models.py::Foo.bar"}
 
 
-def test_owner_first_line_of_method() -> None:
-    assert owner(20, OWNER_SPANS) == "Foo.bar"
+CHANGE_CLASS_ATTRIBUTE = """\
+--- a/app/models.py
++++ b/app/models.py
+@@ -4,1 +4,1 @@
+-    x = 1
++    x = 2
+"""
 
 
-def test_owner_last_line_of_method() -> None:
-    assert owner(30, OWNER_SPANS) == "Foo.bar"
+def test_change_in_class_body_is_the_class(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/models.py": MODELS})
+    assert function_gold(CHANGE_CLASS_ATTRIBUTE, repo) == {"app/models.py::Foo"}
 
 
-def test_owner_line_in_no_span_is_none() -> None:
-    # e.g. a pure insertion at the end of a hunk records last_old + 1, past the file end.
-    assert owner(150, OWNER_SPANS) is None
+CHANGE_IMPORT_AND_FUNCTION = """\
+--- a/app/models.py
++++ b/app/models.py
+@@ -1,1 +1,1 @@
+-import os
++import sys
+@@ -10,1 +10,1 @@
+-    pass
++    return None
+"""
+
+
+def test_changes_in_two_chunks(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/models.py": MODELS})
+    assert function_gold(CHANGE_IMPORT_AND_FUNCTION, repo) == {
+        "app/models.py::<module>",
+        "app/models.py::baz",
+    }
+
+
+# Pure insertion between old (8) blank and old (9) def baz: both neighbors are gold, so
+# the blank line pulls in the module chunk. This is the boundary cost logged for Phase 1.
+INSERT_BEFORE_BAZ = (
+    "--- a/app/models.py\n"
+    "+++ b/app/models.py\n"
+    "@@ -8,2 +8,4 @@\n"
+    " \n"
+    "+def qux():\n"
+    "+    pass\n"
+    " def baz():\n"
+)
+
+
+def test_insertion_between_definitions_gets_both_neighbors(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/models.py": MODELS})
+    assert function_gold(INSERT_BEFORE_BAZ, repo) == {
+        "app/models.py::<module>",
+        "app/models.py::baz",
+    }
+
+
+# Pure insertion after the last line records (10) and (11); (11) is past the end of file.
+APPEND_AT_END = """\
+--- a/app/models.py
++++ b/app/models.py
+@@ -9,2 +9,4 @@
+ def baz():
+     pass
++
++X = 1
+"""
+
+
+def test_line_past_end_of_file_adds_nothing(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/models.py": MODELS})
+    assert function_gold(APPEND_AT_END, repo) == {"app/models.py::baz"}
+
+
+ONE_CLASS = """\
+class C:
+    x = 1
+
+    y = 2
+"""
+# (1) class C:
+# (2)     x = 1
+# (3)
+# (4)     y = 2
+
+# Replaces the blank line (3) inside the class: owned by C, not by a module chunk.
+CHANGE_BLANK_IN_CLASS = "--- a/app/c.py\n+++ b/app/c.py\n@@ -3,1 +3,1 @@\n-\n+    # note\n"
+
+
+def test_blank_line_inside_class_is_the_class(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/c.py": ONE_CLASS})
+    assert function_gold(CHANGE_BLANK_IN_CLASS, repo) == {"app/c.py::C"}
+
+
+TWO_FUNCTIONS = """\
+def f():
+    pass
+
+
+def g():
+    pass
+"""
+# (1) def f():
+# (2)     pass
+# (3)
+# (4)
+# (5) def g():
+# (6)     pass
+
+# Removes blank line (4). Only blank lines are outside f and g, so there is no module
+# chunk and line (4) has no owner.
+REMOVE_BLANK_BETWEEN_FUNCTIONS = "--- a/app/fg.py\n+++ b/app/fg.py\n@@ -3,2 +3,1 @@\n \n-\n"
+
+
+def test_unowned_blank_line_gives_empty_gold(tmp_path: Path) -> None:
+    repo = _snapshot(tmp_path, {"app/fg.py": TWO_FUNCTIONS})
+    assert function_gold(REMOVE_BLANK_BETWEEN_FUNCTIONS, repo) == set()

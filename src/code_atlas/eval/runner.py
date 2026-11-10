@@ -1,12 +1,13 @@
 """Evaluation runner: run one retriever over a split, score it, write JSON, print a table.
 
-Scores at file level only for now: function-level gold needs the chunker.
-
 Per instance:
     repo_dir = snapshot at base_commit
     retriever = RETRIEVERS[method](repo_dir)        # build: any indexing happens here (timed)
     hits = retriever.search(problem_statement, K)   # search (timed)
     score the file ranking against the files the gold patch changes
+    chunk retrievers only: score the chunk ranking against the chunks the patch changes
+    (function-level gold). An instance with no function-level gold is scored at file level
+    only.
 """
 
 from __future__ import annotations
@@ -19,12 +20,17 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from code_atlas.baselines.ripgrep import RipgrepRetriever
 from code_atlas.eval.dataset import DATASET_REVISION, Instance
-from code_atlas.eval.gold import changed_lines
-from code_atlas.eval.metrics import files_from_chunks, recall_at_k, reciprocal_rank_at_k
+from code_atlas.eval.gold import changed_lines, function_gold
+from code_atlas.eval.metrics import (
+    files_from_chunks,
+    hit_at_k,
+    recall_at_k,
+    reciprocal_rank_at_k,
+)
 from code_atlas.types import Hit, Level, Retriever
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -32,6 +38,9 @@ RESULTS_DIR = ROOT / "results"
 
 K = 10  # retrieval depth; also the largest cutoff any metric uses (MRR@10, Recall@10)
 METRICS = ("recall@1", "recall@5", "recall@10", "mrr@10")
+# Hit@k only at function level: file gold is always one file, where Hit@k = Recall@k.
+FUNCTION_METRICS = (*METRICS, "hit@1", "hit@5", "hit@10")
+ScoreLevel = Literal["file", "function"]
 
 # Method name -> how to build a retriever for one snapshot directory.
 RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
@@ -48,7 +57,12 @@ class InstanceResult:
     category: int | None  # hand-labeled query category; None if unlabeled
     gold_files: list[str]
     ranking: list[str]  # file ranking that was scored, best first
-    scores: dict[str, float]
+    scores: dict[str, float]  # file level
+    # Function level, chunk retrievers only (None for file retrievers). An empty
+    # gold_chunks means no function-level gold, and function_scores is then None.
+    gold_chunks: list[str] | None
+    chunk_ranking: list[str] | None
+    function_scores: dict[str, float] | None
     build_seconds: float
     search_seconds: float
 
@@ -72,6 +86,16 @@ def file_scores(ranking: Sequence[str], gold: set[str]) -> dict[str, float]:
         "recall@5": recall_at_k(ranking, gold, 5),
         "recall@10": recall_at_k(ranking, gold, 10),
         "mrr@10": reciprocal_rank_at_k(ranking, gold, 10),
+    }
+
+
+def function_scores(ranking: Sequence[str], gold: set[str]) -> dict[str, float]:
+    """All function-level metrics for one instance."""
+    return {
+        **file_scores(ranking, gold),
+        "hit@1": hit_at_k(ranking, gold, 1),
+        "hit@5": hit_at_k(ranking, gold, 5),
+        "hit@10": hit_at_k(ranking, gold, 10),
     }
 
 
@@ -99,6 +123,14 @@ def evaluate(
         searched = time.perf_counter()
 
         ranking = file_ranking(hits, retriever.level)
+        gold_chunks: set[str] | None = None
+        chunk_ranking: list[str] | None = None
+        fn_scores: dict[str, float] | None = None
+        if retriever.level == "chunk":
+            gold_chunks = function_gold(inst.patch, repo_dir)
+            chunk_ranking = [hit.id for hit in hits]
+            if gold_chunks:
+                fn_scores = function_scores(chunk_ranking, gold_chunks)
         result = InstanceResult(
             instance_id=inst.instance_id,
             repo=inst.repo,
@@ -106,6 +138,9 @@ def evaluate(
             gold_files=sorted(gold),
             ranking=ranking,
             scores=file_scores(ranking, gold),
+            gold_chunks=sorted(gold_chunks) if gold_chunks is not None else None,
+            chunk_ranking=chunk_ranking,
+            function_scores=fn_scores,
             build_seconds=round(built - start, 4),
             search_seconds=round(searched - built, 4),
         )
@@ -117,13 +152,29 @@ def evaluate(
     return results, skipped
 
 
-def _mean_scores(results: Sequence[InstanceResult]) -> dict[str, float]:
+def _scores(r: InstanceResult, level: ScoreLevel) -> dict[str, float]:
+    if level == "file":
+        return r.scores
+    assert r.function_scores is not None
+    return r.function_scores
+
+
+def _mean_scores(results: Sequence[InstanceResult], level: ScoreLevel) -> dict[str, float]:
     """Macro average: every instance counts once."""
-    return {m: sum(r.scores[m] for r in results) / len(results) for m in METRICS}
+    metrics = METRICS if level == "file" else FUNCTION_METRICS
+    return {m: sum(_scores(r, level)[m] for r in results) / len(results) for m in metrics}
 
 
-def summarize(results: Sequence[InstanceResult]) -> dict[str, dict[str, float]]:
-    """Mean of each metric overall, per repo and per query category, plus the count `n`."""
+def summarize(
+    results: Sequence[InstanceResult], level: ScoreLevel = "file"
+) -> dict[str, dict[str, float]]:
+    """Mean of each metric overall, per repo and per query category, plus the count `n`.
+
+    level "file": every instance. level "function": only instances with function-level
+    scores (chunk retrievers, non-empty function gold), so `n` can be smaller.
+    """
+    if level == "function":
+        results = [r for r in results if r.function_scores is not None]
     if not results:
         return {}
     by_repo: dict[str, list[InstanceResult]] = defaultdict(list)
@@ -132,18 +183,22 @@ def summarize(results: Sequence[InstanceResult]) -> dict[str, dict[str, float]]:
         by_repo[r.repo].append(r)
         if r.category is not None:
             by_category[f"category {r.category}"].append(r)
-    summary = {"overall": {"n": float(len(results)), **_mean_scores(results)}}
+    summary = {"overall": {"n": float(len(results)), **_mean_scores(results, level)}}
     for groups in (by_repo, by_category):
         for name in sorted(groups):
-            summary[name] = {"n": float(len(groups[name])), **_mean_scores(groups[name])}
+            summary[name] = {"n": float(len(groups[name])), **_mean_scores(groups[name], level)}
     return summary
 
 
 def format_table(summary: dict[str, dict[str, float]]) -> str:
-    header = f"{'':28} {'n':>4} " + " ".join(f"{m:>9}" for m in METRICS)
+    """One row per group; the columns are whichever metrics the summary has."""
+    if not summary:
+        return "(no instances)"
+    metrics = [m for m in next(iter(summary.values())) if m != "n"]
+    header = f"{'':28} {'n':>4} " + " ".join(f"{m:>9}" for m in metrics)
     lines = [header, "-" * len(header)]
     for name, row in summary.items():
-        cells = " ".join(f"{row[m]:>9.3f}" for m in METRICS)
+        cells = " ".join(f"{row[m]:>9.3f}" for m in metrics)
         lines.append(f"{name:28} {int(row['n']):>4} {cells}")
     return "\n".join(lines)
 
@@ -178,19 +233,23 @@ def write_results(
 ) -> Path:
     """Write one run to <out_dir>/<method>_<split>_<UTC time>.json and return its path."""
     now = datetime.now(UTC)
+    function_scored = any(r.gold_chunks is not None for r in results)
     payload = {
         "meta": {
             "method": method,
             "split": split,
             "k": K,
-            "level_scored": "file",
+            "level_scored": "file+function" if function_scored else "file",
             "created_at": now.isoformat(timespec="seconds"),
             "codeatlas": git_state(),
             "dataset_revision": DATASET_REVISION,
             "ripgrep": ripgrep_version(),
             "skipped_no_gold": list(skipped),
+            # Chunk retrievers: scored at file level only, for lack of function-level gold.
+            "no_function_gold": [r.instance_id for r in results if r.gold_chunks == []],
         },
         "summary": summarize(results),
+        "function_summary": summarize(results, "function"),
         "instances": [asdict(r) for r in results],
     }
     out_dir.mkdir(parents=True, exist_ok=True)

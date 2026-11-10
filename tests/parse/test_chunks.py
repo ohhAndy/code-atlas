@@ -3,8 +3,7 @@ inclusive; each source line is numbered in a comment."""
 
 from __future__ import annotations
 
-from code_atlas.eval.gold import owner
-from code_atlas.parse.chunks import chunk_file, chunk_spans, chunk_texts
+from code_atlas.parse.chunks import chunk_file, chunk_spans, chunk_texts, owner
 
 BASIC = b"""\
 import os
@@ -170,3 +169,36 @@ def test_texts_with_form_feed_keep_tree_sitter_lines() -> None:
         "<module>": "x = 1\x0c\n\n",
         "f": "def f():\n    return 1\n",
     }
+
+
+# owner: spans are (name, start_line, end_line), 1-based inclusive.
+OWNER_SPANS = [
+    ("<module>", 1, 100),
+    ("Foo", 10, 60),
+    ("Foo.bar", 20, 30),
+]
+
+
+def test_owner_line_in_method() -> None:
+    assert owner(25, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_line_in_class_body_outside_methods() -> None:
+    assert owner(15, OWNER_SPANS) == "Foo"
+
+
+def test_owner_top_level_line() -> None:
+    assert owner(5, OWNER_SPANS) == "<module>"
+
+
+def test_owner_first_line_of_method() -> None:
+    assert owner(20, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_last_line_of_method() -> None:
+    assert owner(30, OWNER_SPANS) == "Foo.bar"
+
+
+def test_owner_line_in_no_span_is_none() -> None:
+    # e.g. a pure insertion at the end of a hunk records last_old + 1, past the file end.
+    assert owner(150, OWNER_SPANS) is None

@@ -141,3 +141,96 @@ def test_write_results_json(tmp_path: Path) -> None:
     assert data["meta"]["ripgrep"].startswith("ripgrep ")
     assert data["summary"]["overall"]["recall@1"] == 1.0
     assert data["instances"][0]["instance_id"] == "x-1"
+
+
+# --- function level: chunk retrievers ------------------------------------------------------
+
+MODULE = "import os\n\ndef f():\n    return 1\n\ndef g():\n    return 2\n"
+# (1) import os  (2)  (3) def f():  (4) return 1  (5)  (6) def g():  (7) return 2
+
+
+def _change(path: str, line: int, old: str) -> str:
+    """A unified diff that replaces old line `line` of `path`."""
+    return f"--- a/{path}\n+++ b/{path}\n@@ -{line},1 +{line},1 @@\n-{old}\n+changed\n"
+
+
+class FakeChunkRetriever:
+    """Returns a fixed chunk ranking, whatever the query."""
+
+    level: Level = "chunk"
+
+    def __init__(self, ranking: list[str]) -> None:
+        self.ranking = ranking
+
+    def search(self, query: str, k: int) -> list[Hit]:
+        return [Hit(c, float(len(self.ranking) - i)) for i, c in enumerate(self.ranking[:k])]
+
+
+def _make_chunks(ranking: list[str]) -> Callable[[Path], Retriever]:
+    return lambda repo_dir: FakeChunkRetriever(ranking)
+
+
+def _repo(tmp_path: Path) -> Path:
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "m.py").write_text(MODULE)
+    return tmp_path
+
+
+def test_chunk_retriever_is_scored_at_function_level(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    inst = _instance("x-1", "org/x", _change("m.py", 7, "    return 2"))  # gold m.py::g
+    results, _ = runner.evaluate(
+        [inst], _make_chunks(["m.py::f", "m.py::g", "m.py::<module>"]), lambda i: repo
+    )
+    r = results[0]
+    assert r.gold_chunks == ["m.py::g"]
+    assert r.chunk_ranking == ["m.py::f", "m.py::g", "m.py::<module>"]
+    assert r.ranking == ["m.py"]
+    assert r.scores["recall@1"] == 1.0  # file level: m.py is first
+    assert r.function_scores == {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+    }
+
+
+def test_file_retriever_gets_no_function_level_fields() -> None:
+    results, _ = runner.evaluate(
+        [_instance("x-1", "org/x", _patch("a.py"))], _make(["a.py"]), lambda i: Path("/u")
+    )
+    assert results[0].gold_chunks is None
+    assert results[0].function_scores is None
+    assert runner.summarize(results, "function") == {}
+
+
+def test_instance_without_function_gold_is_file_level_only(tmp_path: Path) -> None:
+    (tmp_path / "fg.py").write_text("def f():\n    pass\n\n\ndef g():\n    pass\n")
+    blank = "--- a/fg.py\n+++ b/fg.py\n@@ -4,1 +4,1 @@\n-\n+# x\n"  # unowned blank line
+    scored = _instance("x-2", "org/x", _change("fg.py", 2, "    pass"))  # gold fg.py::f
+    results, _ = runner.evaluate(
+        [_instance("x-1", "org/x", blank), scored],
+        _make_chunks(["fg.py::f"]),
+        lambda i: tmp_path,
+    )
+    assert results[0].gold_chunks == []
+    assert results[0].function_scores is None
+    assert results[0].scores["recall@1"] == 1.0
+    summary = runner.summarize(results, "function")
+    assert summary["overall"]["n"] == 1
+    assert summary["overall"]["hit@1"] == 1.0
+
+
+def test_write_results_records_function_level(tmp_path: Path) -> None:
+    repo = _repo(tmp_path / "repo")
+    inst = _instance("x-1", "org/x", _change("m.py", 4, "    return 1"))  # gold m.py::f
+    results, _ = runner.evaluate([inst], _make_chunks(["m.py::f"]), lambda i: repo)
+    path = runner.write_results("fake", "dev", results, [], out_dir=tmp_path / "out")
+    data = json.loads(path.read_text())
+    assert data["meta"]["level_scored"] == "file+function"
+    assert data["meta"]["no_function_gold"] == []
+    assert data["function_summary"]["overall"]["mrr@10"] == 1.0
+    assert "hit@10" in runner.format_table(runner.summarize(results, "function"))
