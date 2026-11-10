@@ -6,7 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from code_atlas.baselines.ripgrep import RipgrepRetriever, extract_identifiers
+from code_atlas.baselines.ripgrep import (
+    RipgrepChunkRetriever,
+    RipgrepRetriever,
+    extract_identifiers,
+)
 from code_atlas.types import Hit
 
 # --- extract_identifiers: one case per row of the identifier-rule table ----------------
@@ -157,3 +161,53 @@ def test_query_without_identifiers_returns_empty(repo: Path) -> None:
 def test_identifier_with_no_matches_returns_empty(repo: Path) -> None:
     # rg exits with code 1 when nothing matches; that is not an error.
     assert RipgrepRetriever(repo).search("NoSuchThing", k=10) == []
+
+
+# --- RipgrepChunkRetriever: matches credited to the chunk that owns each line ------------
+#
+# On the `repo` fixture, query "QuerySet.get_or_create" searches QuerySet.get_or_create
+# (no match), QuerySet and get_or_create:
+#   pkg/query.py (1) class QuerySet:             QuerySet       -> QuerySet
+#                (2)     def get_or_create(...)  get_or_create  -> QuerySet.get_or_create
+#                (3)         QuerySet()          QuerySet       -> QuerySet.get_or_create
+#   pkg/other.py (1) from pkg.query import ...   QuerySet       -> <module>
+# Totals: QuerySet.get_or_create 2, QuerySet 1, other.py <module> 1 (tie broken by id).
+
+
+def test_chunk_level_is_chunk(repo: Path) -> None:
+    assert RipgrepChunkRetriever(repo).level == "chunk"
+
+
+def test_chunk_ranks_by_owned_matching_lines(repo: Path) -> None:
+    assert RipgrepChunkRetriever(repo).search("QuerySet.get_or_create", 10) == [
+        Hit("pkg/query.py::QuerySet.get_or_create", 2.0),
+        Hit("pkg/other.py::<module>", 1.0),
+        Hit("pkg/query.py::QuerySet", 1.0),
+    ]
+
+
+def test_chunk_k_limits_results(repo: Path) -> None:
+    hits = RipgrepChunkRetriever(repo).search("QuerySet.get_or_create", 1)
+    assert [h.id for h in hits] == ["pkg/query.py::QuerySet.get_or_create"]
+
+
+def test_chunk_test_directories_excluded(repo: Path) -> None:
+    hits = RipgrepChunkRetriever(repo).search("QuerySet", 10)
+    assert all("/tests/" not in h.id for h in hits)
+
+
+def test_chunk_query_without_identifiers_returns_empty(repo: Path) -> None:
+    assert RipgrepChunkRetriever(repo).search("nothing to see here", 10) == []
+
+
+def test_chunk_match_on_line_with_invalid_utf8(tmp_path: Path) -> None:
+    (tmp_path / "a.py").write_bytes(b"def f():\n    return foo_bar  # \xff\n")
+    assert RipgrepChunkRetriever(tmp_path).search("foo_bar", 10) == [Hit("a.py::f", 1.0)]
+
+
+def test_chunk_ids_follow_duplicate_suffix(tmp_path: Path) -> None:
+    (tmp_path / "a.py").write_text(
+        "class C:\n    @property\n    def name(self):\n        return 1\n\n"
+        "    @name.setter\n    def name(self, v):\n        self._the_name = v\n"
+    )
+    assert RipgrepChunkRetriever(tmp_path).search("_the_name", 10) == [Hit("a.py::C.name#2", 1.0)]

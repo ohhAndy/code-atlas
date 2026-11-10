@@ -22,7 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from code_atlas.baselines.ripgrep import RipgrepRetriever
+from code_atlas.baselines.ripgrep import RipgrepChunkRetriever, RipgrepRetriever
 from code_atlas.eval.dataset import DATASET_REVISION, Instance
 from code_atlas.eval.gold import changed_lines, function_gold
 from code_atlas.eval.metrics import (
@@ -45,6 +45,8 @@ ScoreLevel = Literal["file", "function"]
 # Method name -> how to build a retriever for one snapshot directory.
 RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg": RipgrepRetriever,
+    # rg's matches credited to the chunk owning each matching line: function-level baseline.
+    "rg-chunks": RipgrepChunkRetriever,
     # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
     "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
 }

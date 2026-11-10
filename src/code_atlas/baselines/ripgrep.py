@@ -1,4 +1,5 @@
-"""Ripgrep baseline: rank files by how often they contain identifiers from the issue text."""
+"""Ripgrep baseline: rank files (or chunks) by how often they contain identifiers from the
+issue text."""
 
 from __future__ import annotations
 
@@ -6,6 +7,7 @@ import re
 import subprocess
 from pathlib import Path
 
+from code_atlas.parse.chunks import Span, chunk_file, owner
 from code_atlas.types import Hit, Level
 
 CANDIDATE_RE = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
@@ -117,3 +119,82 @@ def _count_matches(repo_dir: Path, identifier: str, include_tests: bool = False)
         path, n = line.rsplit(":", 1)  # split on the LAST ":"; a path could contain one
         counts[path.removeprefix("./")] = int(n)  # "./pkg/a.py" -> "pkg/a.py", as in gold
     return counts
+
+
+class RipgrepChunkRetriever:
+    """Chunk-level retriever: the file-level baseline's matches, credited to the chunk
+    that owns each matching line. One per snapshot; chunks a file only when it first has
+    a match, and keeps the chunks for later queries.
+
+    Score of a chunk = its matching lines summed over all identifiers (the file baseline's
+    rule, one level down). No length normalization: a long chunk has more lines that can
+    match, so module and class chunks of big files are favored.
+    """
+
+    level: Level = "chunk"
+
+    def __init__(self, repo_dir: Path) -> None:
+        self.repo_dir = repo_dir
+        # path -> (chunk id, start_line, end_line) for each chunk chunk_file emits; the span
+        # name is the chunk id, so `owner` returns ids directly.
+        self._spans: dict[str, list[Span]] = {}
+
+    def search(self, query: str, k: int) -> list[Hit]:
+        """Top k chunk ids by score; ties broken by chunk id so results are reproducible."""
+        totals: dict[str, int] = {}
+        for identifier in extract_identifiers(query):
+            for path, line_numbers in _matching_lines(self.repo_dir, identifier).items():
+                spans = self._spans_for(path)
+                for line_no in line_numbers:
+                    chunk_id = owner(line_no, spans)
+                    if chunk_id is None:  # only if rg and tree-sitter count lines differently
+                        continue
+                    totals[chunk_id] = totals.get(chunk_id, 0) + 1
+
+        top = sorted(totals.items(), key=lambda kv: (-kv[1], kv[0]))[:k]
+        return [Hit(id=chunk_id, score=float(count)) for chunk_id, count in top]
+
+    def _spans_for(self, path: str) -> list[Span]:
+        if path not in self._spans:
+            chunks = chunk_file(path, (self.repo_dir / path).read_bytes())
+            self._spans[path] = [(c.id, c.start_line, c.end_line) for c in chunks]
+        return self._spans[path]
+
+
+def _matching_lines(repo_dir: Path, identifier: str) -> dict[str, list[int]]:
+    """Run ripgrep for one identifier; return {repo-relative path: matching line numbers}.
+
+    Same search as `_count_matches` (literal whole word, .py files, no `tests` dirs), but
+    one output line per matching line: "path\\0line:text". Output is read as bytes: the
+    matched text can be invalid UTF-8, and only the path and line number are used.
+    """
+    cmd = [
+        "rg",
+        "--line-number",
+        "--no-heading",  # "path:line:text" on every line, not grouped under the path
+        "--null",  # NUL after the path, so a ":" in the path cannot confuse the split
+        "--fixed-strings",
+        "--word-regexp",
+        "--type",
+        "py",
+        "--glob",
+        "!**/tests/**",
+        "--",
+        identifier,
+        ".",
+    ]
+    result = subprocess.run(
+        cmd, cwd=repo_dir, stdin=subprocess.DEVNULL, capture_output=True, check=False
+    )
+    if result.returncode == 1:
+        return {}
+    if result.returncode != 0:
+        stderr = result.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"rg failed for {identifier!r}: {stderr}")
+
+    lines: dict[str, list[int]] = {}
+    for row in result.stdout.splitlines():
+        raw_path, rest = row.split(b"\0", 1)
+        path = raw_path.decode("utf-8").removeprefix("./")
+        lines.setdefault(path, []).append(int(rest.split(b":", 1)[0]))
+    return lines
