@@ -477,6 +477,28 @@ happened and why.
     per line, and `owner` scans every span, so a file costs lines × spans comparisons
     (here about 22.7 million). Not fixed: 4 s per snapshot is acceptable for now. A fix
     is a single pass that tracks the innermost open span (lines × nesting depth).
+- `rg-chunks` on test (final, logged below; k = 10, ripgrep 15.2.0, commit `a51c849`,
+  `results/rg-chunks_test_20261110T031500Z.json`). All 70 instances have function-level
+  gold.
+
+  | Level | n | R@1 | R@5 | R@10 | MRR@10 | Hit@1 | Hit@5 | Hit@10 |
+  |---|---|---|---|---|---|---|---|---|
+  | function | 70 | 0.071 | 0.150 | 0.214 | 0.117 | 0.071 | 0.157 | 0.229 |
+  | file (from chunk ranking) | 70 | 0.229 | 0.471 | 0.557 | 0.337 | | | |
+
+  - Function level MRR@10 per repo: django 0.151 (n = 32), scikit-learn 0.156 (n = 16),
+    sympy 0.039 (n = 22). Per category: cat 1 0.175 (n = 38), cat 2 0.049 (n = 32).
+  - Function-level MRR@10 is 0.210 on dev and 0.117 on test. The per-repo order also
+    flips (django lowest on dev at 0.079, sympy lowest on test). With 7–32 queries per
+    repo this is within what split noise can do; no per-repo claim.
+  - Cat 2 (names an identifier, no path) is far below cat 1 on test (MRR@10 0.049 vs
+    0.175); on dev the two were close (0.221 vs 0.200). Not a finding yet, only a question
+    for the Phase 2 per-category tables.
+
+### Test-split runs
+- 2026-11-10, commit `a51c849`, `rg-chunks`, `results/rg-chunks_test_20261110T031500Z.json`.
+  Why: final Phase 1 function-level baseline, run after ADR 002 Part 3 was accepted and
+  ADR 004 written, so gold and chunk ids are fixed. `rg-chunks` is frozen from here.
 
 ### Problems and dead ends
 - Function-level gold stats: first counted "gold chunks with no `-` line" (19 in 14
