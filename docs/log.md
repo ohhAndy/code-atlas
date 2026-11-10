@@ -515,3 +515,19 @@ happened and why.
   `if PY3: def compat()` / `else: def compat()`, but chunk ids (`path::QualifiedName`) must
   be unique. Keep both with a suffix, merge them, or keep the first?~~ Resolved: ordinal
   suffix (see Decisions).
+
+### End-of-phase quiz (2026-11-10)
+PLAN §8 questions plus 4 new ones (chunking complexity, gold over emitted chunks vs all
+spans, `rg-chunks` length bias, boundary-insertion bias). All answered; weak spots, to
+review before the deep-dive:
+- Bytes vs str: mixed up the form feed (`\x0c`, the bug fixed here) with a lone `\r`
+  (the logged limitation). Both are line breaks for `str.splitlines()`; only `\r` is one
+  for `bytes.splitlines()` too.
+- Faster `owner`: needed the concept given (a stack of open spans: push at
+  `start_line`, pop while the top's `end_line` is behind, owner = top; O(N + M) instead
+  of O(N × M)), then traced it correctly by hand.
+- Gold over emitted chunks: needed two prompts to reach the consequence (an id that is
+  never emitted can never be retrieved, so recall drops for reasons unrelated to
+  retrieval).
+- Boundary-insertion rule kept because changing a labeling rule after seeing the
+  instances it hurts overfits the benchmark, and it affects only 2 / 30 dev instances.

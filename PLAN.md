@@ -234,7 +234,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
   - A rule for oversized functions.
 - [x] Generate function-level gold labels (ADR 002).
 - [x] Map ripgrep hits to their enclosing chunks to get a function-level baseline.
-- [ ] Tests for:
+- [x] Tests for:
   - nested classes and nested functions
   - decorators and `async def`
   - files with syntax errors (`ERROR` nodes)
