@@ -268,7 +268,7 @@ happened and why.
 
 ## Phase 1: Parsing and Chunking
 
-**Status:** in progress (started 2026-11-08)
+**Status:** done (2026-11-10)
 
 ### Work done
 - Added `tree-sitter` 0.26.0 and `tree-sitter-python` 0.25.0. Both ship type hints; no mypy
@@ -531,3 +531,10 @@ review before the deep-dive:
   retrieval).
 - Boundary-insertion rule kept because changing a labeling rule after seeing the
   instances it hurts overfits the benchmark, and it affects only 2 / 30 dev instances.
+
+### Retro (at phase end)
+- What I'd do differently: when I got stuck on core code (`owner`, chunk text,
+  `rg-chunks`), I delegated it instead of attempting it, and the quiz showed the gaps (the
+  stack-based owner, why gold uses only emitted chunks). For Phase 2's core components
+  (tokenizer, inverted index, BM25) I write a first attempt myself, even a wrong one, and
+  ask for review rather than the solution.
