@@ -225,14 +225,14 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Integrate `tree-sitter` with the Python grammar.
-- [ ] Walk the tree and extract functions, methods, classes and decorated definitions. Build qualified names with a scope stack.
+- [x] Integrate `tree-sitter` with the Python grammar.
+- [x] Walk the tree and extract functions, methods, classes and decorated definitions. Build qualified names with a scope stack.
 - [ ] Chunking policy (ADR 004):
   - One chunk per function or method.
   - Class chunk = header, docstring and class-level attributes, without method bodies.
   - Module chunk = top-level code outside definitions.
   - A rule for oversized functions.
-- [ ] Generate function-level gold labels (ADR 002).
+- [x] Generate function-level gold labels (ADR 002).
 - [ ] Map ripgrep hits to their enclosing chunks to get a function-level baseline.
 - [ ] Tests for:
   - nested classes and nested functions

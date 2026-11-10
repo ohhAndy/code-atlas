@@ -1,6 +1,6 @@
 # ADR 002: Gold labels and corpus scope
 
-**Status:** In progress (Parts 1 and 2 accepted; Part 3, mapping lines to chunks, comes in Phase 1)
+**Status:** Parts 1 and 2 accepted; Part 3 proposed (2026-11-09)
 **Date:** 2026-11-06
 
 ## Part 1: Test files in the corpus
@@ -115,4 +115,66 @@ measurable once Phase 1 chunks exist.
 
 ## Part 3: Mapping changed lines to chunks
 
-To be written in Phase 1, once the chunker exists.
+Implemented in `code_atlas.eval.gold.function_gold`, tested in `tests/eval/test_gold.py`.
+Counts from `notebooks/gold_stats.py`.
+
+### Context
+Part 2 gives old-file line numbers per changed file. Function-level gold needs chunk ids
+that a chunk retriever can return. The chunks nest (method inside class inside module), so
+one changed line is inside several chunk line ranges, and the mapping has to pick.
+
+### Options considered
+- **A) Every chunk whose line range contains the line.** A change in `Foo.bar` also makes
+  `Foo` and the module gold.
+- **B) The innermost chunk that contains the line (its owner).**
+- **C) Like B, but for a pure insertion at a chunk boundary keep only one neighbor's
+  owner** (e.g. the enclosing class, dropping the next method).
+
+### Decision
+B. Each line has exactly one owner: the smallest chunk whose range contains it. Gold for
+an instance is the set of owners of its changed lines, over the chunks `chunk_file`
+actually emits for the file at `base_commit`. A line with no owner adds nothing.
+
+Why B over A: under A, nearly every instance would have its module chunk as gold, and a
+retriever returning the module would score a hit for any change in the file. That turns
+function-level scores back into file-level scores. B labels the unit the fix changed.
+
+Why the chunks `chunk_file` emits, not every span: the module chunk is dropped when its
+text is only whitespace. Mapping over all spans would give a blank line in such a file the
+gold id `path::<module>`, which is not in the corpus, so no retriever could ever find it
+and recall would drop for a reason unrelated to retrieval. Gold must only contain ids the
+retrievers can return.
+
+Why not C (yet): Part 2's both-neighbors rule was fixed before any chunks existed, and its
+cost was expected to be small. The counts below confirm it is small (2 / 30 dev instances),
+and C would add a rule written after looking at those 2 instances. Revisit if the test
+split, once run, shows the same pattern at a larger scale.
+
+### Evidence (dev, 30 instances)
+- Gold chunks per instance: 1 chunk in 19 instances, 2 in 9, 3 in 2 (43 gold chunks).
+- By kind: 25 methods, 12 functions, 4 module chunks, 2 classes.
+- Instances with no function-level gold: 0.
+- Changed files with tree-sitter parse errors: 0.
+- Pure-insertion runs: 25. Runs whose two neighbors have different owners (a chunk
+  boundary): 3, in 2 instances. Every other run sits inside one chunk, so its gold is right.
+- Gold chunks reached only through a boundary run: 5, in the same 2 instances. Both fixes
+  add a new method to a class:
+  - django__django-14752 adds `serialize_result`. Gold: `AutocompleteJsonView.get` (really
+    changed), plus `AutocompleteJsonView` (blank line before the insertion) and
+    `AutocompleteJsonView.get_paginator` (unchanged method after it).
+  - sympy__sympy-15308 adds `_print_Basic` and `_print_Trace` and changes nothing else.
+    Gold: `LatexPrinter`, `LatexPrinter._print_bool`, `LatexPrinter._print_Adjoint`; the
+    two methods are unchanged neighbors.
+
+### Consequences
+- **Boundary insertions mislabel a little.** In those 2 instances, unchanged neighbor
+  methods are gold. Recall@k is harder there (3 gold chunks, 1 really changed in 14752);
+  Hit@k is easier (a retriever that returns the unchanged neighbor gets a hit). The effect
+  is limited to 2 / 30 dev instances and is reported, not hidden.
+- **The class chunk as gold for "add a method" fixes is arguably right.** The class is
+  where the new method goes, and the class chunk is the only existing chunk about it.
+- **Nested functions map to their parent function** (they are not chunks, ADR 004), so gold
+  for a fix inside a nested helper is the whole parent.
+- **Gold depends on the chunker.** Any change to the chunking policy changes function-level
+  gold, and earlier function-level results are no longer comparable.
+- **Counts are dev only.** Test-split gold was not inspected.

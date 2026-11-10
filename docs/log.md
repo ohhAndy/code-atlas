@@ -294,6 +294,17 @@ happened and why.
   via `owner`) and `chunk_file` (ids `path::name`, kinds, sha256 `content_hash`, module
   chunk skipped when whitespace-only). Tests in `tests/parse/test_chunks.py`, including
   non-ASCII source and a form feed.
+- Moved `owner` from `eval/gold.py` to `parse/chunks.py`: gold now imports the chunker, and
+  the chunker importing gold back would be a circular import.
+- `function_gold(patch, repo_dir)`: owners of the changed lines, over the chunks
+  `chunk_file` emits. Tests in `tests/eval/test_gold.py`.
+- Runner scores chunk retrievers at function level too (Recall@1/5/10, MRR@10,
+  Hit@1/5/10) on instances with non-empty function gold; results JSON gains `gold_chunks`,
+  `chunk_ranking`, `function_scores` per instance, plus `function_summary` and
+  `no_function_gold`. The CLI prints both tables. File retrievers are unchanged. No chunk
+  retriever exists yet, so no function-level numbers.
+- `notebooks/gold_stats.py`: function-level gold counts on dev (see Findings).
+- ADR 002 Part 3 written (proposed).
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -368,6 +379,12 @@ happened and why.
   real repos contain mis-encoded files (sphinx fixtures, see Phase 0), and one bad byte
   should not stop a whole snapshot from being indexed. Cost: those characters are lost for
   search, with no count of how often it happens.
+- Function-level gold = the owners of the changed lines, over the chunks `chunk_file`
+  emits (not over all spans, which would make an unfindable `<module>` id gold). Boundary
+  insertions keep the Part 2 both-neighbors rule unchanged: 2 / 30 dev instances affected.
+  See [ADR 002 Part 3](decisions/002-gold-labels.md).
+- The runner computes function gold only for chunk retrievers. File retrievers never need
+  it, and computing it means parsing every changed file.
 
 ### Findings
 - Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
@@ -394,8 +411,22 @@ happened and why.
     are outside this sample.
   - 4 / 30 instances change module-level code, which the module chunk rule (ADR 004) has
     to cover.
+- Function-level gold on dev (`notebooks/gold_stats.py`, 2026-11-09):
+  - 43 gold chunks over 30 instances: 1 chunk in 19 instances, 2 in 9, 3 in 2.
+  - By kind: 25 methods, 12 functions, 4 module chunks, 2 classes.
+  - 0 instances without function-level gold; 0 changed files with parse errors.
+  - 25 pure-insertion runs; 3 sit at a chunk boundary (neighbors with different owners), in
+    2 instances (django__django-14752, sympy__sympy-15308). Both fixes add a new method.
+    They add 5 gold chunks that the fix did not change: the class (via the blank line
+    before the insertion) and the next method (via its `def` line).
+  - The Phase 0 estimate (16 / 100 instances insert a `def` / `class`) was over all 100
+    and from patch text only; on dev the chunker shows 2 / 30 with a boundary effect.
 
 ### Problems and dead ends
+- Function-level gold stats: first counted "gold chunks with no `-` line" (19 in 14
+  instances) as the boundary cost. Wrong measure: an insertion inside a function body has
+  both neighbors in that function, so the function is correct gold without any `-` line.
+  The right measure is insertions whose two neighbors have different owners (3 runs).
 - Known limitation, not fixed: a lone `\r` (old Mac line ending) counts as a line break
   for `bytes.splitlines()` but not for tree-sitter or git diffs, so N comes out too large
   for such files. Checked by hand on `b"x=1\ry=2\n"` (splitlines: 2, tree-sitter: 1 row).
