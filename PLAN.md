@@ -233,7 +233,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
   - Module chunk = top-level code outside definitions.
   - A rule for oversized functions.
 - [x] Generate function-level gold labels (ADR 002).
-- [ ] Map ripgrep hits to their enclosing chunks to get a function-level baseline.
+- [x] Map ripgrep hits to their enclosing chunks to get a function-level baseline.
 - [ ] Tests for:
   - nested classes and nested functions
   - decorators and `async def`

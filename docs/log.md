@@ -305,6 +305,9 @@ happened and why.
   retriever exists yet, so no function-level numbers.
 - `notebooks/gold_stats.py`: function-level gold counts on dev (see Findings).
 - ADR 002 Part 3 written (proposed).
+- Function-level ripgrep baseline: `RipgrepChunkRetriever`, registered as `rg-chunks`.
+  Same identifiers and rg search as `rg`; each matching line is credited to the chunk that
+  owns it. Tests in `tests/baselines/test_ripgrep.py`. Dev run (see Findings).
 
 ### Decisions
 - Nested functions are part of their parent: the walker descends into class bodies
@@ -385,6 +388,14 @@ happened and why.
   See [ADR 002 Part 3](decisions/002-gold-labels.md).
 - The runner computes function gold only for chunk retrievers. File retrievers never need
   it, and computing it means parsing every changed file.
+- `rg-chunks` is a new method, not a change to `rg`. Why: `rg` is frozen after its logged
+  test run; any change to it would need a new one. Its score rule is `rg`'s one level down:
+  matching lines summed over identifiers, per chunk, ties broken by id. No length
+  normalization, on purpose: it is a baseline, and BM25 adds normalization in Phase 2.
+- `rg-chunks` reads rg's per-line output (`--line-number --null`) as bytes and decodes
+  only the path. Why: the matched text can be invalid UTF-8, and only the path and line
+  number are used. The span name passed to `owner` is the chunk id from `chunk_file`, so
+  the id format is defined in one place.
 
 ### Findings
 - Tree-sitter facts the walker depends on (checked on 0.26 with the Python grammar):
@@ -421,6 +432,23 @@ happened and why.
     before the insertion) and the next method (via its `def` line).
   - The Phase 0 estimate (16 / 100 instances insert a `def` / `class`) was over all 100
     and from patch text only; on dev the chunker shows 2 / 30 with a boundary effect.
+- `rg-chunks` on dev (k = 10, ripgrep 15.2.0, commit `a843cb0`,
+  `results/rg-chunks_dev_20261110T030345Z.json`):
+
+  | Level | n | R@1 | R@5 | R@10 | MRR@10 | Hit@1 | Hit@5 | Hit@10 |
+  |---|---|---|---|---|---|---|---|---|
+  | function | 30 | 0.111 | 0.194 | 0.228 | 0.210 | 0.167 | 0.267 | 0.300 |
+  | file (from chunk ranking) | 30 | 0.200 | 0.400 | 0.500 | 0.297 | | | |
+  | file, `rg` for comparison | 30 | 0.333 | 0.567 | 0.600 | 0.419 | | | |
+
+  - Function level, per repo MRR@10: django 0.079 (n = 14), scikit-learn 0.457 (n = 7),
+    sympy 0.222 (n = 9). Per category: cat 1 0.200 (n = 16), cat 2 0.221 (n = 14).
+  - File level is lower than `rg` (MRR@10 0.297 vs 0.419). Measured: the top 10 chunks
+    cover 7.2 distinct files on average, against 10 files for `rg`, so fewer files get a
+    chance. Hypothesis, untested: ranking a file by its best chunk instead of by the sum
+    over the whole file also loses signal spread over many chunks.
+  - Module chunks are not dominating: 3 / 29 top-1 chunks are `<module>`, 30 / 268
+    top-10 slots (1 instance returned nothing).
 
 ### Problems and dead ends
 - Function-level gold stats: first counted "gold chunks with no `-` line" (19 in 14
