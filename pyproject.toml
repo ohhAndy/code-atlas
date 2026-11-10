@@ -42,7 +42,7 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["src", "tests"]
+files = ["src", "tests", "benchmarks"]
 
 [[tool.mypy.overrides]]
 # Third-party packages without type hints.
