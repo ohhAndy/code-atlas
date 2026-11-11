@@ -58,6 +58,28 @@ def evaluate(method: str, split: str, final: bool) -> None:
         print("TEST RUN: record it in the project log (date, commit, method, why).")
 
 
+def sweep_bm25() -> None:
+    """Grid-search BM25's k1 and b on dev; write a results JSON and print the grid."""
+    from code_atlas.eval import categories, sweep
+
+    splits = read_split()
+    wanted = [inst for inst in load_instances() if splits.get(inst.instance_id) == "dev"]
+    results = sweep.sweep(
+        wanted,
+        lambda inst: snapshot(inst.repo, inst.base_commit),
+        {iid: label["category"] for iid, label in categories.load_labels().items()},
+    )
+    per_setting, chosen = sweep.summarize_sweep(results)
+    path = sweep.write_sweep("dev", results, per_setting, chosen)
+    print(f"\nFunction-level {sweep.METRIC} on dev")
+    print(sweep.format_grid(per_setting))
+    print(
+        f"\nChosen: k1={chosen[0]}, b={chosen[1]}  (defaults {sweep.DEFAULTS}, margin "
+        f"{sweep.MARGIN})"
+    )
+    print(f"Wrote {path}")
+
+
 def label(split: str) -> None:
     """Hand-label query categories for every instance in `split` (resumable)."""
     from code_atlas.eval import categories
@@ -89,6 +111,8 @@ def main() -> None:
     e.add_argument("--split", choices=["dev", "test"], default="dev")
     e.add_argument("--final", action="store_true", help="required to run the test split")
 
+    commands.add_parser("sweep-bm25", help="grid-search BM25 k1 and b on the dev split")
+
     lab = commands.add_parser("label", help="hand-label query categories")
     lab.add_argument("--split", choices=["dev", "test", "all"], default="all")
 
@@ -97,5 +121,7 @@ def main() -> None:
         prepare(args.split)
     elif args.command == "eval":
         evaluate(args.method, args.split, args.final)
+    elif args.command == "sweep-bm25":
+        sweep_bm25()
     elif args.command == "label":
         label(args.split)

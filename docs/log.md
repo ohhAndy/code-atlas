@@ -609,6 +609,8 @@ review before the deep-dive:
     MRR@10 (about one query's rank change on 30 queries), keep the defaults. Why: a smaller
     gain cannot be told apart from noise.
   - The grid and the metric are not changed after seeing results.
+  - Tie for best: the first setting in grid order (k1, then b). Added with the sweep code,
+    before the sweep ran; only matters if the tied settings beat the defaults by >= 0.02.
 - A token repeated in the query counts once. Why: long issues and tracebacks repeat
   module and function names; counting each repeat would let one repeated name outweigh
   the rest of the query. Cost: words the reporter repeats for emphasis get no extra weight.
