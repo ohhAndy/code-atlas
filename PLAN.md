@@ -3,7 +3,7 @@
 > A Python code retrieval engine, evaluated on real bug reports.
 > **Stack:** Python 3.12+, Tree-sitter, NumPy, pytest, ruff, mypy
 > **Collaboration rules:** see [AGENTS.md](AGENTS.md)
-> **Last updated:** 2026-11-08
+> **Last updated:** 2026-11-11
 
 ---
 
@@ -255,14 +255,14 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Tokenizer (ADR 005):
+- [x] Tokenizer (ADR 005):
   - Split on non-alphanumerics, `camelCase` and `snake_case`.
   - Lowercase.
   - Keep the full identifier alongside its parts.
   - Decide whether to drop stopwords.
   - Apply the same tokenizer to queries.
-- [ ] Inverted index: token to postings (chunk id, term frequency), plus document lengths and average length.
-- [ ] BM25, with unit tests against hand-computed scores.
+- [x] Inverted index: token to postings (chunk id, term frequency), plus document lengths and average length.
+- [x] BM25, with unit tests against hand-computed scores.
 - [ ] Cache built indexes on disk per (repo, commit).
 - [ ] Tune `k1` and `b` on dev.
 - [ ] Measure:

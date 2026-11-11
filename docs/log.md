@@ -538,3 +538,84 @@ review before the deep-dive:
   stack-based owner, why gold uses only emitted chunks). For Phase 2's core components
   (tokenizer, inverted index, BM25) I write a first attempt myself, even a wrong one, and
   ask for review rather than the solution.
+
+## Phase 2: Lexical Search
+
+**Status:** in progress
+
+### Work done
+- Plan for the phase, one session each: tokenizer, inverted index, BM25 + retriever, disk
+  cache, tune `k1` / `b` on dev, latency and memory benchmark, failure analysis of 10 dev
+  misses, test run and quiz.
+- `code_atlas.lexical.tokenizer.tokenize`, 13 tests in `tests/lexical/test_tokenizer.py`
+  (snake / camel case, acronyms, digits, dotted names, dunders, non-ASCII, duplicates).
+- ADR 005 (tokenizer) written and accepted.
+- `code_atlas.lexical.index`: `InvertedIndex` (postings, doc lengths, average length) and
+  `build_index(chunk id -> tokens)`, one pass with a `Counter` per chunk. Tests on a
+  three-chunk hand-computed corpus and the empty corpus in `tests/lexical/test_index.py`.
+- `code_atlas.lexical.bm25`: `idf(df, num_docs)` and
+  `bm25_scores(index, query_tokens, k1, b) -> chunk id -> score`, term-at-a-time over the
+  query tokens' postings. 9 tests with hand-computed values in `tests/lexical/test_bm25.py`
+  (including b = 0, k1 = 0 and a repeated query token).
+
+### Decisions
+- Tokens: split on non-alphanumerics, `snake_case` and `camelCase`; lowercase; emit the
+  whole identifier and its parts (`get_or_create` -> `get_or_create, get, or, create`).
+  Why: issue text names identifiers both exactly and in prose. Cost: identifier-heavy
+  chunks get longer and are penalized by length normalization. See
+  [ADR 005](decisions/005-tokenizer.md).
+- No stopword list. Why: IDF already weights a term found in most chunks close to 0, and
+  words like `or`, `is`, `not` are also Python keywords and identifier parts.
+- `tokenize` returns a list with duplicates. Why: BM25 needs term frequency.
+- Acronyms stay one part (`parseHTTPResponse` -> `parse, http, response`); dots separate
+  words with no dotted token; digits stay attached (`utf8`, `base64`); leading / trailing
+  underscores stripped (`__init__` -> `init`); word characters are Unicode-aware. Reasons
+  in ADR 005.
+- `build_index` takes chunk id -> tokens, not chunks. Why: what text gets indexed (chunk
+  text alone, or with path and qualified name) is then decided by the retriever, and the
+  index stays a pure data structure that tests can feed hand-made tokens.
+- Postings keyed by chunk id strings, as the Phase 2 task in PLAN §6 states. Integer doc ids would save
+  memory; not done until the benchmark shows memory is a problem.
+- Empty corpus: `avg_doc_length` is 0.0, not an error. Why: an empty corpus is a valid
+  input, not a caller bug, and with no postings BM25 never divides by it.
+- `build_index` returns `postings` as a plain `dict`, converted from the `defaultdict` used
+  while building. Why: looking up an unknown query token in a `defaultdict` inserts an
+  empty list, so every query would silently grow the index's vocabulary.
+- Chunks with zero tokens are kept in `doc_lengths` (they count toward N and the average)
+  with no special case. Why: they do not occur in practice (see Findings).
+- IDF is `ln(1 + (N - df + 0.5) / (df + 0.5))` (Lucene's form), not the classic
+  `ln((N - df + 0.5) / (df + 0.5))`. Why: the classic form goes negative for a token in
+  more than half the chunks, so matching a common word would lower a chunk's score.
+- Defaults `k1 = 1.2`, `b = 0.75` until tuned on dev.
+- A token repeated in the query counts once. Why: long issues and tracebacks repeat
+  module and function names; counting each repeat would let one repeated name outweigh
+  the rest of the query. Cost: words the reporter repeats for emphasis get no extra weight.
+- Distinct query tokens are visited in first-seen order (`dict.fromkeys`), not as a `set`.
+  Why: string hashing is randomized per process and float addition is not associative,
+  so set order could change scores in the last bit and flip near-ties between runs.
+- No guards for `idf <= 0` or `avg_doc_length == 0` in scoring: a token with postings has
+  1 <= df <= N, so idf > 0, and a chunk in a posting list has at least one token, so the
+  average is > 0.
+
+### Findings
+- Chunks whose text tokenizes to nothing: 0 of 43,920 (one snapshot per repo: django
+  10,500, scikit-learn 4,717, sympy 28,703 chunks). Every function and class chunk has at
+  least its keyword and name, and whitespace-only module chunks are already dropped.
+
+### Test-split runs
+-
+
+### Problems and dead ends
+- First tokenizer used `[A-Za-z0-9_]+` for words: `naïve_parse` gave `na, ve_parse`, a
+  fragment from the middle of a word. Root cause: an ASCII-only character class assumes
+  ASCII text. Fix: `\w+`, which is Unicode-aware on `str` patterns.
+- Second attempt also widened the camelCase regex to Unicode ranges. `À-ɏ`
+  includes lowercase letters (`ï`), so `naïve` split into `na, ïve`; the rewrite also
+  dropped the acronym and digit rules (`parseHTTPResponse` -> `httpresponse`). Existing
+  tests did not catch it. Reverted to the ASCII camelCase regex and added tests for
+  acronyms, digits and non-ASCII.
+
+### Open questions
+- Does a chunk's indexed text include `path` and `qualified_name`, or only `chunk.text`?
+  Decide with the inverted index.
+- Tuning metric and `k1` / `b` grid: fix both before the first BM25 dev run.
