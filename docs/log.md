@@ -561,6 +561,11 @@ review before the deep-dive:
   the index in the constructor), registered as `bm25`. `document_tokens(chunk)` and
   `search` not written yet; 6 tests on a fake three-file repo in
   `tests/lexical/test_retriever.py`.
+- `BM25Retriever` written (`document_tokens`, `search`); first dev run with the defaults
+  (see Findings).
+- `codeatlas sweep-bm25` (`code_atlas.eval.sweep`): dev-only grid search over `k1` / `b`,
+  one index build per snapshot, all 20 settings scored against it. Selection rule in
+  `choose_setting`, tested in `tests/eval/test_sweep.py`. Run on dev (see Findings).
 
 ### Decisions
 - Tokens: split on non-alphanumerics, `snake_case` and `camelCase`; lowercase; emit the
@@ -611,6 +616,8 @@ review before the deep-dive:
   - The grid and the metric are not changed after seeing results.
   - Tie for best: the first setting in grid order (k1, then b). Added with the sweep code,
     before the sweep ran; only matters if the tied settings beat the defaults by >= 0.02.
+- `k1 = 1.2`, `b = 0.75` kept after the sweep. Why: the best setting (k1 2.0, b 0.5,
+  0.293) beat the defaults (0.290) by 0.003, under the 0.02 margin.
 - A token repeated in the query counts once. Why: long issues and tracebacks repeat
   module and function names; counting each repeat would let one repeated name outweigh
   the rest of the query. Cost: words the reporter repeats for emphasis get no extra weight.
@@ -625,6 +632,46 @@ review before the deep-dive:
 - Chunks whose text tokenizes to nothing: 0 of 43,920 (one snapshot per repo: django
   10,500, scikit-learn 4,717, sympy 28,703 chunks). Every function and class chunk has at
   least its keyword and name, and whitespace-only module chunks are already dropped.
+- `bm25` on dev, defaults k1 1.2, b 0.75 (k = 10, commit `e226096`,
+  `results/bm25_dev_20261111T225354Z.json`), next to the Phase 1 dev baselines:
+
+  | Level | Method | n | R@1 | R@5 | R@10 | MRR@10 | Hit@1 | Hit@5 | Hit@10 |
+  |---|---|---|---|---|---|---|---|---|---|
+  | function | `bm25` | 30 | 0.161 | 0.361 | 0.461 | 0.290 | 0.200 | 0.433 | 0.567 |
+  | function | `rg-chunks` | 30 | 0.111 | 0.194 | 0.228 | 0.210 | 0.167 | 0.267 | 0.300 |
+  | file (from chunks) | `bm25` | 30 | 0.533 | 0.667 | 0.800 | 0.604 | | | |
+  | file | `rg` | 30 | 0.333 | 0.567 | 0.600 | 0.419 | | | |
+
+  - Function-level MRR@10 per category: cat 1 0.231 (n = 16), cat 2 0.357 (n = 14);
+    `rg-chunks` was 0.200 / 0.221. Per repo: django 0.233 (n = 14), scikit-learn 0.402
+    (n = 7), sympy 0.290 (n = 9).
+  - Cat 1 (traceback or path) is below cat 2 even though paths are indexed. Hypothesis,
+    untested: a traceback adds many tokens (frames, paths into library code, line numbers)
+    that match many chunks and dilute the few that point at the fix. The failure analysis
+    should check this.
+  - Part of the gain over `rg-chunks` comes from indexing path and qualified name, which
+    `rg-chunks` never searched; the chunk-text-only ablation would measure how much.
+  - Index build (chunk + tokenize + index) per snapshot: median 1.2 s, max 4.8 s, from
+    `build_seconds` in the results file. Not a benchmark (cold / warm cache not
+    controlled); the latency table comes later.
+- `k1` / `b` sweep on dev (commit `5ec9d14`, `results/bm25-sweep_dev_20261111T225622Z.json`),
+  function-level MRR@10:
+
+  | k1 \ b | 0.25 | 0.5 | 0.75 | 1.0 |
+  |---|---|---|---|---|
+  | 0.6 | 0.197 | 0.250 | 0.275 | 0.267 |
+  | 0.9 | 0.186 | 0.272 | 0.270 | 0.273 |
+  | 1.2 | 0.198 | 0.279 | **0.290** | 0.273 |
+  | 1.5 | 0.211 | 0.283 | 0.280 | 0.287 |
+  | 2.0 | 0.236 | 0.293 | 0.292 | 0.255 |
+
+  - The defaults score 0.290 in the sweep, the same as the standalone dev run, so the
+    sweep's scoring path matches `codeatlas eval`.
+  - `b = 0.25` is the worst column for every `k1` (0.186–0.236); for `b` >= 0.5 every
+    setting is within 0.250–0.293, a spread of about two to four query rank changes on 30
+    queries. Measured: weak length normalization hurts here. Hypothesis: without it, long
+    chunks (big module and class chunks) match more query tokens and crowd the top 10.
+  - No setting clears the 0.02 margin, so the defaults stay (see Decisions).
 
 ### Test-split runs
 -
