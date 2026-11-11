@@ -31,6 +31,7 @@ from code_atlas.eval.metrics import (
     recall_at_k,
     reciprocal_rank_at_k,
 )
+from code_atlas.lexical.retriever import BM25Retriever
 from code_atlas.types import Hit, Level, Retriever
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -49,6 +50,8 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg-chunks": RipgrepChunkRetriever,
     # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
     "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
+    # BM25 over chunks, default k1 and b.
+    "bm25": BM25Retriever,
 }
 
 

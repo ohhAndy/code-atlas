@@ -557,6 +557,10 @@ review before the deep-dive:
   `bm25_scores(index, query_tokens, k1, b) -> chunk id -> score`, term-at-a-time over the
   query tokens' postings. 9 tests with hand-computed values in `tests/lexical/test_bm25.py`
   (including b = 0, k1 = 0 and a repeated query token).
+- Stub `code_atlas.lexical.retriever.BM25Retriever` (chunks every corpus file and builds
+  the index in the constructor), registered as `bm25`. `document_tokens(chunk)` and
+  `search` not written yet; 6 tests on a fake three-file repo in
+  `tests/lexical/test_retriever.py`.
 
 ### Decisions
 - Tokens: split on non-alphanumerics, `snake_case` and `camelCase`; lowercase; emit the
@@ -587,6 +591,24 @@ review before the deep-dive:
   `ln((N - df + 0.5) / (df + 0.5))`. Why: the classic form goes negative for a token in
   more than half the chunks, so matching a common word would lower a chunk's score.
 - Defaults `k1 = 1.2`, `b = 0.75` until tuned on dev.
+- Indexed text per chunk = path + qualified name + chunk text. Why: issues paste
+  tracebacks with real paths, and a method body rarely names its class, so only the
+  qualified name links `QuerySet.get_or_create` to its chunk. Not leakage: the path comes
+  from the corpus, not from gold. Cost: cat 1 is inflated by path matches (claims about
+  BM25 rest on the per-category tables), and BM25 sees text `rg-chunks` did not, so a gain
+  over the baseline is part ranking, part extra text. A dev-only ablation with chunk text
+  alone measures that part. Small noise: the duplicate-name suffix adds a digit token
+  (`C.name#2` -> `2`), and `<module>` adds `module`.
+- Tuning protocol for `k1` / `b`, fixed on 2026-11-11 before any BM25 run:
+  - Dev split only. The test split is run once, at the end of the phase, with the chosen
+    values.
+  - Metric: function-level MRR@10. Why: function level is what the project ranks, and
+    MRR rewards putting the right chunk first; Recall@10 is too coarse on 30 queries.
+  - Grid: `k1` in {0.6, 0.9, 1.2, 1.5, 2.0} x `b` in {0.25, 0.5, 0.75, 1.0}, 20 settings.
+  - Rule: take the best setting; if it beats the defaults (1.2, 0.75) by less than 0.02
+    MRR@10 (about one query's rank change on 30 queries), keep the defaults. Why: a smaller
+    gain cannot be told apart from noise.
+  - The grid and the metric are not changed after seeing results.
 - A token repeated in the query counts once. Why: long issues and tracebacks repeat
   module and function names; counting each repeat would let one repeated name outweigh
   the rest of the query. Cost: words the reporter repeats for emphasis get no extra weight.
@@ -616,6 +638,4 @@ review before the deep-dive:
   acronyms, digits and non-ASCII.
 
 ### Open questions
-- Does a chunk's indexed text include `path` and `qualified_name`, or only `chunk.text`?
-  Decide with the inverted index.
-- Tuning metric and `k1` / `b` grid: fix both before the first BM25 dev run.
+-
