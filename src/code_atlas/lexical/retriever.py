@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from code_atlas.lexical.bm25 import bm25_scores
+from code_atlas.lexical.cache import load_or_build
 from code_atlas.lexical.index import InvertedIndex, build_index
 from code_atlas.lexical.tokenizer import tokenize
 from code_atlas.parse.chunks import Chunk, chunk_file
@@ -12,26 +13,54 @@ from code_atlas.parse.files import iter_corpus_files
 from code_atlas.types import Hit, Level
 
 
-def document_tokens(chunk: Chunk) -> list[str]:
-    """The tokens indexed for one chunk."""
+def document_tokens(chunk: Chunk, with_path_and_name: bool = True) -> list[str]:
+    """The tokens indexed for one chunk: its path, qualified name and text, or the text
+    alone when `with_path_and_name` is False."""
+    if not with_path_and_name:
+        return tokenize(chunk.text)
     full_text = f"{chunk.path} {chunk.qualified_name}\n{chunk.text}"
     return tokenize(full_text)
 
 
+def build_snapshot_index(repo_dir: Path, with_path_and_name: bool = True) -> InvertedIndex:
+    """Chunk every corpus file under `repo_dir` and index the chunks' tokens."""
+    docs: dict[str, list[str]] = {}
+    for path, source in iter_corpus_files(repo_dir):
+        for chunk in chunk_file(path, source):
+            docs[chunk.id] = document_tokens(chunk, with_path_and_name)
+    return build_index(docs)
+
+
 class BM25Retriever:
-    """Chunk-level retriever. The constructor chunks every corpus file of the snapshot and
-    builds the inverted index once; `search` only scores against it."""
+    """Chunk-level retriever. The constructor builds the snapshot's inverted index once (or
+    loads it from `cache_dir`, if given); `search` only scores against it.
+
+    `with_path_and_name=False` indexes chunk text alone. It exists only to measure how much
+    indexing paths and qualified names changes the scores.
+    """
 
     level: Level = "chunk"
 
-    def __init__(self, repo_dir: Path, k1: float = 1.2, b: float = 0.75) -> None:
+    def __init__(
+        self,
+        repo_dir: Path,
+        k1: float = 1.2,
+        b: float = 0.75,
+        *,
+        with_path_and_name: bool = True,
+        cache_dir: Path | None = None,
+    ) -> None:
         self.k1 = k1
         self.b = b
-        docs: dict[str, list[str]] = {}
-        for path, source in iter_corpus_files(repo_dir):
-            for chunk in chunk_file(path, source):
-                docs[chunk.id] = document_tokens(chunk)
-        self.index: InvertedIndex = build_index(docs)
+
+        def build() -> InvertedIndex:
+            return build_snapshot_index(repo_dir, with_path_and_name)
+
+        if cache_dir is None:
+            self.index = build()
+        else:
+            variant = "path-name-text" if with_path_and_name else "text"
+            self.index = load_or_build(repo_dir, variant, build, cache_dir)
 
     def search(self, query: str, k: int) -> list[Hit]:
         """Top k chunk ids by BM25 score, best first; ties broken by chunk id so results

@@ -27,8 +27,8 @@ def evaluate(method: str, split: str, final: bool) -> None:
     """Run `method` on `split`, write a results JSON, and print the summary table."""
     from code_atlas.eval import categories, runner
 
-    if method == "rg-with-tests" and split == "test":
-        raise SystemExit("rg-with-tests measures the test-file exclusion on dev only.")
+    if method in runner.DEV_ONLY and split == "test":
+        raise SystemExit(f"{method} measures one design choice on dev only.")
     if split == "test" and not final:
         raise SystemExit(
             "The test split is for logged final runs only. Tune on dev; pass --final to run test."

@@ -31,6 +31,7 @@ from code_atlas.eval.metrics import (
     recall_at_k,
     reciprocal_rank_at_k,
 )
+from code_atlas.lexical.cache import INDEX_CACHE_DIR
 from code_atlas.lexical.retriever import BM25Retriever
 from code_atlas.types import Hit, Level, Retriever
 
@@ -50,9 +51,15 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg-chunks": RipgrepChunkRetriever,
     # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
     "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
-    # BM25 over chunks, default k1 and b.
-    "bm25": BM25Retriever,
+    # BM25 over chunks (path + qualified name + text), k1 1.2, b 0.75; indexes cached on disk.
+    "bm25": lambda repo_dir: BM25Retriever(repo_dir, cache_dir=INDEX_CACHE_DIR),
+    # Dev-only measurement of indexing path and qualified name; never a method to compare.
+    "bm25-text-only": lambda repo_dir: BM25Retriever(
+        repo_dir, with_path_and_name=False, cache_dir=INDEX_CACHE_DIR
+    ),
 }
+# Methods that exist only to measure one choice on dev; the CLI refuses them on test.
+DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only"})
 
 
 @dataclass(frozen=True)

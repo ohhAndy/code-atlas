@@ -26,6 +26,7 @@ from code_atlas.eval.runner import (
     git_state,
     summarize,
 )
+from code_atlas.lexical.cache import INDEX_CACHE_DIR
 from code_atlas.lexical.retriever import BM25Retriever
 
 K1_GRID = (0.6, 0.9, 1.2, 1.5, 2.0)
@@ -60,7 +61,7 @@ def sweep(
         if not gold:
             continue
         repo_dir = repo_dir_for(inst)
-        retriever = BM25Retriever(repo_dir)
+        retriever = BM25Retriever(repo_dir, cache_dir=INDEX_CACHE_DIR)
         gold_chunks = function_gold(inst.patch, repo_dir)
         for k1, b in settings:
             # Same index, new scoring parameters.

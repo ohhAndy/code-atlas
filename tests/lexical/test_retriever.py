@@ -50,3 +50,10 @@ def test_scores_are_descending(retriever: BM25Retriever) -> None:
 
 def test_no_matching_token_returns_nothing(retriever: BM25Retriever) -> None:
     assert retriever.search("zzz qqq", k=10) == []
+
+
+def test_path_is_searchable_only_when_indexed(tmp_path: Path) -> None:
+    (tmp_path / "widgets.py").write_text("def f():\n    return 1\n")
+    assert [h.id for h in BM25Retriever(tmp_path).search("widgets", k=10)] == ["widgets.py::f"]
+    text_only = BM25Retriever(tmp_path, with_path_and_name=False)
+    assert text_only.search("widgets", k=10) == []
