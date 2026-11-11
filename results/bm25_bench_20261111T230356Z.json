@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "benchmark": "bm25_bench",
+    "instance": "sympy__sympy-22840",
+    "base_commit": "d822fcba181155b85ff2b29fe525adbafb22b448",
+    "runs": 5,
+    "warmup_runs": 1,
+    "reps_per_query": 5,
+    "k": 10,
+    "k1": 1.2,
+    "b": 0.75,
+    "cache": "warm (OS page cache; indexes loaded before queries are timed)",
+    "created_at": "2026-11-11T23:03:56+00:00",
+    "codeatlas": {
+      "commit": "9a26500df8b1b43d7947f24dfdf8909dfb533c97",
+      "dirty": false
+    },
+    "python": "3.12.15",
+    "tree_sitter": "0.26.0",
+    "tree_sitter_python": "0.25.0",
+    "hardware": {
+      "machine": "arm64",
+      "system": "macOS-26.6.2-arm64-arm-64bit",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": "25769803776"
+    }
+  },
+  "summary": {
+    "index": {
+      "chunks": 31502,
+      "vocabulary": 76414,
+      "postings_entries": 1244960,
+      "total_tokens": 3467720,
+      "avg_doc_length": 110.07936004063234,
+      "pickle_bytes": 14210428,
+      "in_memory_pickle_bytes": 14210428
+    },
+    "build_seconds": {
+      "median": 4.7520552079658955,
+      "min": 4.7185942500364035,
+      "max": 4.774518374935724
+    },
+    "build_peak_rss_mib": 433.46875,
+    "build_rss_after_imports_mib": 127.046875,
+    "load_seconds": {
+      "median": 0.09272437507752329,
+      "min": 0.09186375001445413,
+      "max": 0.09321362501941621
+    },
+    "load_peak_rss_mib": 244.9375,
+    "query_own_snapshot": {
+      "n": 30,
+      "p50_ms": 11.885166983120143,
+      "p95_ms": 27.75179105810821,
+      "max_ms": 50.95904192421585
+    },
+    "query_largest_index": {
+      "n": 30,
+      "p50_ms": 27.506791055202484,
+      "p95_ms": 51.506875082850456,
+      "max_ms": 58.73620801139623
+    }
+  },
+  "builds": [
+    {
+      "seconds": 4.7185942500364035,
+      "rss_after_imports_bytes": 133267456,
+      "peak_rss_bytes": 454656000
+    },
+    {
+      "seconds": 4.7737891669385135,
+      "rss_after_imports_bytes": 133218304,
+      "peak_rss_bytes": 454524928
+    },
+    {
+      "seconds": 4.774518374935724,
+      "rss_after_imports_bytes": 133283840,
+      "peak_rss_bytes": 455213056
+    },
+    {
+      "seconds": 4.742171625024639,
+      "rss_after_imports_bytes": 133169152,
+      "peak_rss_bytes": 454361088
+    },
+    {
+      "seconds": 4.7520552079658955,
+      "rss_after_imports_bytes": 133218304,
+      "peak_rss_bytes": 454443008
+    }
+  ],
+  "loads": [
+    {
+      "seconds": 0.09186375001445413,
+      "rss_after_imports_bytes": 133218304,
+      "peak_rss_bytes": 256819200
+    },
+    {
+      "seconds": 0.09320474998094141,
+      "rss_after_imports_bytes": 133234688,
+      "peak_rss_bytes": 256868352
+    },
+    {
+      "seconds": 0.09194725006818771,
+      "rss_after_imports_bytes": 133185536,
+      "peak_rss_bytes": 256835584
+    },
+    {
+      "seconds": 0.09321362501941621,
+      "rss_after_imports_bytes": 133152768,
+      "peak_rss_bytes": 257294336
+    },
+    {
+      "seconds": 0.09272437507752329,
+      "rss_after_imports_bytes": 133185536,
+      "peak_rss_bytes": 256835584
+    }
+  ],
+  "query_ms": {
+    "own_snapshot": {
+      "django__django-11583": 17.0334589201957,
+      "django__django-11797": 7.294750073924661,
+      "django__django-12284": 8.226834004744887,
+      "django__django-12308": 8.925999980419874,
+      "django__django-12747": 9.043833008036017,
+      "django__django-13321": 18.284459016285837,
+      "django__django-13964": 11.178666027262807,
+      "django__django-14667": 8.33087507635355,
+      "django__django-14752": 17.72470900323242,
+      "django__django-15388": 11.885166983120143,
+      "django__django-15695": 12.733791954815388,
+      "django__django-15738": 13.353624963201582,
+      "django__django-16820": 4.677999997511506,
+      "django__django-16873": 15.730834100395441,
+      "scikit-learn__scikit-learn-10508": 8.090457995422184,
+      "scikit-learn__scikit-learn-11040": 6.041750079020858,
+      "scikit-learn__scikit-learn-13497": 4.633834003470838,
+      "scikit-learn__scikit-learn-14087": 9.819375001825392,
+      "scikit-learn__scikit-learn-14092": 13.604541891254485,
+      "scikit-learn__scikit-learn-15512": 11.27875002566725,
+      "scikit-learn__scikit-learn-25747": 17.81908399425447,
+      "sympy__sympy-12454": 21.07129106298089,
+      "sympy__sympy-13043": 12.507042032666504,
+      "sympy__sympy-14024": 10.68616600241512,
+      "sympy__sympy-15308": 15.887333080172539,
+      "sympy__sympy-17630": 42.25858289282769,
+      "sympy__sympy-18189": 10.601374902762473,
+      "sympy__sympy-18199": 23.18024996202439,
+      "sympy__sympy-19007": 27.75179105810821,
+      "sympy__sympy-22840": 50.95904192421585
+    },
+    "largest_index": {
+      "django__django-11583": 45.1106249820441,
+      "django__django-11797": 18.572791013866663,
+      "django__django-12284": 24.352374952286482,
+      "django__django-12308": 17.86479097791016,
+      "django__django-12747": 27.506791055202484,
+      "django__django-13321": 40.61141598504037,
+      "django__django-13964": 27.122833067551255,
+      "django__django-14667": 19.543541013263166,
+      "django__django-14752": 42.21862507984042,
+      "django__django-15388": 29.960750020109117,
+      "django__django-15695": 25.729625020176172,
+      "django__django-15738": 32.86400006618351,
+      "django__django-16820": 16.80645893793553,
+      "django__django-16873": 43.208583956584334,
+      "scikit-learn__scikit-learn-10508": 38.739874958992004,
+      "scikit-learn__scikit-learn-11040": 23.11541698873043,
+      "scikit-learn__scikit-learn-13497": 15.316749922931194,
+      "scikit-learn__scikit-learn-14087": 39.15575006976724,
+      "scikit-learn__scikit-learn-14092": 51.506875082850456,
+      "scikit-learn__scikit-learn-15512": 40.50945909693837,
+      "scikit-learn__scikit-learn-25747": 58.73620801139623,
+      "sympy__sympy-12454": 42.55195800215006,
+      "sympy__sympy-13043": 21.263582981191576,
+      "sympy__sympy-14024": 23.079250007867813,
+      "sympy__sympy-15308": 25.36554099060595,
+      "sympy__sympy-17630": 48.46129100769758,
+      "sympy__sympy-18189": 11.919041047804058,
+      "sympy__sympy-18199": 26.030124980024993,
+      "sympy__sympy-19007": 30.503832967951894,
+      "sympy__sympy-22840": 51.53162498027086
+    }
+  }
+}
