@@ -566,6 +566,14 @@ review before the deep-dive:
 - `codeatlas sweep-bm25` (`code_atlas.eval.sweep`): dev-only grid search over `k1` / `b`,
   one index build per snapshot, all 20 settings scored against it. Selection rule in
   `choose_setting`, tested in `tests/eval/test_sweep.py`. Run on dev (see Findings).
+- On-disk index cache, `code_atlas.lexical.cache` (tests in `tests/lexical/test_cache.py`).
+  `bm25`, `bm25-text-only` and the sweep use it.
+- `bm25-text-only`: dev-only ablation that indexes chunk text without path and qualified
+  name. The CLI refuses dev-only methods (`DEV_ONLY` in the runner) on test.
+- `benchmarks/bm25_bench.py`: build, cache load and query latency (see Findings).
+- `notebooks/bm25_misses.py` writes `notebooks/bm25_misses_dev.md`: every dev miss
+  (function-level Hit@10 = 0) with issue text, gold patch, gold chunk ranks in the top
+  1000, and per-token BM25 contributions for the gold and the top 3 chunks.
 
 ### Decisions
 - Tokens: split on non-alphanumerics, `snake_case` and `camelCase`; lowercase; emit the
@@ -618,6 +626,21 @@ review before the deep-dive:
     before the sweep ran; only matters if the tied settings beat the defaults by >= 0.02.
 - `k1 = 1.2`, `b = 0.75` kept after the sweep. Why: the best setting (k1 2.0, b 0.5,
   0.293) beat the defaults (0.290) by 0.003, under the 0.02 margin.
+- Index cache key = snapshot commit + variant (`path-name-text` or `text`) + a fingerprint
+  (sha256 of the tokenizer, index, retriever and chunker source files and the tree-sitter
+  versions). Why: a stale index after a tokenizer edit would silently change results;
+  hashing the code makes invalidation automatic instead of relying on memory. Cost: any
+  edit to those files, even a comment, rebuilds every index (about 1 minute for dev).
+- Only a directory that is the top of a git checkout is cached. Why: its commit is a
+  stable identity for the corpus; a plain directory has none. Checking the top level
+  matters: `git rev-parse HEAD` inside a subdirectory of another repo would return that
+  repo's commit.
+- Cache files are pickles, written to a temp file and renamed. Why: pickle loads the
+  `InvertedIndex` directly and is fast; it can run code on load, which is acceptable only
+  for a cache this program writes and reads locally. The rename means a crash mid-write
+  never leaves a truncated file under the real name.
+- `build_seconds` in results files now measures a cache load when the index is cached.
+  Build cost is measured by the benchmark, not by eval runs.
 - A token repeated in the query counts once. Why: long issues and tracebacks repeat
   module and function names; counting each repeat would let one repeated name outweigh
   the rest of the query. Cost: words the reporter repeats for emphasis get no extra weight.
@@ -672,6 +695,56 @@ review before the deep-dive:
     queries. Measured: weak length normalization hurts here. Hypothesis: without it, long
     chunks (big module and class chunks) match more query tokens and crowd the top 10.
   - No setting clears the 0.02 margin, so the defaults stay (see Decisions).
+- Cache check: `bm25` on dev with an empty cache, then again reading every index from it
+  (commit `cf95774`, `results/bm25_dev_20261111T230214Z.json` is the cached run). Chunk
+  rankings identical to the first dev run on all 30 instances. Whole dev eval: 61 s
+  uncached, 3.7 s cached; cached index load per snapshot median 0.04 s, max 0.11 s. Cache
+  size for the 30 dev snapshots: 183 MB.
+- BM25 benchmark (`results/bm25_bench_20261111T230356Z.json`, commit `9a26500`):
+  sympy__sympy-22840 (largest dev corpus), Apple M4 Pro, 24 GB, macOS, Python 3.12.15,
+  tree-sitter 0.26.0, tree-sitter-python 0.25.0. Warm OS page cache; build and load are 5
+  runs after 1 discarded warm-up, each in a fresh process.
+
+  | Index | Value |
+  |---|---|
+  | chunks | 31,502 |
+  | vocabulary | 76,414 tokens |
+  | postings entries | 1,244,960 |
+  | total tokens | 3,467,720 (average 110 per chunk) |
+  | pickle on disk | 14.2 MB |
+
+  | Step | Median (5 runs) | Range | Peak RSS |
+  |---|---|---|---|
+  | build (chunk + tokenize + index) | 4.75 s | 4.72–4.77 s | 433 MiB (127 after imports) |
+  | load from cache | 0.093 s | 0.092–0.093 s | 245 MiB (127 after imports) |
+
+  | Query latency (k = 10, warm, median of 5 per query) | n | p50 | p95 | max |
+  |---|---|---|---|---|
+  | each dev query on its own snapshot | 30 | 11.9 ms | 27.8 ms | 51.0 ms |
+  | every dev query on the largest index | 30 | 27.5 ms | 51.5 ms | 58.7 ms |
+
+  - A loaded index costs about 118 MiB of RSS (245 − 127). Building peaks about 306 MiB
+    above imports, because chunks, token lists and the index are all in memory at once.
+  - Building takes 51× longer than loading (4.75 s vs 0.093 s).
+  - The same 30 queries are 2.3× slower at p50 on the largest index than on their own
+    snapshots. Expected: query cost is the total length of the query tokens' posting
+    lists, which grow with the corpus.
+- Ablation, chunk text only (`bm25-text-only`, dev, commit `3793d92`,
+  `results/bm25-text-only_dev_20261111T230503Z.json`), function level:
+
+  | Indexed text | MRR@10 | R@10 | Hit@10 | MRR@10 cat 1 (n 16) | MRR@10 cat 2 (n 14) |
+  |---|---|---|---|---|---|
+  | path + name + text (`bm25`) | 0.290 | 0.461 | 0.567 | 0.231 | 0.357 |
+  | text only | 0.267 | 0.344 | 0.433 | 0.199 | 0.345 |
+  | `rg-chunks` (Phase 1) | 0.210 | 0.228 | 0.300 | 0.200 | 0.221 |
+
+  - Of `bm25`'s +0.080 MRR@10 over `rg-chunks`, +0.057 remains with text alone, so most of
+    the MRR gain is the ranking, not the extra text. Path and name matter more for
+    Hit@10 (0.433 -> 0.567, 4 of 30 instances).
+  - Path and name add more for cat 1 (+0.032) than cat 2 (+0.012), the direction expected
+    if tracebacks' paths match chunk paths. n = 16 and 14: a direction, not a finding.
+- Dev misses: 13 of 30 instances have no gold chunk in the top 10
+  (`notebooks/bm25_misses_dev.md`). Analysis pending.
 
 ### Test-split runs
 -

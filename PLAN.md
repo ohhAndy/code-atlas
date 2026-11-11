@@ -263,9 +263,9 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
   - Apply the same tokenizer to queries.
 - [x] Inverted index: token to postings (chunk id, term frequency), plus document lengths and average length.
 - [x] BM25, with unit tests against hand-computed scores.
-- [ ] Cache built indexes on disk per (repo, commit).
+- [x] Cache built indexes on disk per (repo, commit).
 - [x] Tune `k1` and `b` on dev.
-- [ ] Measure:
+- [x] Measure:
   - Index build time and memory.
   - Query latency at p50 and p95 over all queries, with a warm cache and stated hardware.
 - [ ] Failure analysis: read 10 dev misses and write down why each one failed.
