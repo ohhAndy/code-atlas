@@ -50,41 +50,54 @@ def test_qwen_query_prompt_uses_the_documented_format() -> None:
 
 def test_padded_batches_cover_every_index_once() -> None:
     lengths = [5, 300, 40, 7, 300, 2]
-    batches = padded_batches(lengths, max_texts=16, max_cells=10**9)
+    batches = padded_batches(lengths, max_texts=16, max_padded_tokens=10**9)
     assert sorted(i for b in batches for i in b) == list(range(len(lengths)))
 
 
 def test_padded_batches_put_longest_first() -> None:
     # Plenty of room: one batch, ordered longest first, ties by index.
-    assert padded_batches([5, 300, 40, 300], max_texts=16, max_cells=10**9) == [[1, 3, 2, 0]]
+    batches = padded_batches([5, 300, 40, 300], max_texts=16, max_padded_tokens=10**9)
+    assert batches == [[1, 3, 2, 0]]
 
 
 def test_long_texts_get_small_batches() -> None:
-    # Budget 2 * 100**2: two texts of 100 fit together, a third does not. The short
-    # texts (10 tokens) fit 16 per batch: 16 * 10**2 = 1,600 cells.
+    # Budget 200 padded tokens: two texts of 100 fit together (2 * 100), a third does not.
+    # The short texts (10 tokens) fit 16 per batch: 16 * 10 = 160.
     lengths = [100, 100, 100] + [10] * 20
-    batches = padded_batches(lengths, max_texts=16, max_cells=2 * 100**2)
+    batches = padded_batches(lengths, max_texts=16, max_padded_tokens=200)
     assert batches[0] == [0, 1]
     assert batches[1][0] == 2  # the third long text starts a new batch
     assert all(len(b) <= 16 for b in batches)
 
 
+def test_batch_is_padded_to_its_longest_text() -> None:
+    # 120 + 10 real tokens, but padded to 2 * 120 = 240 > 200: they cannot share a batch.
+    assert padded_batches([120, 10], max_texts=16, max_padded_tokens=200) == [[0], [1]]
+
+
 def test_batch_cost_stays_within_budget() -> None:
-    lengths = [32_768] * 20 + [500] * 100 + [50] * 300
-    budget = 32_768**2
-    for batch in padded_batches(lengths, max_texts=16, max_cells=budget):
-        assert len(batch) == 1 or len(batch) * max(lengths[i] for i in batch) ** 2 <= budget
+    lengths = [32_768] * 20 + [8_000] * 40 + [500] * 100 + [50] * 300
+    budget = 32_768
+    for batch in padded_batches(lengths, max_texts=16, max_padded_tokens=budget):
+        assert len(batch) == 1 or len(batch) * max(lengths[i] for i in batch) <= budget
 
 
 def test_text_alone_over_budget_still_gets_a_batch() -> None:
-    assert padded_batches([1000], max_texts=16, max_cells=10) == [[0]]
+    assert padded_batches([1000], max_texts=16, max_padded_tokens=10) == [[0]]
+
+
+def test_memory_hog_case_is_split() -> None:
+    # 16 texts of 8,000 tokens (128,000 padded tokens) fit the old length-squared budget
+    # and made the Mac swap. With 32,768 padded tokens per batch they go 4 at a time.
+    batches = padded_batches([8_000] * 16, max_texts=16, max_padded_tokens=32_768)
+    assert [len(b) for b in batches] == [4, 4, 4, 4]
 
 
 def test_crash_case_is_split() -> None:
-    # The crash: 16 texts at the 32,768-token limit in one batch needed 16 GiB of mask.
-    # With the 32,768**2 budget each one is embedded alone.
-    batches = padded_batches([32_768] * 16, max_texts=16, max_cells=32_768**2)
-    assert batches == [[i] for i in range(16)]
+    # The first crash: one text at the 32,768-token limit padded a batch of 16 to 16 GiB
+    # of attention mask. A text at the limit is now embedded alone.
+    batches = padded_batches([32_768] + [100] * 15, max_texts=16, max_padded_tokens=32_768)
+    assert batches[0] == [0]
 
 
 # --- token_batches ------------------------------------------------------------------------
