@@ -19,6 +19,7 @@ from collections import defaultdict
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from functools import cache
 from pathlib import Path
 from typing import Any, Literal
 
@@ -33,6 +34,9 @@ from code_atlas.eval.metrics import (
 )
 from code_atlas.lexical.cache import INDEX_CACHE_DIR
 from code_atlas.lexical.retriever import BM25Retriever
+from code_atlas.semantic.cache import EMBEDDING_CACHE_DIR
+from code_atlas.semantic.embed import QwenEmbedder, VoyageEmbedder
+from code_atlas.semantic.retriever import SemanticRetriever
 from code_atlas.types import Hit, Level, Retriever
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -43,6 +47,18 @@ METRICS = ("recall@1", "recall@5", "recall@10", "mrr@10")
 # Hit@k only at function level: file gold is always one file, where Hit@k = Recall@k.
 FUNCTION_METRICS = (*METRICS, "hit@1", "hit@5", "hit@10")
 ScoreLevel = Literal["file", "function"]
+
+
+@cache
+def _qwen() -> QwenEmbedder:
+    """One model load per process, shared by every snapshot."""
+    return QwenEmbedder()
+
+
+@cache
+def _voyage() -> VoyageEmbedder:
+    return VoyageEmbedder()
+
 
 # Method name -> how to build a retriever for one snapshot directory.
 RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
@@ -56,6 +72,13 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     # Dev-only measurement of indexing path and qualified name; never a method to compare.
     "bm25-text-only": lambda repo_dir: BM25Retriever(
         repo_dir, with_path_and_name=False, cache_dir=INDEX_CACHE_DIR
+    ),
+    # Embedding candidates: same chunks and embedded text as bm25; vectors cached on disk.
+    "semantic-qwen": lambda repo_dir: SemanticRetriever(
+        repo_dir, _qwen(), cache_dir=EMBEDDING_CACHE_DIR
+    ),
+    "semantic-voyage": lambda repo_dir: SemanticRetriever(
+        repo_dir, _voyage(), cache_dir=EMBEDDING_CACHE_DIR
     ),
 }
 # Methods that exist only to measure one choice on dev; the CLI refuses them on test.
