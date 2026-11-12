@@ -541,7 +541,7 @@ review before the deep-dive:
 
 ## Phase 2: Lexical Search
 
-**Status:** in progress
+**Status:** done (2026-11-12)
 
 ### Work done
 - Plan for the phase, one session each: tokenizer, inverted index, BM25 + retriever, disk
@@ -828,6 +828,21 @@ review before the deep-dive:
   dropped the acronym and digit rules (`parseHTTPResponse` -> `httpresponse`). Existing
   tests did not catch it. Reverted to the ASCII camelCase regex and added tests for
   acronyms, digits and non-ASCII.
+- Known limitation, not fixed: the index cache key does not include the Python version.
+  `\w` and `str.lower()` follow the Unicode tables shipped with the interpreter, so after a
+  Python upgrade (pyproject allows >= 3.12) tokens can change while the key stays the
+  same, and a stale index would load. Workaround: delete `.cache/bm25` after changing
+  Python. Fix if needed: add the Python version to `code_fingerprint`.
 
 ### Open questions
 -
+
+### Retro (at phase end)
+- What I'd do differently: learn the prerequisites before starting the phase. I started
+  Phase 2 without knowing what TF, IDF or BM25 were, so the first design questions
+  (tokenizer, stopwords, `k1` / `b`) stalled until the concepts were explained. For
+  Phase 3, the first session is reading on embeddings, cosine similarity and rank fusion
+  before making any design decision.
+- What worked: hand-computed test values caught real bugs (a typo, two regex regressions)
+  before any eval run, and fixing the tuning protocol before seeing results kept the dev
+  number honest: 0.290 on dev, 0.262 on test.
