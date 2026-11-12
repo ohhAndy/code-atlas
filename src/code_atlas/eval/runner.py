@@ -88,8 +88,9 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
         repo_dir, _qwen(), cache_dir=EMBEDDING_CACHE_DIR
     ),
     "semantic-voyage": lambda repo_dir: _semantic(repo_dir),
-    # RRF of bm25 and semantic-voyage (the embedding model chosen on dev), top 100 each.
-    "hybrid": lambda repo_dir: HybridRetriever(_bm25(repo_dir), _semantic(repo_dir), rrf_k=60),
+    # RRF of bm25 and semantic-voyage (the embedding model chosen on dev), top 100 each;
+    # k = 10, chosen by the dev sweep.
+    "hybrid": lambda repo_dir: HybridRetriever(_bm25(repo_dir), _semantic(repo_dir), rrf_k=10),
 }
 # Methods that exist only to measure one choice on dev; the CLI refuses them on test.
 DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only"})
