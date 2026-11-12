@@ -1114,10 +1114,13 @@ review before the deep-dive:
   - Symptom ≠ fix stays the hardest group: each model finds 1 of 3, and not the same
     one. This fits the Phase 2 guess that the issue's words never describe the fix
     location, whatever the method.
-  - sympy-15308 is found at rank 1 by voyage, although its gold is the chunks next to
-    where the fix inserts a new method. The model ranks the `Trace`-related printer
-    code first, which happens to be the gold neighbor. This is not evidence of
-    understanding the fix.
+  - sympy-15308 (gold-label artifact) is a rank-1 hit for voyage, but not evidence of
+    finding where the fix goes. Its #1 is the `LatexPrinter` class chunk, which is gold
+    only because the boundary-insertion rule labels the enclosing class. The two
+    neighbor methods (`_print_Adjoint`, `_print_bool`) are not in its top 3, and #3 is
+    `_print_Tr`, a near-namesake of the `_print_Trace` the fix adds. The issue is about
+    LaTeX printing, so the model found the topic, not the insertion point. Counted in
+    the metric (rule fixed before the runs), not read as a capability.
 - Regressions against `bm25`: function-level rank, `bm25` → model.
   - Voyage loses none of the 17 instances `bm25` found. Its 3 misses (11797, 15738,
     17630) were `bm25` misses too.
