@@ -1,0 +1,3287 @@
+{
+  "meta": {
+    "method": "semantic-voyage",
+    "split": "test",
+    "k": 10,
+    "level_scored": "file+function",
+    "created_at": "2026-11-12T22:19:38+00:00",
+    "codeatlas": {
+      "commit": "3b5b6cd5cd13ae9969f0ec8d261131b7277e635c",
+      "dirty": false
+    },
+    "dataset_revision": "6ec7bb89b9342f664a54a6e0a6ea6501d3437cc2",
+    "ripgrep": "ripgrep 15.2.0",
+    "skipped_no_gold": [],
+    "no_function_gold": []
+  },
+  "summary": {
+    "overall": {
+      "n": 70.0,
+      "recall@1": 0.8428571428571429,
+      "recall@5": 0.9285714285714286,
+      "recall@10": 0.9285714285714286,
+      "mrr@10": 0.8797619047619047
+    },
+    "django/django": {
+      "n": 32.0,
+      "recall@1": 0.875,
+      "recall@5": 0.96875,
+      "recall@10": 0.96875,
+      "mrr@10": 0.9140625
+    },
+    "scikit-learn/scikit-learn": {
+      "n": 16.0,
+      "recall@1": 0.9375,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.96875
+    },
+    "sympy/sympy": {
+      "n": 22.0,
+      "recall@1": 0.7272727272727273,
+      "recall@5": 0.8181818181818182,
+      "recall@10": 0.8181818181818182,
+      "mrr@10": 0.7651515151515151
+    },
+    "category 1": {
+      "n": 38.0,
+      "recall@1": 0.8947368421052632,
+      "recall@5": 0.9473684210526315,
+      "recall@10": 0.9473684210526315,
+      "mrr@10": 0.9210526315789473
+    },
+    "category 2": {
+      "n": 32.0,
+      "recall@1": 0.78125,
+      "recall@5": 0.90625,
+      "recall@10": 0.90625,
+      "mrr@10": 0.8307291666666666
+    }
+  },
+  "function_summary": {
+    "overall": {
+      "n": 70.0,
+      "recall@1": 0.4119047619047619,
+      "recall@5": 0.7404761904761905,
+      "recall@10": 0.8404761904761905,
+      "mrr@10": 0.6033276643990929,
+      "hit@1": 0.4714285714285714,
+      "hit@5": 0.7857142857142857,
+      "hit@10": 0.8714285714285714
+    },
+    "django/django": {
+      "n": 32.0,
+      "recall@1": 0.421875,
+      "recall@5": 0.75,
+      "recall@10": 0.875,
+      "mrr@10": 0.6012524801587301,
+      "hit@1": 0.46875,
+      "hit@5": 0.78125,
+      "hit@10": 0.90625
+    },
+    "scikit-learn/scikit-learn": {
+      "n": 16.0,
+      "recall@1": 0.4895833333333333,
+      "recall@5": 0.7916666666666666,
+      "recall@10": 0.9479166666666666,
+      "mrr@10": 0.7349702380952381,
+      "hit@1": 0.625,
+      "hit@5": 0.875,
+      "hit@10": 1.0
+    },
+    "sympy/sympy": {
+      "n": 22.0,
+      "recall@1": 0.3409090909090909,
+      "recall@5": 0.6893939393939393,
+      "recall@10": 0.712121212121212,
+      "mrr@10": 0.5106060606060606,
+      "hit@1": 0.36363636363636365,
+      "hit@5": 0.7272727272727273,
+      "hit@10": 0.7272727272727273
+    },
+    "category 1": {
+      "n": 38.0,
+      "recall@1": 0.4166666666666667,
+      "recall@5": 0.8333333333333334,
+      "recall@10": 0.9254385964912281,
+      "mrr@10": 0.6408521303258145,
+      "hit@1": 0.47368421052631576,
+      "hit@5": 0.868421052631579,
+      "hit@10": 0.9473684210526315
+    },
+    "category 2": {
+      "n": 32.0,
+      "recall@1": 0.40625,
+      "recall@5": 0.6302083333333334,
+      "recall@10": 0.7395833333333334,
+      "mrr@10": 0.5587673611111111,
+      "hit@1": 0.46875,
+      "hit@5": 0.6875,
+      "hit@10": 0.78125
+    }
+  },
+  "instances": [
+    {
+      "instance_id": "django__django-11049",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "ranking": [
+        "django/db/models/fields/__init__.py",
+        "django/forms/fields.py",
+        "django/utils/dateparse.py",
+        "django/utils/duration.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/fields/__init__.py::DurationField"
+      ],
+      "chunk_ranking": [
+        "django/db/models/fields/__init__.py::DurationField",
+        "django/forms/fields.py::DurationField",
+        "django/forms/fields.py::DurationField.to_python",
+        "django/db/models/fields/__init__.py::DurationField.to_python",
+        "django/utils/dateparse.py::parse_duration",
+        "django/utils/duration.py::duration_string",
+        "django/utils/duration.py::duration_iso_string",
+        "django/forms/fields.py::DurationField.prepare_value",
+        "django/db/models/fields/__init__.py::DateTimeField",
+        "django/db/models/fields/__init__.py::DurationField.value_to_string"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 5.2123,
+      "search_seconds": 0.3174
+    },
+    {
+      "instance_id": "django__django-11179",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/db/models/deletion.py"
+      ],
+      "ranking": [
+        "django/db/models/deletion.py",
+        "django/db/models/base.py",
+        "django/db/models/query.py",
+        "django/db/models/sql/subqueries.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/deletion.py::Collector.delete"
+      ],
+      "chunk_ranking": [
+        "django/db/models/deletion.py::Collector.delete",
+        "django/db/models/base.py::Model.delete",
+        "django/db/models/deletion.py::Collector.collect",
+        "django/db/models/query.py::QuerySet.delete",
+        "django/db/models/base.py::Model._save_table",
+        "django/db/models/base.py::Model",
+        "django/db/models/base.py::Model._do_update",
+        "django/db/models/base.py::Model._save_parents",
+        "django/db/models/base.py::Model.save",
+        "django/db/models/sql/subqueries.py::DeleteQuery.delete_qs"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.8286,
+      "search_seconds": 0.1469
+    },
+    {
+      "instance_id": "django__django-11422",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/utils/autoreload.py"
+      ],
+      "ranking": [
+        "django/utils/autoreload.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/utils/autoreload.py::iter_modules_and_files"
+      ],
+      "chunk_ranking": [
+        "django/utils/autoreload.py::<module>",
+        "django/utils/autoreload.py::iter_modules_and_files",
+        "django/utils/autoreload.py::StatReloader.tick",
+        "django/utils/autoreload.py::start_django",
+        "django/utils/autoreload.py::sys_path_directories",
+        "django/utils/autoreload.py::StatReloader.snapshot_files",
+        "django/utils/autoreload.py::WatchmanReloader._update_watches",
+        "django/utils/autoreload.py::BaseReloader.watched_files",
+        "django/utils/autoreload.py::WatchmanReloader._watch_glob",
+        "django/utils/autoreload.py::WatchmanReloader._subscribe_dir"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.6116,
+      "search_seconds": 0.1421
+    },
+    {
+      "instance_id": "django__django-11564",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/conf/__init__.py"
+      ],
+      "ranking": [
+        "django/templatetags/static.py",
+        "django/template/context_processors.py",
+        "django/conf/global_settings.py",
+        "django/core/files/storage.py",
+        "django/contrib/staticfiles/storage.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0
+      },
+      "gold_chunks": [
+        "django/conf/__init__.py::<module>",
+        "django/conf/__init__.py::LazySettings",
+        "django/conf/__init__.py::LazySettings.configured"
+      ],
+      "chunk_ranking": [
+        "django/templatetags/static.py::StaticNode.handle_simple",
+        "django/templatetags/static.py::StaticNode.render",
+        "django/template/context_processors.py::static",
+        "django/conf/global_settings.py::<module>",
+        "django/templatetags/static.py::get_media_prefix",
+        "django/templatetags/static.py::get_static_prefix",
+        "django/core/files/storage.py::FileSystemStorage.base_url",
+        "django/templatetags/static.py::<module>",
+        "django/contrib/staticfiles/storage.py::HashedFilesMixin.url_converter",
+        "django/templatetags/static.py::do_static"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 1.7106,
+      "search_seconds": 0.4087
+    },
+    {
+      "instance_id": "django__django-11630",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/core/checks/model_checks.py"
+      ],
+      "ranking": [
+        "django/core/checks/model_checks.py",
+        "django/db/models/fields/related.py",
+        "django/db/models/options.py",
+        "django/db/models/base.py",
+        "django/contrib/auth/checks.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/core/checks/model_checks.py::<module>",
+        "django/core/checks/model_checks.py::check_all_models"
+      ],
+      "chunk_ranking": [
+        "django/core/checks/model_checks.py::check_all_models",
+        "django/db/models/fields/related.py::ManyToManyField._check_table_uniqueness",
+        "django/db/models/options.py::Options.contribute_to_class",
+        "django/db/models/base.py::Model._check_long_column_names",
+        "django/db/models/base.py::Model.check",
+        "django/db/models/base.py::Model._check_field_name_clashes",
+        "django/db/models/base.py::ModelBase.__new__",
+        "django/db/models/base.py::Model._check_model_name_db_lookup_clashes",
+        "django/db/models/base.py::Model._check_column_name_clashes",
+        "django/contrib/auth/checks.py::check_models_permissions"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.3726,
+      "search_seconds": 0.3258
+    },
+    {
+      "instance_id": "django__django-11848",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/utils/http.py"
+      ],
+      "ranking": [
+        "django/utils/http.py",
+        "django/utils/dateparse.py",
+        "django/conf/global_settings.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/utils/http.py::parse_http_date"
+      ],
+      "chunk_ranking": [
+        "django/utils/http.py::parse_http_date",
+        "django/utils/http.py::<module>",
+        "django/utils/http.py::parse_http_date_safe",
+        "django/utils/dateparse.py::<module>",
+        "django/utils/dateparse.py::parse_datetime",
+        "django/utils/http.py::http_date",
+        "django/utils/http.py::parse_etags",
+        "django/utils/dateparse.py::parse_date",
+        "django/conf/global_settings.py::<module>",
+        "django/utils/http.py::base36_to_int"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.1867,
+      "search_seconds": 0.1705
+    },
+    {
+      "instance_id": "django__django-11999",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "ranking": [
+        "django/db/models/base.py",
+        "django/db/models/fields/__init__.py",
+        "django/db/models/options.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "gold_chunks": [
+        "django/db/models/fields/__init__.py::Field.contribute_to_class"
+      ],
+      "chunk_ranking": [
+        "django/db/models/base.py::Model._get_FIELD_display",
+        "django/db/models/base.py::ModelBase._prepare",
+        "django/db/models/base.py::ModelBase.__new__",
+        "django/db/models/fields/__init__.py::Field.contribute_to_class",
+        "django/db/models/base.py::<module>",
+        "django/db/models/options.py::Options._get_fields",
+        "django/db/models/base.py::Model.get_deferred_fields",
+        "django/db/models/options.py::Options.contribute_to_class",
+        "django/db/models/base.py::Model._check_field_name_clashes",
+        "django/db/models/options.py::Options.get_base_chain"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.9609,
+      "search_seconds": 0.1368
+    },
+    {
+      "instance_id": "django__django-12453",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "ranking": [
+        "django/db/backends/base/creation.py",
+        "django/test/testcases.py",
+        "django/test/utils.py",
+        "django/db/backends/base/features.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/backends/base/creation.py::<module>",
+        "django/db/backends/base/creation.py::BaseDatabaseCreation.deserialize_db_from_string"
+      ],
+      "chunk_ranking": [
+        "django/db/backends/base/creation.py::BaseDatabaseCreation.serialize_db_to_string",
+        "django/db/backends/base/creation.py::BaseDatabaseCreation.create_test_db",
+        "django/db/backends/base/creation.py::BaseDatabaseCreation.deserialize_db_from_string",
+        "django/test/testcases.py::TransactionTestCase._fixture_setup",
+        "django/db/backends/base/creation.py::<module>",
+        "django/test/testcases.py::TransactionTestCase",
+        "django/test/utils.py::setup_databases",
+        "django/db/backends/base/features.py::BaseDatabaseFeatures",
+        "django/db/backends/base/creation.py::BaseDatabaseCreation._create_test_db",
+        "django/test/testcases.py::TransactionTestCase._fixture_teardown"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.636,
+      "search_seconds": 0.1382
+    },
+    {
+      "instance_id": "django__django-12497",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "ranking": [
+        "django/db/models/fields/related.py",
+        "django/db/models/base.py",
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/fields/related.py::ManyToManyField._check_relationship_model"
+      ],
+      "chunk_ranking": [
+        "django/db/models/fields/related.py::ManyToManyField._check_relationship_model",
+        "django/db/models/fields/related.py::ManyToManyField._check_table_uniqueness",
+        "django/db/models/base.py::Model._check_m2m_through_same_relationship",
+        "django/db/models/fields/related.py::create_many_to_many_intermediary_model",
+        "django/db/models/fields/related.py::ManyToManyField.contribute_to_class",
+        "django/db/models/fields/related.py::ManyToManyField._check_ignored_options",
+        "django/db/models/fields/related_descriptors.py::create_forward_many_to_many_manager",
+        "django/db/models/fields/related.py::ManyToManyField.__init__",
+        "django/db/models/fields/related.py::ForeignObject._check_unique_target",
+        "django/db/models/fields/related.py::ManyToManyField._get_m2m_reverse_attr"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.1978,
+      "search_seconds": 0.3237
+    },
+    {
+      "instance_id": "django__django-12708",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/db/backends/base/schema.py"
+      ],
+      "ranking": [
+        "django/db/backends/base/schema.py",
+        "django/db/backends/mysql/schema.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together"
+      ],
+      "chunk_ranking": [
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_composed_index",
+        "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._delete_composed_index",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_unique_together",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._model_indexes_sql",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._alter_field",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_unique_sql",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._create_unique_sql",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor",
+        "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._create_index_sql"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.2672,
+      "search_seconds": 0.136
+    },
+    {
+      "instance_id": "django__django-12915",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/contrib/staticfiles/handlers.py"
+      ],
+      "ranking": [
+        "django/contrib/staticfiles/handlers.py",
+        "django/core/handlers/asgi.py",
+        "django/core/handlers/base.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/staticfiles/handlers.py::<module>"
+      ],
+      "chunk_ranking": [
+        "django/contrib/staticfiles/handlers.py::StaticFilesHandlerMixin",
+        "django/contrib/staticfiles/handlers.py::ASGIStaticFilesHandler.__call__",
+        "django/core/handlers/asgi.py::ASGIHandler.__call__",
+        "django/contrib/staticfiles/handlers.py::ASGIStaticFilesHandler",
+        "django/contrib/staticfiles/handlers.py::ASGIStaticFilesHandler.__init__",
+        "django/core/handlers/asgi.py::ASGIHandler.send_response",
+        "django/contrib/staticfiles/handlers.py::<module>",
+        "django/core/handlers/base.py::BaseHandler._get_response_async",
+        "django/core/handlers/asgi.py::ASGIHandler",
+        "django/core/handlers/base.py::BaseHandler.get_response_async"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.14285714285714285,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.7317,
+      "search_seconds": 0.1375
+    },
+    {
+      "instance_id": "django__django-13033",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "ranking": [
+        "django/db/models/sql/compiler.py",
+        "django/db/models/base.py",
+        "django/db/models/sql/query.py",
+        "django/db/models/fields/related.py",
+        "django/db/models/options.py",
+        "django/contrib/admin/views/main.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/sql/compiler.py::SQLCompiler.find_ordering_name"
+      ],
+      "chunk_ranking": [
+        "django/db/models/sql/compiler.py::SQLCompiler.find_ordering_name",
+        "django/db/models/sql/compiler.py::SQLCompiler.get_order_by",
+        "django/db/models/base.py::Model._check_ordering",
+        "django/db/models/sql/query.py::Query.add_ordering",
+        "django/db/models/sql/query.py::Query.names_to_path",
+        "django/db/models/sql/query.py::Query.join_parent_model",
+        "django/db/models/fields/related.py::ForeignKey.get_col",
+        "django/db/models/sql/query.py::Query.setup_joins",
+        "django/db/models/options.py::Options._prepare",
+        "django/contrib/admin/views/main.py::ChangeList._get_deterministic_ordering"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.2219,
+      "search_seconds": 0.1378
+    },
+    {
+      "instance_id": "django__django-13447",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/contrib/admin/sites.py"
+      ],
+      "ranking": [
+        "django/contrib/admin/sites.py",
+        "django/conf/global_settings.py",
+        "django/apps/registry.py",
+        "django/contrib/admin/options.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/admin/sites.py::AdminSite._build_app_dict"
+      ],
+      "chunk_ranking": [
+        "django/contrib/admin/sites.py::AdminSite._build_app_dict",
+        "django/contrib/admin/sites.py::AdminSite.app_index",
+        "django/contrib/admin/sites.py::AdminSite.index",
+        "django/contrib/admin/sites.py::AdminSite.get_app_list",
+        "django/contrib/admin/sites.py::AdminSite.get_urls",
+        "django/contrib/admin/sites.py::AdminSite.each_context",
+        "django/conf/global_settings.py::<module>",
+        "django/apps/registry.py::Apps.populate",
+        "django/contrib/admin/sites.py::AdminSite",
+        "django/contrib/admin/options.py::ModelAdmin.changelist_view"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.6462,
+      "search_seconds": 0.1392
+    },
+    {
+      "instance_id": "django__django-13551",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/contrib/auth/tokens.py"
+      ],
+      "ranking": [
+        "django/contrib/auth/tokens.py",
+        "django/contrib/auth/forms.py",
+        "django/contrib/auth/base_user.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator._make_hash_value"
+      ],
+      "chunk_ranking": [
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator._make_hash_value",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator._make_token_with_timestamp",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator.check_token",
+        "django/contrib/auth/forms.py::PasswordResetForm.save",
+        "django/contrib/auth/base_user.py::AbstractBaseUser.get_session_auth_hash",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator.make_token",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator.__init__",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator",
+        "django/contrib/auth/base_user.py::AbstractBaseUser._legacy_get_session_auth_hash",
+        "django/contrib/auth/tokens.py::PasswordResetTokenGenerator._num_seconds"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.683,
+      "search_seconds": 0.1363
+    },
+    {
+      "instance_id": "django__django-13757",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/db/models/fields/json.py"
+      ],
+      "ranking": [
+        "django/db/models/fields/json.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/fields/json.py::KeyTransformIsNull.as_oracle",
+        "django/db/models/fields/json.py::KeyTransformIsNull.as_sqlite"
+      ],
+      "chunk_ranking": [
+        "django/db/models/fields/json.py::KeyTransformIn.resolve_expression_parameter",
+        "django/db/models/fields/json.py::KeyTransformExact.as_oracle",
+        "django/db/models/fields/json.py::KeyTransformExact.process_rhs",
+        "django/db/models/fields/json.py::KeyTransformIsNull.as_oracle",
+        "django/db/models/fields/json.py::KeyTransformIsNull.as_sqlite",
+        "django/db/models/fields/json.py::KeyTransformIsNull",
+        "django/db/models/fields/json.py::KeyTransformExact.process_lhs",
+        "django/db/models/fields/json.py::<module>",
+        "django/db/models/fields/json.py::HasKeyLookup.as_sql",
+        "django/db/models/fields/json.py::HasKeyLookup.as_postgresql"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.4536,
+      "search_seconds": 0.1303
+    },
+    {
+      "instance_id": "django__django-13768",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/dispatch/dispatcher.py"
+      ],
+      "ranking": [
+        "django/dispatch/dispatcher.py",
+        "django/db/models/signals.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/dispatch/dispatcher.py::<module>",
+        "django/dispatch/dispatcher.py::Signal.send_robust"
+      ],
+      "chunk_ranking": [
+        "django/dispatch/dispatcher.py::Signal.send_robust",
+        "django/dispatch/dispatcher.py::Signal._live_receivers",
+        "django/dispatch/dispatcher.py::Signal.send",
+        "django/dispatch/dispatcher.py::Signal.connect",
+        "django/dispatch/dispatcher.py::Signal.__init__",
+        "django/dispatch/dispatcher.py::Signal._clear_dead_receivers",
+        "django/db/models/signals.py::ModelSignal._lazy_method",
+        "django/dispatch/dispatcher.py::Signal",
+        "django/db/models/signals.py::ModelSignal.connect",
+        "django/dispatch/dispatcher.py::Signal._remove_receiver"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.071,
+      "search_seconds": 0.1323
+    },
+    {
+      "instance_id": "django__django-14382",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/core/management/templates.py"
+      ],
+      "ranking": [
+        "django/core/management/templates.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/core/management/templates.py::TemplateCommand.handle"
+      ],
+      "chunk_ranking": [
+        "django/core/management/templates.py::TemplateCommand.handle",
+        "django/core/management/templates.py::TemplateCommand.validate_name",
+        "django/core/management/templates.py::TemplateCommand",
+        "django/core/management/templates.py::TemplateCommand.handle_template",
+        "django/core/management/templates.py::TemplateCommand.download",
+        "django/core/management/templates.py::TemplateCommand.add_arguments",
+        "django/core/management/templates.py::TemplateCommand.splitext",
+        "django/core/management/templates.py::TemplateCommand.extract",
+        "django/core/management/templates.py::<module>",
+        "django/core/management/templates.py::TemplateCommand.is_url"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.2452,
+      "search_seconds": 0.2539
+    },
+    {
+      "instance_id": "django__django-14411",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "ranking": [
+        "django/contrib/auth/forms.py",
+        "django/contrib/admin/helpers.py",
+        "django/forms/widgets.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/auth/forms.py::<module>"
+      ],
+      "chunk_ranking": [
+        "django/contrib/auth/forms.py::ReadOnlyPasswordHashWidget",
+        "django/contrib/auth/forms.py::ReadOnlyPasswordHashWidget.get_context",
+        "django/contrib/auth/forms.py::ReadOnlyPasswordHashField",
+        "django/contrib/auth/forms.py::ReadOnlyPasswordHashField.__init__",
+        "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+        "django/contrib/auth/forms.py::UserChangeForm",
+        "django/forms/widgets.py::PasswordInput",
+        "django/contrib/admin/helpers.py::AdminReadonlyField.label_tag",
+        "django/contrib/auth/forms.py::AdminPasswordChangeForm",
+        "django/contrib/admin/helpers.py::AdminField.label_tag"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 1.3619,
+      "search_seconds": 0.1331
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/forms/boundfield.py"
+      ],
+      "ranking": [
+        "django/forms/boundfield.py",
+        "django/forms/widgets.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/forms/boundfield.py::BoundWidget.id_for_label"
+      ],
+      "chunk_ranking": [
+        "django/forms/boundfield.py::BoundField.subwidgets",
+        "django/forms/boundfield.py::BoundField.as_widget",
+        "django/forms/widgets.py::ChoiceWidget.subwidgets",
+        "django/forms/boundfield.py::BoundField.label_tag",
+        "django/forms/boundfield.py::BoundField.__init__",
+        "django/forms/boundfield.py::BoundWidget.choice_label",
+        "django/forms/boundfield.py::BoundField.id_for_label",
+        "django/forms/boundfield.py::BoundWidget.id_for_label",
+        "django/forms/boundfield.py::BoundWidget.tag",
+        "django/forms/boundfield.py::BoundField.auto_id"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.125,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.2994,
+      "search_seconds": 0.3246
+    },
+    {
+      "instance_id": "django__django-14730",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "ranking": [
+        "django/db/models/fields/related.py",
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/fields/related.py::ManyToManyField._check_ignored_options"
+      ],
+      "chunk_ranking": [
+        "django/db/models/fields/related.py::ManyToManyField.contribute_to_class",
+        "django/db/models/fields/related.py::ManyToManyField.__init__",
+        "django/db/models/fields/related.py::ManyToManyField._check_relationship_model",
+        "django/db/models/fields/related.py::ManyToManyField._check_table_uniqueness",
+        "django/db/models/fields/related.py::ManyToManyField",
+        "django/db/models/fields/related_descriptors.py::create_forward_many_to_many_manager",
+        "django/db/models/fields/related.py::create_many_to_many_intermediary_model",
+        "django/db/models/fields/related.py::ManyToManyField.check",
+        "django/db/models/fields/related.py::ManyToManyField._check_ignored_options",
+        "django/db/models/fields/related.py::ManyToManyField._check_unique"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.1111111111111111,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.2921,
+      "search_seconds": 0.1758
+    },
+    {
+      "instance_id": "django__django-14855",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/contrib/admin/helpers.py"
+      ],
+      "ranking": [
+        "django/contrib/admin/helpers.py",
+        "django/contrib/admin/utils.py",
+        "django/contrib/admin/widgets.py",
+        "django/contrib/admin/options.py",
+        "django/shortcuts.py",
+        "django/contrib/admin/templatetags/admin_urls.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/admin/helpers.py::AdminReadonlyField.get_admin_url"
+      ],
+      "chunk_ranking": [
+        "django/contrib/admin/helpers.py::AdminReadonlyField.get_admin_url",
+        "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+        "django/contrib/admin/helpers.py::<module>",
+        "django/contrib/admin/utils.py::<module>",
+        "django/contrib/admin/widgets.py::RelatedFieldWidgetWrapper.get_related_url",
+        "django/contrib/admin/options.py::BaseModelAdmin.to_field_allowed",
+        "django/shortcuts.py::resolve_url",
+        "django/contrib/admin/utils.py::reverse_field_path",
+        "django/contrib/admin/templatetags/admin_urls.py::admin_urlname",
+        "django/contrib/admin/options.py::BaseModelAdmin.get_view_on_site_url"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.6164,
+      "search_seconds": 0.1469
+    },
+    {
+      "instance_id": "django__django-14915",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/forms/models.py"
+      ],
+      "ranking": [
+        "django/forms/models.py",
+        "django/utils/hashable.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/forms/models.py::ModelChoiceIteratorValue",
+        "django/forms/models.py::ModelChoiceIteratorValue.__eq__"
+      ],
+      "chunk_ranking": [
+        "django/forms/models.py::ModelChoiceIteratorValue.__eq__",
+        "django/forms/models.py::ModelChoiceIteratorValue.__str__",
+        "django/forms/models.py::ModelChoiceIterator.choice",
+        "django/forms/models.py::ModelChoiceIteratorValue.__init__",
+        "django/forms/models.py::ModelChoiceIteratorValue",
+        "django/forms/models.py::ModelChoiceIterator.__iter__",
+        "django/utils/hashable.py::make_hashable",
+        "django/forms/models.py::ModelChoiceIterator.__bool__",
+        "django/forms/models.py::ModelChoiceIterator.__len__",
+        "django/forms/models.py::ModelChoiceField._get_choices"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.7643,
+      "search_seconds": 0.148
+    },
+    {
+      "instance_id": "django__django-15202",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/core/validators.py"
+      ],
+      "ranking": [
+        "django/forms/fields.py",
+        "django/core/validators.py",
+        "django/db/models/fields/__init__.py",
+        "django/utils/http.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "gold_chunks": [
+        "django/core/validators.py::URLValidator.__call__"
+      ],
+      "chunk_ranking": [
+        "django/forms/fields.py::URLField.to_python",
+        "django/core/validators.py::URLValidator.__call__",
+        "django/forms/fields.py::URLField",
+        "django/core/validators.py::URLValidator",
+        "django/forms/fields.py::URLField.__init__",
+        "django/core/validators.py::<module>",
+        "django/db/models/fields/__init__.py::URLField",
+        "django/utils/http.py::_urlsplit",
+        "django/forms/fields.py::<module>",
+        "django/db/models/fields/__init__.py::URLField.formfield"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.9885,
+      "search_seconds": 0.2307
+    },
+    {
+      "instance_id": "django__django-15400",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/utils/functional.py"
+      ],
+      "ranking": [
+        "django/utils/functional.py",
+        "django/conf/global_settings.py",
+        "django/conf/__init__.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/utils/functional.py::<module>"
+      ],
+      "chunk_ranking": [
+        "django/utils/functional.py::LazyObject",
+        "django/utils/functional.py::lazy",
+        "django/utils/functional.py::SimpleLazyObject.__copy__",
+        "django/utils/functional.py::SimpleLazyObject.__deepcopy__",
+        "django/utils/functional.py::SimpleLazyObject.__init__",
+        "django/utils/functional.py::SimpleLazyObject.__repr__",
+        "django/utils/functional.py::LazyObject.__setattr__",
+        "django/utils/functional.py::SimpleLazyObject",
+        "django/conf/global_settings.py::<module>",
+        "django/conf/__init__.py::LazySettings.__getattr__"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 2.9041,
+      "search_seconds": 0.1348
+    },
+    {
+      "instance_id": "django__django-15781",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/core/management/base.py"
+      ],
+      "ranking": [
+        "django/core/management/base.py",
+        "django/core/management/__init__.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/core/management/base.py::BaseCommand.create_parser"
+      ],
+      "chunk_ranking": [
+        "django/core/management/base.py::DjangoHelpFormatter",
+        "django/core/management/base.py::BaseCommand.create_parser",
+        "django/core/management/base.py::DjangoHelpFormatter.add_usage",
+        "django/core/management/__init__.py::ManagementUtility.main_help_text",
+        "django/core/management/base.py::BaseCommand",
+        "django/core/management/base.py::DjangoHelpFormatter.add_arguments",
+        "django/core/management/base.py::DjangoHelpFormatter._reordered_actions",
+        "django/core/management/base.py::BaseCommand.add_base_argument",
+        "django/core/management/base.py::BaseCommand.print_help",
+        "django/core/management/base.py::<module>"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.6491,
+      "search_seconds": 0.1362
+    },
+    {
+      "instance_id": "django__django-15814",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "ranking": [
+        "django/db/models/sql/query.py",
+        "django/db/models/query.py",
+        "django/db/models/sql/compiler.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/sql/query.py::Query.deferred_to_data"
+      ],
+      "chunk_ranking": [
+        "django/db/models/sql/query.py::Query",
+        "django/db/models/query.py::ModelIterable.__iter__",
+        "django/db/models/sql/query.py::Query.deferred_to_data",
+        "django/db/models/sql/compiler.py::SQLCompiler.get_related_selections",
+        "django/db/models/sql/compiler.py::SQLCompiler.get_select",
+        "django/db/models/sql/query.py::Query.get_aggregation",
+        "django/db/models/sql/query.py::Query.set_values",
+        "django/db/models/sql/query.py::Query.clone",
+        "django/db/models/query.py::RelatedPopulator.__init__",
+        "django/db/models/sql/query.py::Query.extra_select"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.9397,
+      "search_seconds": 0.1485
+    },
+    {
+      "instance_id": "django__django-15819",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/core/management/commands/inspectdb.py"
+      ],
+      "ranking": [
+        "django/core/management/commands/inspectdb.py",
+        "django/contrib/gis/utils/ogrinspect.py",
+        "django/db/models/options.py",
+        "django/db/migrations/autodetector.py",
+        "django/db/models/fields/related.py",
+        "django/db/models/base.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/core/management/commands/inspectdb.py::Command.handle_inspection"
+      ],
+      "chunk_ranking": [
+        "django/core/management/commands/inspectdb.py::Command.handle_inspection",
+        "django/core/management/commands/inspectdb.py::Command.normalize_col_name",
+        "django/core/management/commands/inspectdb.py::Command.get_meta",
+        "django/contrib/gis/utils/ogrinspect.py::_ogrinspect",
+        "django/core/management/commands/inspectdb.py::Command.get_field_type",
+        "django/db/models/options.py::Options.contribute_to_class",
+        "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models",
+        "django/db/models/fields/related.py::RelatedField._check_clashes",
+        "django/db/models/fields/related.py::RelatedField.contribute_to_class",
+        "django/db/models/base.py::Model._check_long_column_names"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.4259,
+      "search_seconds": 0.1413
+    },
+    {
+      "instance_id": "django__django-15851",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/backends/postgresql/client.py"
+      ],
+      "ranking": [
+        "django/db/backends/postgresql/client.py",
+        "django/core/management/commands/dbshell.py",
+        "django/db/backends/base/client.py",
+        "django/db/backends/postgresql/base.py",
+        "django/db/backends/mysql/client.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/backends/postgresql/client.py::DatabaseClient.settings_to_cmd_args_env"
+      ],
+      "chunk_ranking": [
+        "django/db/backends/postgresql/client.py::DatabaseClient.settings_to_cmd_args_env",
+        "django/core/management/commands/dbshell.py::Command.add_arguments",
+        "django/db/backends/base/client.py::BaseDatabaseClient.runshell",
+        "django/core/management/commands/dbshell.py::Command.handle",
+        "django/db/backends/postgresql/client.py::DatabaseClient.runshell",
+        "django/core/management/commands/dbshell.py::Command",
+        "django/db/backends/postgresql/client.py::DatabaseClient",
+        "django/db/backends/postgresql/base.py::DatabaseWrapper.get_connection_params",
+        "django/db/backends/mysql/client.py::DatabaseClient.settings_to_cmd_args_env",
+        "django/core/management/commands/dbshell.py::<module>"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.5413,
+      "search_seconds": 0.1362
+    },
+    {
+      "instance_id": "django__django-15902",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/forms/formsets.py"
+      ],
+      "ranking": [
+        "django/forms/utils.py",
+        "django/forms/renderers.py",
+        "django/forms/forms.py",
+        "django/forms/formsets.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25
+      },
+      "gold_chunks": [
+        "django/forms/formsets.py::ManagementForm"
+      ],
+      "chunk_ranking": [
+        "django/forms/utils.py::RenderableMixin.render",
+        "django/forms/utils.py::<module>",
+        "django/forms/renderers.py::BaseRenderer",
+        "django/forms/forms.py::BaseForm._html_output",
+        "django/forms/forms.py::BaseForm.get_context",
+        "django/forms/formsets.py::BaseFormSet",
+        "django/forms/formsets.py::BaseFormSet.management_form",
+        "django/forms/forms.py::BaseForm",
+        "django/forms/formsets.py::ManagementForm",
+        "django/forms/renderers.py::Jinja2DivFormRenderer"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.1111111111111111,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.5846,
+      "search_seconds": 0.1346
+    },
+    {
+      "instance_id": "django__django-16139",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "ranking": [
+        "django/contrib/auth/forms.py",
+        "django/contrib/auth/admin.py",
+        "django/contrib/admin/sites.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/contrib/auth/forms.py::UserChangeForm.__init__"
+      ],
+      "chunk_ranking": [
+        "django/contrib/auth/forms.py::UserChangeForm",
+        "django/contrib/auth/admin.py::UserAdmin.user_change_password",
+        "django/contrib/auth/forms.py::UserChangeForm.__init__",
+        "django/contrib/auth/forms.py::AdminPasswordChangeForm",
+        "django/contrib/auth/admin.py::UserAdmin.get_urls",
+        "django/contrib/auth/admin.py::UserAdmin",
+        "django/contrib/auth/admin.py::UserAdmin._add_view",
+        "django/contrib/admin/sites.py::AdminSite.password_change",
+        "django/contrib/auth/forms.py::PasswordChangeForm",
+        "django/contrib/auth/forms.py::AdminPasswordChangeForm.changed_data"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 2.3103,
+      "search_seconds": 0.136
+    },
+    {
+      "instance_id": "django__django-16379",
+      "repo": "django/django",
+      "category": 1,
+      "gold_files": [
+        "django/core/cache/backends/filebased.py"
+      ],
+      "ranking": [
+        "django/core/cache/backends/filebased.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/core/cache/backends/filebased.py::FileBasedCache.has_key"
+      ],
+      "chunk_ranking": [
+        "django/core/cache/backends/filebased.py::FileBasedCache._is_expired",
+        "django/core/cache/backends/filebased.py::FileBasedCache.has_key",
+        "django/core/cache/backends/filebased.py::FileBasedCache.set",
+        "django/core/cache/backends/filebased.py::FileBasedCache.touch",
+        "django/core/cache/backends/filebased.py::FileBasedCache._key_to_file",
+        "django/core/cache/backends/filebased.py::FileBasedCache._delete",
+        "django/core/cache/backends/filebased.py::FileBasedCache",
+        "django/core/cache/backends/filebased.py::FileBasedCache.get",
+        "django/core/cache/backends/filebased.py::<module>",
+        "django/core/cache/backends/filebased.py::FileBasedCache._write_content"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.8614,
+      "search_seconds": 0.1392
+    },
+    {
+      "instance_id": "django__django-17051",
+      "repo": "django/django",
+      "category": 2,
+      "gold_files": [
+        "django/db/models/query.py"
+      ],
+      "ranking": [
+        "django/db/models/query.py",
+        "django/db/models/sql/compiler.py",
+        "django/db/backends/postgresql/operations.py",
+        "django/db/backends/mysql/operations.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "django/db/models/query.py::QuerySet._batched_insert"
+      ],
+      "chunk_ranking": [
+        "django/db/models/query.py::QuerySet.bulk_create",
+        "django/db/models/sql/compiler.py::SQLInsertCompiler.as_sql",
+        "django/db/models/query.py::QuerySet._check_bulk_create_options",
+        "django/db/models/query.py::QuerySet._batched_insert",
+        "django/db/models/query.py::QuerySet._insert",
+        "django/db/backends/postgresql/operations.py::DatabaseOperations.on_conflict_suffix_sql",
+        "django/db/models/query.py::QuerySet._prepare_for_bulk_create",
+        "django/db/models/sql/compiler.py::SQLInsertCompiler.execute_sql",
+        "django/db/models/query.py::QuerySet.bulk_update",
+        "django/db/backends/mysql/operations.py::DatabaseOperations.on_conflict_suffix_sql"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 2.2296,
+      "search_seconds": 0.1312
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "ranking": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/linear_model/ridge.py::RidgeCV",
+        "sklearn/linear_model/ridge.py::RidgeClassifierCV",
+        "sklearn/linear_model/ridge.py::RidgeClassifierCV.__init__"
+      ],
+      "chunk_ranking": [
+        "sklearn/linear_model/ridge.py::RidgeCV",
+        "sklearn/linear_model/ridge.py::RidgeClassifierCV",
+        "sklearn/linear_model/ridge.py::_BaseRidgeCV.fit",
+        "sklearn/linear_model/ridge.py::_RidgeGCV.fit",
+        "sklearn/linear_model/ridge.py::ridge_regression",
+        "sklearn/linear_model/ridge.py::Ridge",
+        "sklearn/linear_model/ridge.py::_BaseRidgeCV.__init__",
+        "sklearn/linear_model/ridge.py::RidgeClassifier",
+        "sklearn/linear_model/ridge.py::RidgeClassifierCV.fit",
+        "sklearn/linear_model/ridge.py::RidgeClassifierCV.__init__"
+      ],
+      "function_scores": {
+        "recall@1": 0.3333333333333333,
+        "recall@5": 0.6666666666666666,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.4702,
+      "search_seconds": 0.1328
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10949",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/utils/validation.py"
+      ],
+      "ranking": [
+        "sklearn/utils/validation.py",
+        "sklearn/exceptions.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/utils/validation.py::check_array"
+      ],
+      "chunk_ranking": [
+        "sklearn/utils/validation.py::check_array",
+        "sklearn/utils/validation.py::<module>",
+        "sklearn/utils/validation.py::check_X_y",
+        "sklearn/utils/validation.py::as_float_array",
+        "sklearn/utils/validation.py::_ensure_sparse_format",
+        "sklearn/utils/validation.py::_assert_all_finite",
+        "sklearn/utils/validation.py::_ensure_no_complex_data",
+        "sklearn/utils/validation.py::check_symmetric",
+        "sklearn/exceptions.py::DataConversionWarning",
+        "sklearn/utils/validation.py::_is_arraylike"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.2516,
+      "search_seconds": 0.1502
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11281",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 2,
+      "gold_files": [
+        "sklearn/mixture/base.py"
+      ],
+      "ranking": [
+        "sklearn/mixture/base.py",
+        "sklearn/mixture/gmm.py",
+        "sklearn/mixture/gaussian_mixture.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/mixture/base.py::BaseMixture.fit"
+      ],
+      "chunk_ranking": [
+        "sklearn/mixture/base.py::BaseMixture.fit",
+        "sklearn/mixture/gmm.py::_GMMBase._fit",
+        "sklearn/mixture/gmm.py::_GMMBase.fit_predict",
+        "sklearn/mixture/base.py::BaseMixture.predict",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture",
+        "sklearn/mixture/gmm.py::_GMMBase.predict",
+        "sklearn/mixture/base.py::BaseMixture.predict_proba",
+        "sklearn/mixture/base.py::BaseMixture.sample",
+        "sklearn/mixture/gmm.py::_GMMBase",
+        "sklearn/mixture/base.py::BaseMixture"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.1283,
+      "search_seconds": 0.1326
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12471",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/preprocessing/_encoders.py"
+      ],
+      "ranking": [
+        "sklearn/preprocessing/_encoders.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/preprocessing/_encoders.py::_BaseEncoder._transform"
+      ],
+      "chunk_ranking": [
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder._transform_new",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder._legacy_transform",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder._handle_deprecations",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder.inverse_transform",
+        "sklearn/preprocessing/_encoders.py::_BaseEncoder._transform",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder._legacy_fit_transform",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder.fit",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder",
+        "sklearn/preprocessing/_encoders.py::OneHotEncoder.fit_transform",
+        "sklearn/preprocessing/_encoders.py::_BaseEncoder._fit"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.2,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 6.5697,
+      "search_seconds": 0.14
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13142",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/mixture/base.py"
+      ],
+      "ranking": [
+        "sklearn/mixture/base.py",
+        "sklearn/mixture/gaussian_mixture.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/mixture/base.py::BaseMixture.fit_predict"
+      ],
+      "chunk_ranking": [
+        "sklearn/mixture/base.py::BaseMixture.fit_predict",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture._initialize",
+        "sklearn/mixture/base.py::BaseMixture.predict",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture._m_step",
+        "sklearn/mixture/gaussian_mixture.py::_estimate_log_gaussian_prob",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture.__init__",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture._check_parameters",
+        "sklearn/mixture/base.py::BaseMixture.fit",
+        "sklearn/mixture/gaussian_mixture.py::GaussianMixture._estimate_log_prob"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 2.7845,
+      "search_seconds": 0.1395
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13241",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 2,
+      "gold_files": [
+        "sklearn/decomposition/kernel_pca.py"
+      ],
+      "ranking": [
+        "sklearn/decomposition/kernel_pca.py",
+        "sklearn/decomposition/pca.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/decomposition/kernel_pca.py::<module>",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA._fit_transform"
+      ],
+      "chunk_ranking": [
+        "sklearn/decomposition/kernel_pca.py::KernelPCA._fit_transform",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA.transform",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA._get_kernel",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA.fit",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA._fit_inverse_transform",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA.fit_transform",
+        "sklearn/decomposition/pca.py::PCA._fit_truncated",
+        "sklearn/decomposition/kernel_pca.py::<module>",
+        "sklearn/decomposition/kernel_pca.py::KernelPCA.inverse_transform"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.5201,
+      "search_seconds": 0.1358
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/pipeline.py"
+      ],
+      "ranking": [
+        "sklearn/pipeline.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/pipeline.py::Pipeline",
+        "sklearn/pipeline.py::Pipeline.__getitem__"
+      ],
+      "chunk_ranking": [
+        "sklearn/pipeline.py::Pipeline.__getitem__",
+        "sklearn/pipeline.py::Pipeline",
+        "sklearn/pipeline.py::Pipeline._iter",
+        "sklearn/pipeline.py::Pipeline._validate_steps",
+        "sklearn/pipeline.py::Pipeline._fit",
+        "sklearn/pipeline.py::<module>",
+        "sklearn/pipeline.py::Pipeline.classes_",
+        "sklearn/pipeline.py::Pipeline.named_steps",
+        "sklearn/pipeline.py::Pipeline._final_estimator",
+        "sklearn/pipeline.py::Pipeline._estimator_type"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.1744,
+      "search_seconds": 0.1444
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13496",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/ensemble/iforest.py"
+      ],
+      "ranking": [
+        "sklearn/ensemble/iforest.py",
+        "sklearn/ensemble/bagging.py",
+        "sklearn/ensemble/forest.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/ensemble/iforest.py::IsolationForest",
+        "sklearn/ensemble/iforest.py::IsolationForest.__init__"
+      ],
+      "chunk_ranking": [
+        "sklearn/ensemble/iforest.py::IsolationForest",
+        "sklearn/ensemble/iforest.py::IsolationForest.fit",
+        "sklearn/ensemble/iforest.py::IsolationForest.__init__",
+        "sklearn/ensemble/bagging.py::BaseBagging._fit",
+        "sklearn/ensemble/iforest.py::<module>",
+        "sklearn/ensemble/forest.py::BaseForest.fit",
+        "sklearn/ensemble/bagging.py::BaggingClassifier",
+        "sklearn/ensemble/iforest.py::IsolationForest.predict",
+        "sklearn/ensemble/iforest.py::IsolationForest._compute_score_samples",
+        "sklearn/ensemble/iforest.py::IsolationForest.score_samples"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.5965,
+      "search_seconds": 0.1393
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13584",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/utils/_pprint.py"
+      ],
+      "ranking": [
+        "sklearn/utils/_pprint.py",
+        "sklearn/base.py",
+        "sklearn/model_selection/_split.py",
+        "examples/plot_changed_only_pprint_parameter.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/utils/_pprint.py::_changed_params"
+      ],
+      "chunk_ranking": [
+        "sklearn/utils/_pprint.py::_safe_repr",
+        "sklearn/utils/_pprint.py::_changed_params",
+        "sklearn/base.py::_pprint",
+        "sklearn/base.py::BaseEstimator.__repr__",
+        "sklearn/utils/_pprint.py::_EstimatorPrettyPrinter",
+        "sklearn/model_selection/_split.py::_build_repr",
+        "sklearn/utils/_pprint.py::_EstimatorPrettyPrinter._pprint_estimator",
+        "examples/plot_changed_only_pprint_parameter.py::<module>",
+        "sklearn/utils/_pprint.py::_EstimatorPrettyPrinter.format",
+        "sklearn/utils/_pprint.py::_EstimatorPrettyPrinter.__init__"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.207,
+      "search_seconds": 0.1401
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 2,
+      "gold_files": [
+        "sklearn/ensemble/voting.py"
+      ],
+      "ranking": [
+        "sklearn/ensemble/voting.py",
+        "sklearn/ensemble/weight_boosting.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/ensemble/voting.py::_BaseVoting.fit"
+      ],
+      "chunk_ranking": [
+        "sklearn/ensemble/voting.py::_BaseVoting.fit",
+        "sklearn/ensemble/voting.py::VotingClassifier.fit",
+        "sklearn/ensemble/voting.py::_parallel_fit_estimator",
+        "sklearn/ensemble/voting.py::VotingClassifier.predict",
+        "sklearn/ensemble/voting.py::VotingClassifier",
+        "sklearn/ensemble/voting.py::VotingRegressor.fit",
+        "sklearn/ensemble/voting.py::_BaseVoting._weights_not_none",
+        "sklearn/ensemble/weight_boosting.py::BaseWeightBoosting.fit",
+        "sklearn/ensemble/voting.py::VotingClassifier.transform",
+        "sklearn/ensemble/voting.py::_BaseVoting.set_params"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.9702,
+      "search_seconds": 0.1465
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14894",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/svm/base.py"
+      ],
+      "ranking": [
+        "sklearn/svm/base.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/svm/base.py::BaseLibSVM._sparse_fit"
+      ],
+      "chunk_ranking": [
+        "sklearn/svm/base.py::BaseLibSVM._sparse_fit",
+        "sklearn/svm/base.py::BaseLibSVM.fit",
+        "sklearn/svm/base.py::_fit_liblinear",
+        "sklearn/svm/base.py::BaseSVC.predict",
+        "sklearn/svm/base.py::BaseLibSVM._dense_fit",
+        "sklearn/svm/base.py::_one_vs_one_coef",
+        "sklearn/svm/base.py::BaseSVC._get_coef",
+        "sklearn/svm/base.py::BaseLibSVM.n_support_",
+        "sklearn/svm/base.py::BaseLibSVM._sparse_decision_function",
+        "sklearn/svm/base.py::BaseSVC._validate_targets"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 8.6599,
+      "search_seconds": 0.1366
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14983",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "ranking": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/model_selection/_split.py::<module>",
+        "sklearn/model_selection/_split.py::_build_repr"
+      ],
+      "chunk_ranking": [
+        "sklearn/model_selection/_split.py::RepeatedStratifiedKFold",
+        "sklearn/model_selection/_split.py::RepeatedKFold",
+        "sklearn/model_selection/_split.py::_RepeatedSplits.__init__",
+        "sklearn/model_selection/_split.py::_build_repr",
+        "sklearn/model_selection/_split.py::RepeatedStratifiedKFold.__init__",
+        "sklearn/model_selection/_split.py::_RepeatedSplits",
+        "sklearn/model_selection/_split.py::RepeatedKFold.__init__",
+        "sklearn/model_selection/_split.py::_RepeatedSplits.split",
+        "sklearn/model_selection/_split.py::BaseCrossValidator.__repr__",
+        "sklearn/model_selection/_split.py::BaseShuffleSplit.__repr__"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.5,
+        "recall@10": 0.5,
+        "mrr@10": 0.25,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.1915,
+      "search_seconds": 0.1416
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-15535",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/metrics/cluster/_supervised.py"
+      ],
+      "ranking": [
+        "sklearn/metrics/cluster/_supervised.py",
+        "sklearn/feature_selection/_mutual_info.py",
+        "sklearn/metrics/cluster/__init__.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/metrics/cluster/_supervised.py::check_clusterings"
+      ],
+      "chunk_ranking": [
+        "sklearn/metrics/cluster/_supervised.py::mutual_info_score",
+        "sklearn/metrics/cluster/_supervised.py::adjusted_mutual_info_score",
+        "sklearn/metrics/cluster/_supervised.py::normalized_mutual_info_score",
+        "sklearn/feature_selection/_mutual_info.py::_estimate_mi",
+        "sklearn/metrics/cluster/_supervised.py::<module>",
+        "sklearn/feature_selection/_mutual_info.py::_compute_mi",
+        "sklearn/metrics/cluster/_supervised.py::check_clusterings",
+        "sklearn/feature_selection/_mutual_info.py::_compute_mi_cc",
+        "sklearn/feature_selection/_mutual_info.py::<module>",
+        "sklearn/metrics/cluster/__init__.py::<module>"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.14285714285714285,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.8332,
+      "search_seconds": 0.14
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25500",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/isotonic.py"
+      ],
+      "ranking": [
+        "sklearn/calibration.py",
+        "sklearn/isotonic.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "gold_chunks": [
+        "sklearn/isotonic.py::IsotonicRegression",
+        "sklearn/isotonic.py::IsotonicRegression.predict",
+        "sklearn/isotonic.py::IsotonicRegression.transform"
+      ],
+      "chunk_ranking": [
+        "sklearn/calibration.py::_fit_calibrator",
+        "sklearn/calibration.py::CalibratedClassifierCV",
+        "sklearn/calibration.py::<module>",
+        "sklearn/calibration.py::CalibratedClassifierCV.fit",
+        "sklearn/calibration.py::_CalibratedClassifier.predict_proba",
+        "sklearn/isotonic.py::IsotonicRegression.transform",
+        "sklearn/calibration.py::_CalibratedClassifier",
+        "sklearn/calibration.py::_fit_classifier_calibrator_pair",
+        "sklearn/isotonic.py::IsotonicRegression",
+        "sklearn/calibration.py::_compute_predictions"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.6666666666666666,
+        "mrr@10": 0.16666666666666666,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 2.67,
+      "search_seconds": 0.1482
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25570",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/compose/_column_transformer.py"
+      ],
+      "ranking": [
+        "sklearn/compose/_column_transformer.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._hstack"
+      ],
+      "chunk_ranking": [
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._hstack",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._iter",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer.transform",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer.fit_transform",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._add_prefix_for_feature_names_out",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._update_fitted_transformers",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._fit_transform",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._validate_output",
+        "sklearn/compose/_column_transformer.py::ColumnTransformer._record_output_indices"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.5099,
+      "search_seconds": 0.1566
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25638",
+      "repo": "scikit-learn/scikit-learn",
+      "category": 1,
+      "gold_files": [
+        "sklearn/utils/multiclass.py"
+      ],
+      "ranking": [
+        "sklearn/utils/multiclass.py",
+        "sklearn/metrics/_classification.py",
+        "sklearn/utils/_encode.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sklearn/utils/multiclass.py::is_multilabel",
+        "sklearn/utils/multiclass.py::type_of_target"
+      ],
+      "chunk_ranking": [
+        "sklearn/utils/multiclass.py::unique_labels",
+        "sklearn/utils/multiclass.py::type_of_target",
+        "sklearn/utils/multiclass.py::is_multilabel",
+        "sklearn/utils/multiclass.py::_unique_multiclass",
+        "sklearn/utils/multiclass.py::<module>",
+        "sklearn/metrics/_classification.py::_check_targets",
+        "sklearn/utils/multiclass.py::_unique_indicator",
+        "sklearn/utils/_encode.py::_unique",
+        "sklearn/utils/_encode.py::_unique_python",
+        "sklearn/utils/_encode.py::_encode"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 1.3333,
+      "search_seconds": 0.1541
+    },
+    {
+      "instance_id": "sympy__sympy-12171",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/printing/mathematica.py"
+      ],
+      "ranking": [
+        "sympy/printing/mathematica.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/printing/mathematica.py::<module>"
+      ],
+      "chunk_ranking": [
+        "sympy/printing/mathematica.py::MCodePrinter",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Mul",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Infinity",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Function",
+        "sympy/printing/mathematica.py::<module>",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Pow",
+        "sympy/printing/mathematica.py::MCodePrinter._print_NegativeInfinity",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Pi",
+        "sympy/printing/mathematica.py::mathematica_code",
+        "sympy/printing/mathematica.py::MCodePrinter._print_list"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.2,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 3.6208,
+      "search_seconds": 0.1346
+    },
+    {
+      "instance_id": "sympy__sympy-12419",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/matrices/expressions/matexpr.py"
+      ],
+      "ranking": [
+        "sympy/concrete/summations.py",
+        "sympy/matrices/expressions/matmul.py",
+        "sympy/simplify/simplify.py",
+        "sympy/matrices/matrices.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0
+      },
+      "gold_chunks": [
+        "sympy/matrices/expressions/matexpr.py::<module>",
+        "sympy/matrices/expressions/matexpr.py::Identity",
+        "sympy/matrices/expressions/matexpr.py::Identity._entry",
+        "sympy/matrices/expressions/matexpr.py::MatrixElement._eval_derivative"
+      ],
+      "chunk_ranking": [
+        "sympy/concrete/summations.py::eval_sum",
+        "sympy/concrete/summations.py::Sum.doit",
+        "sympy/concrete/summations.py::Sum",
+        "sympy/concrete/summations.py::eval_sum_symbolic",
+        "sympy/concrete/summations.py::Sum._eval_is_zero",
+        "sympy/matrices/expressions/matmul.py::refine_MatMul",
+        "sympy/concrete/summations.py::Sum._eval_simplify",
+        "sympy/simplify/simplify.py::sum_add",
+        "sympy/simplify/simplify.py::sum_simplify",
+        "sympy/matrices/matrices.py::MatrixProperties._eval_is_Identity"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 1.8507,
+      "search_seconds": 0.1468
+    },
+    {
+      "instance_id": "sympy__sympy-13031",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/matrices/sparse.py"
+      ],
+      "ranking": [
+        "sympy/matrices/common.py",
+        "sympy/matrices/matrices.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0
+      },
+      "gold_chunks": [
+        "sympy/matrices/sparse.py::MutableSparseMatrix.col_join",
+        "sympy/matrices/sparse.py::MutableSparseMatrix.row_join"
+      ],
+      "chunk_ranking": [
+        "sympy/matrices/common.py::MatrixShaping.hstack",
+        "sympy/matrices/common.py::MatrixShaping.vstack",
+        "sympy/matrices/common.py::MatrixShaping.col_join",
+        "sympy/matrices/common.py::MatrixShaping.row_join",
+        "sympy/matrices/matrices.py::MatrixBase._handle_creation_inputs",
+        "sympy/matrices/common.py::MatrixShaping._eval_col_join",
+        "sympy/matrices/common.py::MatrixShaping._eval_row_join",
+        "sympy/matrices/matrices.py::MatrixBase._format_str",
+        "sympy/matrices/matrices.py::MatrixBase.dot",
+        "sympy/matrices/common.py::MatrixShaping.col_insert"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 2.7566,
+      "search_seconds": 0.145
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/core/mod.py"
+      ],
+      "ranking": [
+        "sympy/core/mod.py",
+        "sympy/core/numbers.py",
+        "sympy/polys/rings.py",
+        "sympy/core/expr.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/core/mod.py::Mod.eval"
+      ],
+      "chunk_ranking": [
+        "sympy/core/mod.py::Mod.eval",
+        "sympy/core/numbers.py::Integer.__mod__",
+        "sympy/core/mod.py::Mod._eval_is_integer",
+        "sympy/polys/rings.py::PolyElement.__mod__",
+        "sympy/core/numbers.py::Float.__mod__",
+        "sympy/core/mod.py::Mod",
+        "sympy/core/numbers.py::Rational.__mod__",
+        "sympy/core/expr.py::Expr.__mod__",
+        "sympy/core/numbers.py::Integer.__rmod__",
+        "sympy/core/mod.py::Mod._eval_is_nonnegative"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 2.6205,
+      "search_seconds": 0.1314
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/functions/elementary/hyperbolic.py"
+      ],
+      "ranking": [
+        "sympy/functions/elementary/hyperbolic.py",
+        "sympy/functions/elementary/trigonometric.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/functions/elementary/hyperbolic.py::coth.eval"
+      ],
+      "chunk_ranking": [
+        "sympy/functions/elementary/hyperbolic.py::coth.eval",
+        "sympy/functions/elementary/hyperbolic.py::tanh.eval",
+        "sympy/functions/elementary/trigonometric.py::cot.eval",
+        "sympy/functions/elementary/hyperbolic.py::acoth.eval",
+        "sympy/functions/elementary/hyperbolic.py::coth",
+        "sympy/functions/elementary/hyperbolic.py::cosh.eval",
+        "sympy/functions/elementary/hyperbolic.py::sinh.eval",
+        "sympy/functions/elementary/hyperbolic.py::coth._eval_as_leading_term",
+        "sympy/functions/elementary/hyperbolic.py::coth._eval_rewrite_as_tractable",
+        "sympy/functions/elementary/trigonometric.py::cot._eval_subs"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.8233,
+      "search_seconds": 0.1346
+    },
+    {
+      "instance_id": "sympy__sympy-14396",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/polys/polyoptions.py"
+      ],
+      "ranking": [
+        "sympy/polys/polyoptions.py",
+        "sympy/polys/polytools.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/polys/polyoptions.py::Domain",
+        "sympy/polys/polyoptions.py::Domain.preprocess"
+      ],
+      "chunk_ranking": [
+        "sympy/polys/polyoptions.py::Domain.preprocess",
+        "sympy/polys/polyoptions.py::Domain",
+        "sympy/polys/polyoptions.py::Domain.postprocess",
+        "sympy/polys/polyoptions.py::Options.__init__",
+        "sympy/polys/polyoptions.py::Extension.postprocess",
+        "sympy/polys/polyoptions.py::Auto.postprocess",
+        "sympy/polys/polyoptions.py::Modulus.postprocess",
+        "sympy/polys/polytools.py::Poly._from_poly",
+        "sympy/polys/polyoptions.py::Options",
+        "sympy/polys/polyoptions.py::Extension.preprocess"
+      ],
+      "function_scores": {
+        "recall@1": 0.5,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.6995,
+      "search_seconds": 0.1467
+    },
+    {
+      "instance_id": "sympy__sympy-15345",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/printing/mathematica.py"
+      ],
+      "ranking": [
+        "sympy/printing/mathematica.py",
+        "sympy/parsing/mathematica.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/printing/mathematica.py::<module>",
+        "sympy/printing/mathematica.py::MCodePrinter",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Integral"
+      ],
+      "chunk_ranking": [
+        "sympy/printing/mathematica.py::MCodePrinter._print_Function",
+        "sympy/printing/mathematica.py::<module>",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Pow",
+        "sympy/printing/mathematica.py::MCodePrinter",
+        "sympy/printing/mathematica.py::mathematica_code",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Mul",
+        "sympy/parsing/mathematica.py::MathematicaParser",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Infinity",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Pi",
+        "sympy/printing/mathematica.py::MCodePrinter._print_Sum"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.6666666666666666,
+        "recall@10": 0.6666666666666666,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 3.7627,
+      "search_seconds": 0.1317
+    },
+    {
+      "instance_id": "sympy__sympy-15346",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/simplify/trigsimp.py"
+      ],
+      "ranking": [
+        "sympy/functions/elementary/trigonometric.py",
+        "sympy/simplify/simplify.py",
+        "sympy/simplify/trigsimp.py",
+        "sympy/simplify/fu.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333
+      },
+      "gold_chunks": [
+        "sympy/simplify/trigsimp.py::_futrig"
+      ],
+      "chunk_ranking": [
+        "sympy/functions/elementary/trigonometric.py::sin.eval",
+        "sympy/functions/elementary/trigonometric.py::cos.eval",
+        "sympy/functions/elementary/trigonometric.py::cos._eval_expand_trig",
+        "sympy/functions/elementary/trigonometric.py::sin._eval_expand_trig",
+        "sympy/simplify/simplify.py::simplify",
+        "sympy/functions/elementary/trigonometric.py::TrigonometricFunction._eval_is_rational",
+        "sympy/simplify/trigsimp.py::__trigsimp",
+        "sympy/functions/elementary/trigonometric.py::cos._eval_rewrite_as_sqrt",
+        "sympy/simplify/fu.py::TR8",
+        "sympy/functions/elementary/trigonometric.py::ReciprocalTrigonometricFunction.eval"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 3.3467,
+      "search_seconds": 0.1325
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/simplify/fu.py"
+      ],
+      "ranking": [
+        "sympy/simplify/fu.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/simplify/fu.py::_TR56"
+      ],
+      "chunk_ranking": [
+        "sympy/simplify/fu.py::fu",
+        "sympy/simplify/fu.py::<module>",
+        "sympy/simplify/fu.py::TR6",
+        "sympy/simplify/fu.py::TR14",
+        "sympy/simplify/fu.py::_TR56",
+        "sympy/simplify/fu.py::TRpower",
+        "sympy/simplify/fu.py::TR8",
+        "sympy/simplify/fu.py::TR3",
+        "sympy/simplify/fu.py::TR10i",
+        "sympy/simplify/fu.py::TR111"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.2,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 13.0834,
+      "search_seconds": 0.1411
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/geometry/point.py"
+      ],
+      "ranking": [
+        "sympy/geometry/point.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/geometry/point.py::Point",
+        "sympy/geometry/point.py::Point.__neg__"
+      ],
+      "chunk_ranking": [
+        "sympy/geometry/point.py::Point.__new__",
+        "sympy/geometry/point.py::Point",
+        "sympy/geometry/point.py::Point.__add__",
+        "sympy/geometry/point.py::Point.__mul__",
+        "sympy/geometry/point.py::<module>",
+        "sympy/geometry/point.py::Point.__div__",
+        "sympy/geometry/point.py::Point2D",
+        "sympy/geometry/point.py::Point.is_scalar_multiple",
+        "sympy/geometry/point.py::Point._normalize_dimension",
+        "sympy/geometry/point.py::Point.__neg__"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.5,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 5.0075,
+      "search_seconds": 0.1358
+    },
+    {
+      "instance_id": "sympy__sympy-18532",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/core/basic.py"
+      ],
+      "ranking": [
+        "sympy/core/basic.py",
+        "sympy/core/expr.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/core/basic.py::Basic.atoms"
+      ],
+      "chunk_ranking": [
+        "sympy/core/basic.py::Basic.atoms",
+        "sympy/core/basic.py::Atom",
+        "sympy/core/expr.py::Expr",
+        "sympy/core/basic.py::_atomic",
+        "sympy/core/expr.py::AtomicExpr",
+        "sympy/core/basic.py::Atom._sorted_args",
+        "sympy/core/expr.py::AtomicExpr._eval_derivative_n_times",
+        "sympy/core/expr.py::Expr.as_terms",
+        "sympy/core/basic.py::Basic.free_symbols",
+        "sympy/core/expr.py::<module>"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 6.6637,
+      "search_seconds": 0.1297
+    },
+    {
+      "instance_id": "sympy__sympy-18835",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/utilities/iterables.py"
+      ],
+      "ranking": [
+        "sympy/utilities/iterables.py",
+        "sympy/core/compatibility.py",
+        "sympy/__init__.py",
+        "sympy/utilities/_compilation/util.py",
+        "sympy/utilities/__init__.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/utilities/iterables.py::uniq"
+      ],
+      "chunk_ranking": [
+        "sympy/utilities/iterables.py::uniq",
+        "sympy/utilities/iterables.py::has_dups",
+        "sympy/core/compatibility.py::<module>",
+        "sympy/__init__.py::<module>",
+        "sympy/utilities/iterables.py::<module>",
+        "sympy/utilities/iterables.py::multiset_permutations",
+        "sympy/utilities/_compilation/util.py::unique_list",
+        "sympy/utilities/__init__.py::<module>",
+        "sympy/utilities/iterables.py::multiset_combinations",
+        "sympy/core/compatibility.py::ordered"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.6608,
+      "search_seconds": 0.2344
+    },
+    {
+      "instance_id": "sympy__sympy-20154",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/utilities/iterables.py"
+      ],
+      "ranking": [
+        "sympy/utilities/iterables.py",
+        "sympy/ntheory/partitions_.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/utilities/iterables.py::partitions"
+      ],
+      "chunk_ranking": [
+        "sympy/utilities/iterables.py::partitions",
+        "sympy/utilities/iterables.py::ordered_partitions",
+        "sympy/utilities/iterables.py::_set_partitions",
+        "sympy/utilities/iterables.py::multiset_partitions",
+        "sympy/utilities/iterables.py::binary_partitions",
+        "sympy/utilities/iterables.py::_partition",
+        "sympy/utilities/iterables.py::<module>",
+        "sympy/utilities/iterables.py::kbins",
+        "sympy/utilities/iterables.py::multiset_permutations",
+        "sympy/ntheory/partitions_.py::npartitions"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 18.5871,
+      "search_seconds": 0.323
+    },
+    {
+      "instance_id": "sympy__sympy-20212",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/core/power.py"
+      ],
+      "ranking": [
+        "sympy/core/power.py",
+        "sympy/core/numbers.py",
+        "sympy/core/evalf.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/core/power.py::Pow.__new__"
+      ],
+      "chunk_ranking": [
+        "sympy/core/power.py::Pow",
+        "sympy/core/power.py::Pow.__new__",
+        "sympy/core/power.py::Pow._eval_power",
+        "sympy/core/numbers.py::Zero._eval_power",
+        "sympy/core/numbers.py::Infinity._eval_power",
+        "sympy/core/power.py::Pow._eval_is_zero",
+        "sympy/core/numbers.py::Float._eval_power",
+        "sympy/core/evalf.py::evalf_pow",
+        "sympy/core/numbers.py::ComplexInfinity._eval_power",
+        "sympy/core/power.py::Pow._eval_is_meromorphic"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 8.8794,
+      "search_seconds": 0.1375
+    },
+    {
+      "instance_id": "sympy__sympy-20322",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/core/mul.py"
+      ],
+      "ranking": [
+        "sympy/functions/elementary/integers.py",
+        "sympy/core/evalf.py",
+        "sympy/simplify/simplify.py",
+        "sympy/parsing/latex/_parse_latex_antlr.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0
+      },
+      "gold_chunks": [
+        "sympy/core/mul.py::<module>",
+        "sympy/core/mul.py::Mul",
+        "sympy/core/mul.py::Mul._eval_is_integer"
+      ],
+      "chunk_ranking": [
+        "sympy/functions/elementary/integers.py::ceiling._eval_number",
+        "sympy/core/evalf.py::get_integer_part",
+        "sympy/simplify/simplify.py::simplify",
+        "sympy/functions/elementary/integers.py::ceiling",
+        "sympy/parsing/latex/_parse_latex_antlr.py::convert_ceil",
+        "sympy/functions/elementary/integers.py::floor._eval_number",
+        "sympy/core/evalf.py::evalf_ceiling",
+        "sympy/functions/elementary/integers.py::ceiling._eval_nseries",
+        "sympy/functions/elementary/integers.py::ceiling.__ge__",
+        "sympy/functions/elementary/integers.py::RoundFunction.eval"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 6.2636,
+      "search_seconds": 0.1311
+    },
+    {
+      "instance_id": "sympy__sympy-21171",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/printing/latex.py"
+      ],
+      "ranking": [
+        "sympy/printing/latex.py",
+        "sympy/printing/pretty/pretty.py",
+        "sympy/functions/special/singularity_functions.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/printing/latex.py::LatexPrinter._print_SingularityFunction"
+      ],
+      "chunk_ranking": [
+        "sympy/printing/latex.py::LatexPrinter._print_SingularityFunction",
+        "sympy/printing/latex.py::LatexPrinter._print_Function",
+        "sympy/printing/pretty/pretty.py::PrettyPrinter._print_SingularityFunction",
+        "sympy/printing/latex.py::LatexPrinter._print_Pow",
+        "sympy/printing/latex.py::LatexPrinter",
+        "sympy/printing/latex.py::<module>",
+        "sympy/printing/latex.py::LatexPrinter._print_Mul",
+        "sympy/printing/latex.py::LatexPrinter._print_Heaviside",
+        "sympy/functions/special/singularity_functions.py::SingularityFunction",
+        "sympy/printing/latex.py::LatexPrinter._print_FunctionClass"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 14.3342,
+      "search_seconds": 0.4337
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/printing/str.py"
+      ],
+      "ranking": [
+        "sympy/parsing/latex/_parse_latex_antlr.py",
+        "sympy/parsing/latex/_antlr/latexparser.py",
+        "sympy/printing/latex.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0
+      },
+      "gold_chunks": [
+        "sympy/printing/str.py::StrPrinter._print_Mul"
+      ],
+      "chunk_ranking": [
+        "sympy/parsing/latex/_parse_latex_antlr.py::convert_frac",
+        "sympy/parsing/latex/_antlr/latexparser.py::LaTeXParser.func",
+        "sympy/parsing/latex/_antlr/latexparser.py::LaTeXParser.frac",
+        "sympy/printing/latex.py::LatexPrinter._print_Mul",
+        "sympy/parsing/latex/_antlr/latexparser.py::LaTeXParser",
+        "sympy/printing/latex.py::LatexPrinter._print_frac",
+        "sympy/parsing/latex/_antlr/latexparser.py::LaTeXParser.exp",
+        "sympy/parsing/latex/_antlr/latexparser.py::LaTeXParser.exp_nofunc",
+        "sympy/parsing/latex/_parse_latex_antlr.py::parse_latex",
+        "sympy/parsing/latex/_parse_latex_antlr.py::convert_comp"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 8.6686,
+      "search_seconds": 0.132
+    },
+    {
+      "instance_id": "sympy__sympy-21614",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/core/function.py"
+      ],
+      "ranking": [
+        "sympy/core/function.py",
+        "sympy/core/expr.py",
+        "sympy/matrices/expressions/matexpr.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/core/function.py::Derivative",
+        "sympy/core/function.py::Derivative._eval_subs"
+      ],
+      "chunk_ranking": [
+        "sympy/core/function.py::Derivative.__new__",
+        "sympy/core/function.py::Derivative",
+        "sympy/core/function.py::Derivative._eval_subs",
+        "sympy/core/expr.py::AtomicExpr._eval_derivative_n_times",
+        "sympy/core/function.py::Derivative._eval_derivative",
+        "sympy/core/function.py::_derivative_dispatch",
+        "sympy/core/function.py::Derivative.doit",
+        "sympy/core/function.py::Derivative._diff_wrt",
+        "sympy/core/function.py::Derivative.doit_numerically",
+        "sympy/matrices/expressions/matexpr.py::_matrix_derivative"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 4.3391,
+      "search_seconds": 0.1402
+    },
+    {
+      "instance_id": "sympy__sympy-22714",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/geometry/point.py"
+      ],
+      "ranking": [
+        "sympy/geometry/point.py",
+        "sympy/parsing/sympy_parser.py",
+        "sympy/core/sympify.py",
+        "sympy/parsing/ast_parser.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/geometry/point.py::Point.__new__"
+      ],
+      "chunk_ranking": [
+        "sympy/geometry/point.py::Point.__new__",
+        "sympy/parsing/sympy_parser.py::parse_expr",
+        "sympy/core/sympify.py::sympify",
+        "sympy/parsing/ast_parser.py::parse_expr",
+        "sympy/parsing/sympy_parser.py::evaluateFalse",
+        "sympy/parsing/sympy_parser.py::eval_expr",
+        "sympy/parsing/sympy_parser.py::<module>",
+        "sympy/parsing/sympy_parser.py::EvaluateFalseTransformer",
+        "sympy/geometry/point.py::Point",
+        "sympy/parsing/sympy_parser.py::EvaluateFalseTransformer.visit_Call"
+      ],
+      "function_scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "hit@1": 1.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 6.3342,
+      "search_seconds": 0.1395
+    },
+    {
+      "instance_id": "sympy__sympy-23262",
+      "repo": "sympy/sympy",
+      "category": 2,
+      "gold_files": [
+        "sympy/utilities/lambdify.py"
+      ],
+      "ranking": [
+        "sympy/printing/pycode.py",
+        "sympy/utilities/lambdify.py",
+        "sympy/printing/codeprinter.py",
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "gold_chunks": [
+        "sympy/utilities/lambdify.py::_recursive_to_string"
+      ],
+      "chunk_ranking": [
+        "sympy/printing/pycode.py::AbstractPythonCodePrinter",
+        "sympy/printing/pycode.py::AbstractPythonCodePrinter._print_Print",
+        "sympy/utilities/lambdify.py::_EvaluatorPrinter.doprint",
+        "sympy/printing/codeprinter.py::_convert_python_lists",
+        "sympy/printing/pycode.py::PythonCodePrinter._print_Indexed",
+        "sympy/printing/pretty/pretty.py::PrettyPrinter._print_tuple",
+        "sympy/printing/codeprinter.py::CodePrinter.doprint",
+        "sympy/printing/pycode.py::<module>",
+        "sympy/printing/pycode.py::AbstractPythonCodePrinter._print_Return",
+        "sympy/printing/pycode.py::ArrayPrinter._print_OneArray"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "hit@1": 0.0,
+        "hit@5": 0.0,
+        "hit@10": 0.0
+      },
+      "build_seconds": 21.6152,
+      "search_seconds": 0.1596
+    },
+    {
+      "instance_id": "sympy__sympy-24102",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/parsing/mathematica.py"
+      ],
+      "ranking": [
+        "sympy/parsing/mathematica.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/parsing/mathematica.py::MathematicaParser._from_mathematica_to_tokens"
+      ],
+      "chunk_ranking": [
+        "sympy/parsing/mathematica.py::MathematicaParser",
+        "sympy/parsing/mathematica.py::MathematicaParser._parse_after_braces",
+        "sympy/parsing/mathematica.py::MathematicaParser._from_mathematica_to_tokens",
+        "sympy/parsing/mathematica.py::parse_mathematica",
+        "sympy/parsing/mathematica.py::<module>",
+        "sympy/parsing/mathematica.py::_parse_Function",
+        "sympy/parsing/mathematica.py::MathematicaParser._from_tokens_to_fullformlist",
+        "sympy/parsing/mathematica.py::MathematicaParser._get_tokenizer",
+        "sympy/parsing/mathematica.py::MathematicaParser._compile_dictionary",
+        "sympy/parsing/mathematica.py::MathematicaParser._is_op"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 20.4804,
+      "search_seconds": 0.5796
+    },
+    {
+      "instance_id": "sympy__sympy-24152",
+      "repo": "sympy/sympy",
+      "category": 1,
+      "gold_files": [
+        "sympy/physics/quantum/tensorproduct.py"
+      ],
+      "ranking": [
+        "sympy/physics/quantum/tensorproduct.py",
+        "sympy/tensor/functions.py"
+      ],
+      "scores": {
+        "recall@1": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "gold_chunks": [
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct._eval_expand_tensorproduct"
+      ],
+      "chunk_ranking": [
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct",
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct._eval_expand_tensorproduct",
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct.flatten",
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct._eval_rewrite",
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct.__new__",
+        "sympy/physics/quantum/tensorproduct.py::tensor_product_simp",
+        "sympy/physics/quantum/tensorproduct.py::tensor_product_simp_Mul",
+        "sympy/physics/quantum/tensorproduct.py::<module>",
+        "sympy/tensor/functions.py::TensorProduct.__new__",
+        "sympy/physics/quantum/tensorproduct.py::TensorProduct.doit"
+      ],
+      "function_scores": {
+        "recall@1": 0.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "hit@1": 0.0,
+        "hit@5": 1.0,
+        "hit@10": 1.0
+      },
+      "build_seconds": 5.0929,
+      "search_seconds": 0.2256
+    }
+  ]
+}
