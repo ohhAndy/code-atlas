@@ -268,7 +268,7 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 - [x] Measure:
   - Index build time and memory.
   - Query latency at p50 and p95 over all queries, with a warm cache and stated hardware.
-- [ ] Failure analysis: read 10 dev misses and write down why each one failed.
+- [x] Failure analysis: read 10 dev misses and write down why each one failed.
 
 **Done when**
 

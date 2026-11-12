@@ -743,8 +743,49 @@ review before the deep-dive:
     Hit@10 (0.433 -> 0.567, 4 of 30 instances).
   - Path and name add more for cat 1 (+0.032) than cat 2 (+0.012), the direction expected
     if tracebacks' paths match chunk paths. n = 16 and 14: a direction, not a finding.
-- Dev misses: 13 of 30 instances have no gold chunk in the top 10
-  (`notebooks/bm25_misses_dev.md`). Analysis pending.
+- Failure analysis: all 13 dev misses (function-level Hit@10 = 0 for `bm25`), read from
+  `notebooks/bm25_misses_dev.md` (generated from
+  `results/bm25_dev_20261111T230214Z.json`). All 13 analyzed rather than 10, so the sample
+  was not picked after reading. Evidence is the per-token contribution tables: what the
+  gold chunk scored on versus what the top 3 scored on.
+
+  | Instance | Gold rank | Why it failed (evidence) | Type |
+  |---|---|---|---|
+  | django-11797 | 83 | Winners (`get_group_by`) score on the symptom's words (`group`, `by`, `annotate`, `values`); the fix is in `Exact.process_rhs`, which the issue never describes. | symptom ≠ fix |
+  | django-12284 | 31 | Winners score on the pasted example model (`max_length`, `charfield`, `choices` ×23), not on `abstract` / `display`. `get_FOO_display` is built by string formatting, so the name never appears in code. | query noise |
+  | django-15388 | >1000 | Gold matches only `dir`, `file`, `in`: the issue says `templates`, "changes", "restart"; the code says `template`, `changed`, `autoreload`. The real cause (`.py` files reset templates) is not in the issue. | vocabulary mismatch |
+  | django-15738 | 190 | Winners are migration files matching the pasted models (`max_length`, `on_delete`, `unique_together`) and a 646-token chunk matching 43 query words. | query noise |
+  | django-16820 | 476 | Short chunks about `index_together` (`AlterIndexTogether`, 49 tokens) beat the fix in `CreateModel.reduce` (580 tokens, length-penalized). The issue says "squashing"; the code that squashes is `reduce`. | symptom ≠ fix |
+  | django-16873 | 15 | Gold scores on the right words (`autoescape`, `escape`, `join`); winners score on the pasted test case (`assertequal`, `assert`) and a 751-token module chunk matching 41 words a little each. | query noise |
+  | sklearn-10508 | 104 | #1 is the `LabelEncoder` class chunk: right class, wrong chunk. Its docstring example (`le = LabelEncoder()`) mirrors the issue's code (`le` ×10). #2–3 score on traceback words (`kwds`) and numbers. | right class, wrong chunk |
+  | sklearn-14092 | 47 | The issue is a design proposal using NMF and `LogisticRegression` as examples; the winners are those (`beta_loss`, `frobenius`, `l1_ratio`). 225 distinct query tokens. | query noise |
+  | sympy-14024 | 245 | Winners score on REPL variable names (`n1`, `n2`, `e`, `x`). The issue writes `**`; the code is `_eval_power`, and an operator has no tokens. | vocabulary mismatch |
+  | sympy-15308 | 190 | The fix adds `_print_Trace`, so gold is the neighboring chunks (boundary-insertion rule); the issue's one specific word, `Trace`, has nothing to match. Winners score on `but`, `it`, `be`, `should`. | gold-label artifact |
+  | sympy-17630 | 385 | Winners are what the issue and traceback name (`block_collapse`, `BlockMatrix`, `attributeerror`); the fix is in `get_postprocessor`, never mentioned. | symptom ≠ fix |
+  | sympy-19007 | >1000 | #1 is the `BlockMatrix` class chunk. The issue writes `C[i, 0]` (indexing syntax); the code is `_entry`. | vocabulary mismatch |
+  | sympy-22840 | 50 | The pasted output has variables `x0`…`x16`; a benchmark file with the same names wins, each name with idf about 9. | query noise |
+
+  | Type (main cause) | n | What could help |
+  |---|---|---|
+  | Query noise: pasted code, output, tracebacks, variable names | 5 | query cleanup or title weighting (lexical) |
+  | Symptom ≠ fix location | 3 | probably nothing lexical; maybe graph expansion |
+  | Vocabulary mismatch, incl. syntax vs method name (`**`, `[i, 0]`) | 3 | semantic search; stemming only for plurals and inflections |
+  | Right class, wrong chunk | 1 | none planned (class docstring competes with its methods) |
+  | Gold-label artifact | 1 | none: the target does not exist at the base commit |
+
+  - Query noise is the largest group (5 / 13). It fits the cat-1 dilution hypothesis, but
+    n = 13: a direction, not a finding.
+  - Numbers-as-tokens hypothesis: partly seen. Digit-bearing variable names (`x10`, `n1`)
+    drive two misses (22840, 14024); bare traceback line numbers did not decide any miss.
+  - Prediction for Phase 3, to check there: semantic search helps the 3 vocabulary-mismatch
+    misses (15388, 14024, 19007) more than the 5 query-noise misses.
+  - Two of the four "right class" cases (10508, 19007) lose to the class chunk; the class
+    chunk policy (no method bodies, docstring kept) makes the docstring's usage example
+    compete with the methods it describes.
+  - First pass written by me, then checked against the tables in review: 6 / 13 were right
+    on the main cause; 12284 was wrong (blamed common words; the words were rare and the
+    winners matched the pasted model), and 10508, 19007 had no answer. Lesson: name the
+    winners' top tokens and where in the issue they come from before naming a type.
 
 ### Test-split runs
 -
