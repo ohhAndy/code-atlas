@@ -917,6 +917,18 @@ review before the deep-dive:
 - `SemanticRetriever.search` written: embed the query with `embed_query`, normalize it,
   `top_k` against the matrix, map rows to chunk ids. Returns early on an empty corpus
   without embedding the query. All 9 retriever tests pass; suite 282 passed.
+- Check on brute force vs approximate search (PLAN §8, Phase 3), from the measured 0.43
+  ms / 129 MB at 31,500 chunks × 1,024 dims scaled linearly: about 14 ms / 4 GB at 1M,
+  140 ms / 41 GB at 10M. Right: brute force is fine at this size and HNSW belongs at
+  around 10M. Gaps: memory breaks first (24 GB fills at 5 to 6M chunks) and HNSW fixes
+  latency, not memory (it adds a graph; float16 or quantization shrinks vectors);
+  estimated all of GitHub's Python at 100k functions (one sympy snapshot is 31.5k); did
+  not see that query embedding (roughly 100 to 400 ms with Qwen, estimated from batch
+  throughput, not measured) dwarfs the 0.5 ms search; did not know what HNSW loses
+  (exactness: misses would mix index error with model error, while brute force keeps
+  every miss attributable to the model). Wrong: thought normalizing the query changes the
+  ranking; it scales every score by the same 1/|q|, so only the rows' normalization
+  changes the order. Right: depth 100 lets a near-miss in both lists collect two votes.
 - ADR 007 (fusion) written and accepted; min-max fusion parked in `docs/later.md`.
 - Stub `code_atlas.fusion.hybrid.HybridRetriever(first, second, rrf_k, depth)`: fuses two
   already-built chunk retrievers; `search` not written yet. 9 tests with fixed fake
