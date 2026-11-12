@@ -1,0 +1,2274 @@
+{
+  "meta": {
+    "method": "hybrid-sweep",
+    "split": "dev",
+    "k": 10,
+    "created_at": "2026-11-12T22:05:43+00:00",
+    "codeatlas": {
+      "commit": "7da957ee2414764de96cdf99af9441c7480ac788",
+      "dirty": false
+    },
+    "dataset_revision": "6ec7bb89b9342f664a54a6e0a6ea6501d3437cc2",
+    "fused": [
+      "bm25",
+      "semantic-voyage"
+    ],
+    "depth": 100,
+    "rrf_k_grid": [
+      10,
+      30,
+      60,
+      100
+    ],
+    "default": 60,
+    "metric": "function mrr@10",
+    "margin": 0.02,
+    "chosen": 10
+  },
+  "settings": [
+    {
+      "rrf_k": 10,
+      "function_summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.3277777777777778,
+          "recall@5": 0.7055555555555556,
+          "recall@10": 0.7444444444444444,
+          "mrr@10": 0.6138888888888889,
+          "hit@1": 0.43333333333333335,
+          "hit@5": 0.8666666666666667,
+          "hit@10": 0.8666666666666667
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.3095238095238095,
+          "recall@5": 0.7380952380952381,
+          "recall@10": 0.7857142857142857,
+          "mrr@10": 0.5476190476190477,
+          "hit@1": 0.35714285714285715,
+          "hit@5": 0.7857142857142857,
+          "hit@10": 0.7857142857142857
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.35714285714285715,
+          "recall@5": 0.7142857142857143,
+          "recall@10": 0.7857142857142857,
+          "mrr@10": 0.75,
+          "hit@1": 0.5714285714285714,
+          "hit@5": 1.0,
+          "hit@10": 1.0
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.3333333333333333,
+          "recall@5": 0.6481481481481481,
+          "recall@10": 0.6481481481481481,
+          "mrr@10": 0.6111111111111112,
+          "hit@1": 0.4444444444444444,
+          "hit@5": 0.8888888888888888,
+          "hit@10": 0.8888888888888888
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.3020833333333333,
+          "recall@5": 0.7395833333333334,
+          "recall@10": 0.8125,
+          "mrr@10": 0.640625,
+          "hit@1": 0.4375,
+          "hit@5": 0.875,
+          "hit@10": 0.875
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.35714285714285715,
+          "recall@5": 0.6666666666666667,
+          "recall@10": 0.6666666666666667,
+          "mrr@10": 0.5833333333333333,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.8571428571428571,
+          "hit@10": 0.8571428571428571
+        }
+      },
+      "summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.7,
+          "recall@5": 0.9333333333333333,
+          "recall@10": 0.9333333333333333,
+          "mrr@10": 0.7972222222222223
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.5714285714285714,
+          "recall@5": 0.9285714285714286,
+          "recall@10": 0.9285714285714286,
+          "mrr@10": 0.7202380952380952
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.8571428571428571,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.9285714285714286
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.7777777777777778,
+          "recall@5": 0.8888888888888888,
+          "recall@10": 0.8888888888888888,
+          "mrr@10": 0.8148148148148148
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.75,
+          "recall@5": 0.875,
+          "recall@10": 0.875,
+          "mrr@10": 0.8125
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.6428571428571429,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.7797619047619048
+        }
+      },
+      "instances": {
+        "django__django-11583": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/utils/autoreload.py::iter_all_python_module_files",
+            "django/utils/autoreload.py::start_django",
+            "django/utils/autoreload.py::StatReloader.snapshot_files",
+            "django/utils/autoreload.py::StatReloader.tick",
+            "django/utils/autoreload.py::BaseReloader.watched_files",
+            "django/utils/autoreload.py::<module>",
+            "django/core/management/__init__.py::ManagementUtility.execute",
+            "django/utils/autoreload.py::sys_path_directories",
+            "django/utils/autoreload.py::WatchmanReloader._watch_root"
+          ]
+        },
+        "django__django-11797": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/models/sql/compiler.py::SQLCompiler.get_group_by",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/sql/compiler.py::SQLCompiler.as_sql",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/sql/query.py::Query.split_exclude",
+            "django/db/models/query.py::QuerySet.annotate",
+            "django/db/models/sql/query.py::Query.set_group_by",
+            "django/db/models/sql/query.py::Query.build_filter",
+            "django/contrib/auth/migrations/0001_initial.py::Migration",
+            "django/db/models/sql/compiler.py::SQLCompiler.collapse_group_by"
+          ]
+        },
+        "django__django-12284": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/base.py::ModelBase.__new__",
+            "django/db/models/fields/__init__.py::Field._check_choices",
+            "django/db/models/fields/__init__.py::Field.contribute_to_class",
+            "django/db/models/base.py::Model._get_FIELD_display",
+            "django/contrib/auth/models.py::AbstractUser",
+            "django/contrib/auth/base_user.py::AbstractBaseUser",
+            "django/db/models/fields/__init__.py::Field.get_choices",
+            "django/contrib/gis/db/backends/postgis/models.py::PostGISGeometryColumns",
+            "django/db/models/options.py::Options._get_fields",
+            "django/db/models/fields/__init__.py::TextField.formfield"
+          ]
+        },
+        "django__django-12308": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/utils.py::display_for_field",
+            "django/forms/fields.py::JSONField.prepare_value",
+            "django/db/models/fields/json.py::JSONField",
+            "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+            "django/contrib/admin/templatetags/admin_list.py::items_for_result",
+            "django/contrib/admin/utils.py::display_for_value",
+            "django/db/models/sql/compiler.py::SQLInsertCompiler.prepare_value",
+            "django/contrib/admin/helpers.py::<module>",
+            "django/contrib/admin/utils.py::prepare_lookup_value",
+            "django/contrib/postgres/forms/hstore.py::HStoreField.prepare_value"
+          ]
+        },
+        "django__django-12747": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/deletion.py::Collector.delete",
+            "django/db/models/query.py::QuerySet.delete",
+            "django/db/models/deletion.py::Collector.can_fast_delete",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/db/models/query.py::QuerySet._raw_delete",
+            "django/contrib/admin/utils.py::get_deleted_objects",
+            "django/db/models/fields/related_descriptors.py::<module>",
+            "django/db/models/sql/subqueries.py::DeleteQuery.delete_batch",
+            "django/contrib/admin/actions.py::delete_selected",
+            "django/core/management/commands/dumpdata.py::Command.handle"
+          ]
+        },
+        "django__django-13321": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/contrib/sessions/backends/base.py::SessionBase._legacy_decode",
+            "django/contrib/sessions/backends/base.py::SessionBase.decode",
+            "django/contrib/sessions/backends/signed_cookies.py::SessionStore.load",
+            "django/core/signing.py::loads",
+            "django/contrib/sessions/backends/base.py::SessionBase._get_session",
+            "django/contrib/sessions/backends/base.py::SessionBase.encode",
+            "django/contrib/sessions/backends/cached_db.py::SessionStore.load",
+            "django/contrib/sessions/middleware.py::SessionMiddleware.process_response",
+            "django/contrib/auth/__init__.py::_get_user_session_key",
+            "django/contrib/auth/__init__.py::login"
+          ]
+        },
+        "django__django-13964": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/base.py::Model._prepare_related_fields_for_save",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__set__",
+            "django/db/models/fields/related_descriptors.py::ForwardOneToOneDescriptor.__set__",
+            "django/db/models/base.py::Model._save_parents",
+            "django/db/models/base.py::Model.save_base",
+            "django/db/models/options.py::Options._prepare",
+            "django/db/models/base.py::Model._save_table",
+            "django/contrib/auth/models.py::Permission",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/db/models/fields/reverse_related.py::ForeignObjectRel"
+          ]
+        },
+        "django__django-14667": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/sql/query.py::Query.deferred_to_data",
+            "django/db/models/query.py::QuerySet.defer",
+            "django/db/models/sql/query.py::Query.add_deferred_loading",
+            "django/db/models/query.py::QuerySet.only",
+            "django/db/models/sql/query.py::Query.add_immediate_loading",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/sql/compiler.py::SQLCompiler.get_default_columns",
+            "django/db/models/sql/query.py::Query.check_related_objects",
+            "django/db/models/sql/query.py::Query.get_loaded_field_names",
+            "django/db/backends/oracle/operations.py::DatabaseOperations.bulk_insert_sql"
+          ]
+        },
+        "django__django-14752": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.process_request",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_queryset",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.has_perm",
+            "django/contrib/admin/options.py::ModelAdmin.changelist_view",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_paginator",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView",
+            "django/contrib/admin/checks.py::BaseModelAdminChecks._check_autocomplete_fields_item",
+            "django/contrib/admin/options.py::ModelAdmin._changeform_view",
+            "django/contrib/auth/admin.py::UserAdmin._add_view"
+          ]
+        },
+        "django__django-15388": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/template/autoreload.py::template_changed",
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/template/autoreload.py::get_template_directories",
+            "setup.py::<module>",
+            "django/core/management/templates.py::TemplateCommand.handle",
+            "django/core/files/move.py::file_move_safe",
+            "django/utils/translation/reloader.py::watch_for_translation_changes",
+            "django/db/backends/postgresql/introspection.py::DatabaseIntrospection.get_table_description",
+            "django/utils/autoreload.py::<module>"
+          ]
+        },
+        "django__django-15695": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/db/migrations/operations/models.py::RenameIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.database_forwards",
+            "django/db/migrations/operations/models.py::RenameIndex.state_forwards",
+            "django/db/migrations/migration.py::Migration.unapply",
+            "django/db/migrations/operations/models.py::RenameIndex.reduce",
+            "django/db/migrations/operations/models.py::RenameModel.database_backwards",
+            "django/db/migrations/migration.py::Migration.apply",
+            "django/db/migrations/operations/models.py::RenameIndex.describe",
+            "django/db/migrations/operations/models.py::AlterTogetherOptionOperation.database_forwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_forwards"
+          ]
+        },
+        "django__django-15738": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor._remake_table",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_composed_index",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._alter_field",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_deleted_models",
+            "django/db/migrations/executor.py::MigrationExecutor.detect_soft_applied",
+            "django/contrib/redirects/migrations/0001_initial.py::Migration",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models",
+            "django/contrib/auth/migrations/0001_initial.py::Migration",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_unique_together"
+          ]
+        },
+        "django__django-16820": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._model_indexes_sql",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.create_altered_indexes",
+            "django/db/migrations/operations/models.py::AlterIndexTogether",
+            "django/core/management/commands/squashmigrations.py::Command.handle",
+            "django/db/models/options.py::Options.contribute_to_class",
+            "django/db/migrations/state.py::ModelState.from_model",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together",
+            "django/db/models/base.py::Model._check_index_together",
+            "django/db/models/base.py::Model._check_indexes",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models"
+          ]
+        },
+        "django__django-16873": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/template/defaulttags.py::autoescape",
+            "django/template/defaultfilters.py::join",
+            "django/template/base.py::<module>",
+            "django/template/defaulttags.py::do_filter",
+            "django/template/defaultfilters.py::escape_filter",
+            "django/test/testcases.py::SimpleTestCase.assertFieldOutput",
+            "django/template/defaultfilters.py::linenumbers",
+            "django/template/base.py::FilterExpression.resolve",
+            "django/template/defaultfilters.py::linebreaksbr",
+            "django/template/defaultfilters.py::<module>"
+          ]
+        },
+        "scikit-learn__scikit-learn-10508": {
+          "mrr@10": 0.25,
+          "chunk_ranking": [
+            "sklearn/preprocessing/label.py::LabelEncoder",
+            "sklearn/preprocessing/label.py::label_binarize",
+            "sklearn/utils/multiclass.py::type_of_target",
+            "sklearn/preprocessing/label.py::LabelEncoder.transform",
+            "sklearn/preprocessing/label.py::LabelBinarizer",
+            "sklearn/utils/class_weight.py::compute_class_weight",
+            "sklearn/metrics/pairwise.py::pairwise_distances",
+            "sklearn/preprocessing/label.py::LabelEncoder.fit_transform",
+            "sklearn/preprocessing/data.py::CategoricalEncoder",
+            "sklearn/utils/fixes.py::<module>"
+          ]
+        },
+        "scikit-learn__scikit-learn-11040": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sklearn/neighbors/unsupervised.py::NearestNeighbors",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors",
+            "sklearn/neighbors/classification.py::KNeighborsClassifier",
+            "sklearn/neighbors/base.py::NeighborsBase._fit",
+            "sklearn/neighbors/regression.py::KNeighborsRegressor",
+            "sklearn/neighbors/lof.py::LocalOutlierFactor",
+            "sklearn/neighbors/base.py::RadiusNeighborsMixin.radius_neighbors",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors_graph",
+            "sklearn/neighbors/classification.py::RadiusNeighborsClassifier",
+            "sklearn/neighbors/base.py::NeighborsBase._check_algorithm_metric"
+          ]
+        },
+        "scikit-learn__scikit-learn-13497": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/feature_selection/mutual_info_.py::_estimate_mi",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_regression",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_classif",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cd",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cc",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi",
+            "sklearn/metrics/cluster/supervised.py::adjusted_mutual_info_score",
+            "sklearn/impute.py::MissingIndicator",
+            "sklearn/utils/__init__.py::axis0_safe_slice",
+            "sklearn/datasets/svmlight_format.py::load_svmlight_files"
+          ]
+        },
+        "scikit-learn__scikit-learn-14087": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV.fit",
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV",
+            "sklearn/linear_model/logistic.py::_logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression",
+            "sklearn/linear_model/logistic.py::_log_reg_scoring_path",
+            "sklearn/linear_model/logistic.py::logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression.fit",
+            "examples/linear_model/plot_logistic_path.py::<module>",
+            "sklearn/utils/_show_versions.py::_get_blas_info",
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV.__init__"
+          ]
+        },
+        "scikit-learn__scikit-learn-14092": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis._validate_params",
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation._check_params",
+            "sklearn/utils/estimator_checks.py::set_checking_parameters",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis",
+            "sklearn/decomposition/nmf.py::non_negative_factorization",
+            "sklearn/decomposition/nmf.py::NMF",
+            "examples/compose/plot_compare_reduction.py::<module>",
+            "sklearn/utils/validation.py::check_scalar",
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation",
+            "sklearn/utils/validation.py::check_array"
+          ]
+        },
+        "scikit-learn__scikit-learn-15512": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/cluster/_affinity_propagation.py::affinity_propagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.fit",
+            "sklearn/cluster/_k_means.py::KMeans",
+            "examples/cluster/plot_affinity_propagation.py::<module>",
+            "sklearn/cluster/_k_means.py::k_means",
+            "sklearn/cluster/_k_means.py::_kmeans_single_lloyd",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.predict",
+            "sklearn/cluster/_mean_shift.py::MeanShift",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.fit_predict"
+          ]
+        },
+        "scikit-learn__scikit-learn-25747": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sklearn/utils/_set_output.py::_wrap_data_with_container",
+            "sklearn/utils/_set_output.py::_wrap_in_pandas_container",
+            "sklearn/utils/_set_output.py::_wrap_method_output",
+            "sklearn/_config.py::config_context",
+            "sklearn/utils/_set_output.py::_get_output_config",
+            "build_tools/update_environments_and_lock_files.py::<module>",
+            "sklearn/pipeline.py::FeatureUnion",
+            "sklearn/compose/_column_transformer.py::ColumnTransformer",
+            "sklearn/pipeline.py::FeatureUnion.set_output",
+            "sklearn/_config.py::set_config"
+          ]
+        },
+        "sympy__sympy-12454": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/matrices/matrices.py::MatrixProperties.is_upper",
+            "sympy/matrices/matrices.py::MatrixShaping.extract",
+            "sympy/matrices/dense.py::DenseMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_upper_hessenberg",
+            "sympy/matrices/sparse.py::SparseMatrix.__getitem__",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower_hessenberg",
+            "sympy/matrices/expressions/matexpr.py::MatrixExpr.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_zero"
+          ]
+        },
+        "sympy__sympy-13043": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/integrals/intpoly.py::decompose",
+            "sympy/core/compatibility.py::ordered",
+            "sympy/polys/polytools.py::decompose",
+            "sympy/integrals/intpoly.py::main_integrate",
+            "sympy/solvers/deutils.py::_desolve",
+            "sympy/integrals/integrals.py::Integral._eval_integral",
+            "sympy/integrals/intpoly.py::polytope_integrate",
+            "sympy/plotting/experimental_lambdify.py::<module>",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/logic/boolalg.py::BooleanTrue"
+          ]
+        },
+        "sympy__sympy-14024": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sympy/core/expr.py::Expr.as_independent",
+            "sympy/core/power.py::Pow._eval_power",
+            "sympy/core/numbers.py::Integer._eval_power",
+            "sympy/integrals/integrals.py::Integral.as_sum",
+            "sympy/simplify/powsimp.py::powsimp",
+            "sympy/core/power.py::Pow.__new__",
+            "sympy/simplify/fu.py::as_f_sign_1",
+            "sympy/assumptions/refine.py::refine_Pow",
+            "sympy/concrete/summations.py::Sum.euler_maclaurin",
+            "sympy/simplify/simplify.py::posify"
+          ]
+        },
+        "sympy__sympy-15308": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sympy/printing/latex.py::latex",
+            "sympy/plotting/experimental_lambdify.py::<module>",
+            "sympy/printing/latex.py::LatexPrinter",
+            "sympy/core/basic.py::Basic._subs",
+            "sympy/printing/latex.py::LatexPrinter._print_MatPow",
+            "sympy/printing/latex.py::LatexPrinter._print_Transpose",
+            "sympy/interactive/printing.py::init_printing",
+            "sympy/printing/latex.py::LatexPrinter._print_Tr",
+            "sympy/printing/latex.py::LatexPrinter._print_Function",
+            "sympy/printing/julia.py::julia_code"
+          ]
+        },
+        "sympy__sympy-17630": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockmul",
+            "sympy/matrices/matrices.py::MatrixBase.D",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.__new__",
+            "sympy/matrices/expressions/blockmatrix.py::bc_block_plus_ident",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.colblocksizes",
+            "sympy/core/sympify.py::sympify"
+          ]
+        },
+        "sympy__sympy-18189": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/solvers/diophantine.py::diophantine",
+            "sympy/solvers/diophantine.py::power_representation",
+            "sympy/solvers/diophantine.py::<module>",
+            "sympy/utilities/benchmarking.py::BenchSession.print_bench_results",
+            "sympy/solvers/diophantine.py::diop_solve",
+            "sympy/solvers/diophantine.py::_diop_quadratic",
+            "sympy/solvers/diophantine.py::cornacchia",
+            "sympy/solvers/solvers.py::_solve_system",
+            "sympy/combinatorics/polyhedron.py::<module>",
+            "sympy/solvers/diophantine.py::merge_solution"
+          ]
+        },
+        "sympy__sympy-18199": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/ntheory/residue_ntheory.py::nthroot_mod",
+            "sympy/solvers/solveset.py::_invert_modular",
+            "sympy/ntheory/residue_ntheory.py::sqrt_mod",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/ntheory/modular.py::solve_congruence",
+            "sympy/ntheory/residue_ntheory.py::_nthroot_mod1",
+            "sympy/solvers/solveset.py::_solve_modular",
+            "sympy/simplify/simplify.py::nthroot",
+            "sympy/ntheory/residue_ntheory.py::_sqrt_mod1",
+            "sympy/solvers/solveset.py::_is_modular"
+          ]
+        },
+        "sympy__sympy-19007": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._entry",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/printing/rust.py::rust_code",
+            "sympy/printing/octave.py::octave_code",
+            "sympy/assumptions/handlers/matrices.py::BM_elements",
+            "sympy/printing/julia.py::julia_code",
+            "sympy/printing/ccode.py::ccode",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix"
+          ]
+        },
+        "sympy__sympy-22840": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sympy/simplify/cse_main.py::cse",
+            "sympy/simplify/cse_main.py::tree_cse",
+            "sympy/simplify/cse_main.py::_cse_homogeneous",
+            "sympy/polys/benchmarks/bench_groebnertools.py::<module>",
+            "sympy/utilities/codegen.py::CodeGen.routine",
+            "sympy/simplify/cse_main.py::cse_release_variables",
+            "sympy/functions/elementary/trigonometric.py::cos._eval_rewrite_as_sqrt",
+            "sympy/printing/glsl.py::glsl_code",
+            "sympy/simplify/cse_main.py::opt_cse",
+            "sympy/core/symbol.py::symbols"
+          ]
+        }
+      }
+    },
+    {
+      "rrf_k": 30,
+      "function_summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.3111111111111111,
+          "recall@5": 0.6222222222222222,
+          "recall@10": 0.7333333333333333,
+          "mrr@10": 0.5458333333333333,
+          "hit@1": 0.4,
+          "hit@5": 0.7666666666666667,
+          "hit@10": 0.8666666666666667
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.3095238095238095,
+          "recall@5": 0.6666666666666667,
+          "recall@10": 0.7619047619047619,
+          "mrr@10": 0.5208333333333334,
+          "hit@1": 0.35714285714285715,
+          "hit@5": 0.7142857142857143,
+          "hit@10": 0.7857142857142857
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.2857142857142857,
+          "recall@5": 0.5714285714285714,
+          "recall@10": 0.7857142857142857,
+          "mrr@10": 0.6095238095238095,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.8571428571428571,
+          "hit@10": 1.0
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.3333333333333333,
+          "recall@5": 0.5925925925925926,
+          "recall@10": 0.6481481481481481,
+          "mrr@10": 0.5351851851851852,
+          "hit@1": 0.4444444444444444,
+          "hit@5": 0.7777777777777778,
+          "hit@10": 0.8888888888888888
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.2708333333333333,
+          "recall@5": 0.6770833333333334,
+          "recall@10": 0.7916666666666666,
+          "mrr@10": 0.5635416666666667,
+          "hit@1": 0.375,
+          "hit@5": 0.8125,
+          "hit@10": 0.875
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.35714285714285715,
+          "recall@5": 0.5595238095238095,
+          "recall@10": 0.6666666666666667,
+          "mrr@10": 0.5255952380952381,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.7142857142857143,
+          "hit@10": 0.8571428571428571
+        }
+      },
+      "summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.6666666666666666,
+          "recall@5": 0.9,
+          "recall@10": 0.9333333333333333,
+          "mrr@10": 0.7577777777777778
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.5714285714285714,
+          "recall@5": 0.8571428571428571,
+          "recall@10": 0.9285714285714286,
+          "mrr@10": 0.6928571428571428
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.7142857142857143,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.8333333333333333
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.7777777777777778,
+          "recall@5": 0.8888888888888888,
+          "recall@10": 0.8888888888888888,
+          "mrr@10": 0.8
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.6875,
+          "recall@5": 0.875,
+          "recall@10": 0.875,
+          "mrr@10": 0.7708333333333334
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.6428571428571429,
+          "recall@5": 0.9285714285714286,
+          "recall@10": 1.0,
+          "mrr@10": 0.7428571428571429
+        }
+      },
+      "instances": {
+        "django__django-11583": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/utils/autoreload.py::iter_all_python_module_files",
+            "django/utils/autoreload.py::start_django",
+            "django/utils/autoreload.py::StatReloader.snapshot_files",
+            "django/utils/autoreload.py::StatReloader.tick",
+            "django/utils/autoreload.py::BaseReloader.watched_files",
+            "django/utils/autoreload.py::<module>",
+            "django/utils/autoreload.py::sys_path_directories",
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/core/management/__init__.py::ManagementUtility.execute"
+          ]
+        },
+        "django__django-11797": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/models/sql/compiler.py::SQLCompiler.get_group_by",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/sql/compiler.py::SQLCompiler.as_sql",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/query.py::QuerySet.annotate",
+            "django/db/models/sql/query.py::Query.split_exclude",
+            "django/db/models/sql/query.py::Query.set_group_by",
+            "django/db/models/sql/query.py::Query.build_filter",
+            "django/db/models/query.py::QuerySet.resolve_expression",
+            "django/db/models/sql/compiler.py::SQLCompiler.pre_sql_setup"
+          ]
+        },
+        "django__django-12284": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/base.py::ModelBase.__new__",
+            "django/db/models/fields/__init__.py::Field._check_choices",
+            "django/db/models/fields/__init__.py::Field.contribute_to_class",
+            "django/db/models/base.py::Model.serializable_value",
+            "django/db/models/options.py::Options._populate_directed_relation_graph",
+            "django/forms/models.py::ModelChoiceField.label_from_instance",
+            "django/db/models/options.py::Options.get_path_from_parent",
+            "django/db/models/base.py::Model._get_FIELD_display",
+            "django/contrib/auth/models.py::AbstractUser",
+            "django/contrib/auth/base_user.py::AbstractBaseUser"
+          ]
+        },
+        "django__django-12308": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/utils.py::display_for_field",
+            "django/forms/fields.py::JSONField.prepare_value",
+            "django/db/models/fields/json.py::JSONField",
+            "django/contrib/admin/helpers.py::<module>",
+            "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+            "django/contrib/admin/utils.py::prepare_lookup_value",
+            "django/contrib/admin/templatetags/admin_list.py::items_for_result",
+            "django/contrib/admin/utils.py::display_for_value",
+            "django/db/models/sql/compiler.py::SQLInsertCompiler.prepare_value",
+            "django/forms/fields.py::JSONField.bound_data"
+          ]
+        },
+        "django__django-12747": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/deletion.py::Collector.delete",
+            "django/db/models/deletion.py::Collector.can_fast_delete",
+            "django/db/models/query.py::QuerySet.delete",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/contrib/admin/utils.py::get_deleted_objects",
+            "django/db/models/query.py::QuerySet._raw_delete",
+            "django/contrib/admin/actions.py::delete_selected",
+            "django/db/models/sql/subqueries.py::DeleteQuery.delete_batch",
+            "django/db/models/query.py::QuerySet.bulk_create",
+            "django/db/backends/mysql/compiler.py::SQLDeleteCompiler.as_sql"
+          ]
+        },
+        "django__django-13321": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/contrib/sessions/backends/base.py::SessionBase._legacy_decode",
+            "django/contrib/sessions/backends/base.py::SessionBase.decode",
+            "django/contrib/sessions/backends/signed_cookies.py::SessionStore.load",
+            "django/contrib/sessions/backends/base.py::SessionBase._get_session",
+            "django/contrib/sessions/backends/cached_db.py::SessionStore.load",
+            "django/contrib/sessions/middleware.py::SessionMiddleware.process_response",
+            "django/contrib/auth/__init__.py::login",
+            "django/contrib/sessions/backends/file.py::SessionStore.load",
+            "django/contrib/auth/__init__.py::_get_user_session_key",
+            "django/contrib/sessions/backends/base.py::SessionBase.encode"
+          ]
+        },
+        "django__django-13964": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/base.py::Model._prepare_related_fields_for_save",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__set__",
+            "django/db/models/base.py::Model.save_base",
+            "django/db/models/options.py::Options._prepare",
+            "django/db/models/base.py::Model._save_parents",
+            "django/db/models/fields/related_descriptors.py::ForwardOneToOneDescriptor.__set__",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/db/models/base.py::Model._save_table",
+            "django/db/models/base.py::Model.save",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__get__"
+          ]
+        },
+        "django__django-14667": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/sql/query.py::Query.deferred_to_data",
+            "django/db/models/query.py::QuerySet.defer",
+            "django/db/models/sql/query.py::Query.add_deferred_loading",
+            "django/db/models/query.py::QuerySet.only",
+            "django/db/models/sql/query.py::Query.add_immediate_loading",
+            "django/db/models/sql/compiler.py::SQLCompiler.get_default_columns",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/sql/query.py::Query.get_loaded_field_names",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/query.py::QuerySet.select_related"
+          ]
+        },
+        "django__django-14752": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.process_request",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_queryset",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.has_perm",
+            "django/contrib/admin/options.py::ModelAdmin.changelist_view",
+            "django/contrib/admin/checks.py::BaseModelAdminChecks._check_autocomplete_fields_item",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_paginator",
+            "django/contrib/admin/options.py::ModelAdmin._changeform_view",
+            "django/contrib/admin/sites.py::AdminSite.get_urls",
+            "django/contrib/admin/sites.py::AdminSite.admin_view"
+          ]
+        },
+        "django__django-15388": {
+          "mrr@10": 0.125,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/core/management/templates.py::TemplateCommand.handle",
+            "django/utils/autoreload.py::WatchmanReloader._watch_glob",
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/utils/translation/reloader.py::watch_for_translation_changes",
+            "django/core/management/__init__.py::ManagementUtility.execute",
+            "django/core/checks/templates.py::<module>",
+            "django/template/autoreload.py::template_changed",
+            "django/template/autoreload.py::get_template_directories",
+            "setup.py::<module>"
+          ]
+        },
+        "django__django-15695": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/db/migrations/operations/models.py::RenameIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.database_forwards",
+            "django/db/migrations/operations/models.py::RenameIndex.state_forwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.reduce",
+            "django/db/migrations/operations/models.py::RenameModel.database_forwards",
+            "django/db/migrations/migration.py::Migration.unapply",
+            "django/db/migrations/operations/models.py::AlterTogetherOptionOperation.database_forwards",
+            "django/db/migrations/operations/models.py::RemoveIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.describe"
+          ]
+        },
+        "django__django-15738": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor._remake_table",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_deleted_models",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_composed_index",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._alter_field",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models",
+            "django/db/migrations/autodetector.py::MigrationAutodetector._detect_changes",
+            "django/db/migrations/operations/models.py::AlterUniqueTogether",
+            "django/db/models/base.py::Model._get_unique_checks",
+            "django/db/migrations/executor.py::MigrationExecutor.detect_soft_applied"
+          ]
+        },
+        "django__django-16820": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._model_indexes_sql",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.create_altered_indexes",
+            "django/db/models/options.py::Options.contribute_to_class",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together",
+            "django/core/management/commands/squashmigrations.py::Command.handle",
+            "django/db/migrations/operations/models.py::AlterIndexTogether",
+            "django/db/migrations/state.py::ModelState.from_model",
+            "django/db/models/base.py::Model._check_index_together",
+            "django/db/models/base.py::Model._check_indexes",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._create_missing_fk_index"
+          ]
+        },
+        "django__django-16873": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/template/defaulttags.py::autoescape",
+            "django/template/defaultfilters.py::join",
+            "django/template/base.py::<module>",
+            "django/template/defaulttags.py::do_filter",
+            "django/template/defaultfilters.py::linenumbers",
+            "django/template/defaultfilters.py::escape_filter",
+            "django/template/defaultfilters.py::linebreaksbr",
+            "django/template/defaultfilters.py::linebreaks_filter",
+            "django/utils/html.py::format_html_join",
+            "django/template/defaultfilters.py::urlencode"
+          ]
+        },
+        "scikit-learn__scikit-learn-10508": {
+          "mrr@10": 0.1,
+          "chunk_ranking": [
+            "sklearn/preprocessing/label.py::LabelEncoder",
+            "sklearn/preprocessing/label.py::label_binarize",
+            "sklearn/preprocessing/label.py::LabelBinarizer",
+            "sklearn/utils/class_weight.py::compute_class_weight",
+            "sklearn/utils/multiclass.py::type_of_target",
+            "sklearn/utils/fixes.py::<module>",
+            "sklearn/preprocessing/data.py::CategoricalEncoder",
+            "sklearn/preprocessing/data.py::CategoricalEncoder.fit",
+            "sklearn/preprocessing/data.py::OneHotEncoder",
+            "sklearn/preprocessing/label.py::LabelEncoder.transform"
+          ]
+        },
+        "scikit-learn__scikit-learn-11040": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/neighbors/unsupervised.py::NearestNeighbors",
+            "sklearn/neighbors/classification.py::KNeighborsClassifier",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors",
+            "sklearn/neighbors/regression.py::KNeighborsRegressor",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors_graph",
+            "sklearn/neighbors/base.py::NeighborsBase._fit",
+            "sklearn/neighbors/base.py::RadiusNeighborsMixin.radius_neighbors",
+            "sklearn/neighbors/classification.py::RadiusNeighborsClassifier",
+            "sklearn/neighbors/__init__.py::<module>",
+            "sklearn/manifold/t_sne.py::TSNE._fit"
+          ]
+        },
+        "scikit-learn__scikit-learn-13497": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/feature_selection/mutual_info_.py::_estimate_mi",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_regression",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_classif",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cd",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cc",
+            "sklearn/metrics/cluster/supervised.py::adjusted_mutual_info_score",
+            "sklearn/utils/validation.py::check_array",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi",
+            "sklearn/impute.py::MissingIndicator",
+            "sklearn/utils/__init__.py::axis0_safe_slice"
+          ]
+        },
+        "scikit-learn__scikit-learn-14087": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV.fit",
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV",
+            "sklearn/linear_model/logistic.py::_logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression",
+            "sklearn/linear_model/logistic.py::_log_reg_scoring_path",
+            "sklearn/linear_model/logistic.py::logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression.fit",
+            "examples/linear_model/plot_logistic_path.py::<module>",
+            "sklearn/svm/base.py::_fit_liblinear",
+            "sklearn/linear_model/sag.py::sag_solver"
+          ]
+        },
+        "scikit-learn__scikit-learn-14092": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation._check_params",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis._validate_params",
+            "sklearn/utils/estimator_checks.py::set_checking_parameters",
+            "sklearn/decomposition/nmf.py::non_negative_factorization",
+            "sklearn/decomposition/nmf.py::NMF",
+            "examples/compose/plot_compare_reduction.py::<module>",
+            "sklearn/utils/validation.py::check_scalar",
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation",
+            "sklearn/utils/validation.py::check_array"
+          ]
+        },
+        "scikit-learn__scikit-learn-15512": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/cluster/_affinity_propagation.py::affinity_propagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.fit",
+            "examples/cluster/plot_affinity_propagation.py::<module>",
+            "sklearn/cluster/_k_means.py::KMeans",
+            "sklearn/cluster/_k_means.py::_kmeans_single_lloyd",
+            "sklearn/cluster/_k_means.py::k_means",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.predict",
+            "sklearn/cluster/_mean_shift.py::MeanShift",
+            "sklearn/cluster/_hierarchical.py::AgglomerativeClustering"
+          ]
+        },
+        "scikit-learn__scikit-learn-25747": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sklearn/utils/_set_output.py::_wrap_data_with_container",
+            "sklearn/utils/_set_output.py::_wrap_in_pandas_container",
+            "sklearn/utils/_set_output.py::_wrap_method_output",
+            "sklearn/pipeline.py::FeatureUnion",
+            "sklearn/utils/estimator_checks.py::check_global_ouptut_transform_pandas",
+            "sklearn/_config.py::set_config",
+            "sklearn/utils/_set_output.py::_get_output_config",
+            "sklearn/_config.py::config_context",
+            "sklearn/utils/estimator_checks.py::check_set_output_transform_pandas",
+            "examples/miscellaneous/plot_set_output.py::<module>"
+          ]
+        },
+        "sympy__sympy-12454": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/matrices/matrices.py::MatrixProperties.is_upper",
+            "sympy/matrices/matrices.py::MatrixShaping.extract",
+            "sympy/matrices/dense.py::DenseMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_upper_hessenberg",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower_hessenberg",
+            "sympy/matrices/matrices.py::MatrixBase.D",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__init__",
+            "sympy/matrices/matrices.py::MatrixBase.key2bounds"
+          ]
+        },
+        "sympy__sympy-13043": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/integrals/intpoly.py::decompose",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/integrals/integrals.py::Integral._eval_integral",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/core/compatibility.py::ordered",
+            "sympy/polys/polytools.py::decompose",
+            "sympy/integrals/intpoly.py::main_integrate",
+            "sympy/solvers/deutils.py::_desolve",
+            "sympy/integrals/intpoly.py::polytope_integrate",
+            "sympy/plotting/experimental_lambdify.py::<module>"
+          ]
+        },
+        "sympy__sympy-14024": {
+          "mrr@10": 0.2,
+          "chunk_ranking": [
+            "sympy/simplify/powsimp.py::powsimp",
+            "sympy/simplify/simplify.py::posify",
+            "sympy/core/expr.py::Expr.as_independent",
+            "sympy/core/power.py::Pow._eval_power",
+            "sympy/core/numbers.py::Integer._eval_power",
+            "sympy/integrals/integrals.py::Integral.as_sum",
+            "sympy/core/power.py::Pow.__new__",
+            "sympy/simplify/fu.py::as_f_sign_1",
+            "sympy/assumptions/refine.py::refine_Pow",
+            "sympy/concrete/summations.py::Sum.euler_maclaurin"
+          ]
+        },
+        "sympy__sympy-15308": {
+          "mrr@10": 0.2,
+          "chunk_ranking": [
+            "sympy/printing/latex.py::latex",
+            "sympy/printing/latex.py::LatexPrinter._print_Function",
+            "sympy/printing/latex.py::LatexPrinter._print_Transpose",
+            "sympy/plotting/experimental_lambdify.py::<module>",
+            "sympy/printing/latex.py::LatexPrinter",
+            "sympy/core/basic.py::Basic._subs",
+            "sympy/printing/latex.py::LatexPrinter._print_MatPow",
+            "sympy/interactive/printing.py::init_printing",
+            "sympy/printing/latex.py::LatexPrinter._print_Tr",
+            "sympy/printing/julia.py::julia_code"
+          ]
+        },
+        "sympy__sympy-17630": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.colblocksizes",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.__new__",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._eval_trace",
+            "sympy/matrices/expressions/blockmatrix.py::bc_block_plus_ident",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockadd"
+          ]
+        },
+        "sympy__sympy-18189": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/solvers/diophantine.py::diophantine",
+            "sympy/solvers/diophantine.py::power_representation",
+            "sympy/solvers/diophantine.py::cornacchia",
+            "sympy/solvers/diophantine.py::diop_solve",
+            "sympy/solvers/solvers.py::_solve_system",
+            "sympy/solvers/diophantine.py::diop_linear",
+            "sympy/solvers/diophantine.py::diop_general_pythagorean",
+            "sympy/solvers/diophantine.py::_can_do_sum_of_squares",
+            "sympy/solvers/diophantine.py::<module>",
+            "sympy/utilities/benchmarking.py::BenchSession.print_bench_results"
+          ]
+        },
+        "sympy__sympy-18199": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/ntheory/residue_ntheory.py::nthroot_mod",
+            "sympy/solvers/solveset.py::_invert_modular",
+            "sympy/ntheory/residue_ntheory.py::sqrt_mod",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/ntheory/modular.py::solve_congruence",
+            "sympy/simplify/simplify.py::nthroot",
+            "sympy/solvers/solveset.py::_solve_modular",
+            "sympy/ntheory/factor_.py::perfect_power",
+            "sympy/ntheory/residue_ntheory.py::_sqrt_mod_prime_power",
+            "sympy/functions/elementary/miscellaneous.py::root"
+          ]
+        },
+        "sympy__sympy-19007": {
+          "mrr@10": 0.16666666666666666,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.transpose",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._entry",
+            "sympy/printing/rust.py::rust_code",
+            "sympy/printing/octave.py::octave_code",
+            "sympy/matrices/expressions/blockmatrix.py::deblock",
+            "sympy/assumptions/handlers/matrices.py::BM_elements"
+          ]
+        },
+        "sympy__sympy-22840": {
+          "mrr@10": 0.25,
+          "chunk_ranking": [
+            "sympy/simplify/cse_main.py::cse",
+            "sympy/simplify/cse_main.py::cse_release_variables",
+            "sympy/utilities/codegen.py::CodeGen.routine",
+            "sympy/simplify/cse_main.py::tree_cse",
+            "sympy/simplify/cse_main.py::_cse_homogeneous",
+            "sympy/utilities/codegen.py::CCodeGen._declare_locals",
+            "sympy/simplify/cse_main.py::cse_separate",
+            "sympy/printing/codeprinter.py::CodePrinter.doprint",
+            "sympy/polys/benchmarks/bench_groebnertools.py::<module>",
+            "sympy/functions/elementary/trigonometric.py::cos._eval_rewrite_as_sqrt"
+          ]
+        }
+      }
+    },
+    {
+      "rrf_k": 60,
+      "function_summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.3111111111111111,
+          "recall@5": 0.5944444444444444,
+          "recall@10": 0.6833333333333333,
+          "mrr@10": 0.5306349206349207,
+          "hit@1": 0.4,
+          "hit@5": 0.7,
+          "hit@10": 0.8
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.3095238095238095,
+          "recall@5": 0.6666666666666667,
+          "recall@10": 0.6904761904761905,
+          "mrr@10": 0.511904761904762,
+          "hit@1": 0.35714285714285715,
+          "hit@5": 0.7142857142857143,
+          "hit@10": 0.7142857142857143
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.2857142857142857,
+          "recall@5": 0.5714285714285714,
+          "recall@10": 0.7142857142857143,
+          "mrr@10": 0.5952380952380952,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.8571428571428571,
+          "hit@10": 0.8571428571428571
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.3333333333333333,
+          "recall@5": 0.5,
+          "recall@10": 0.6481481481481481,
+          "mrr@10": 0.5095238095238095,
+          "hit@1": 0.4444444444444444,
+          "hit@5": 0.5555555555555556,
+          "hit@10": 0.8888888888888888
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.2708333333333333,
+          "recall@5": 0.6770833333333334,
+          "recall@10": 0.7604166666666666,
+          "mrr@10": 0.5541666666666667,
+          "hit@1": 0.375,
+          "hit@5": 0.8125,
+          "hit@10": 0.8125
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.35714285714285715,
+          "recall@5": 0.5,
+          "recall@10": 0.5952380952380952,
+          "mrr@10": 0.5037414965986394,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.5714285714285714,
+          "hit@10": 0.7857142857142857
+        }
+      },
+      "summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.6666666666666666,
+          "recall@5": 0.8666666666666667,
+          "recall@10": 0.9,
+          "mrr@10": 0.7492592592592593
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.5714285714285714,
+          "recall@5": 0.8571428571428571,
+          "recall@10": 0.8571428571428571,
+          "mrr@10": 0.680952380952381
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.7142857142857143,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.8333333333333333
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.7777777777777778,
+          "recall@5": 0.7777777777777778,
+          "recall@10": 0.8888888888888888,
+          "mrr@10": 0.7901234567901234
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.6875,
+          "recall@5": 0.875,
+          "recall@10": 0.875,
+          "mrr@10": 0.7708333333333334
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.6428571428571429,
+          "recall@5": 0.8571428571428571,
+          "recall@10": 0.9285714285714286,
+          "mrr@10": 0.7246031746031746
+        }
+      },
+      "instances": {
+        "django__django-11583": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/utils/autoreload.py::iter_all_python_module_files",
+            "django/utils/autoreload.py::StatReloader.snapshot_files",
+            "django/utils/autoreload.py::start_django",
+            "django/utils/autoreload.py::StatReloader.tick",
+            "django/utils/autoreload.py::BaseReloader.watched_files",
+            "django/utils/autoreload.py::<module>",
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/utils/autoreload.py::sys_path_directories",
+            "django/utils/autoreload.py::run_with_reloader"
+          ]
+        },
+        "django__django-11797": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/models/sql/compiler.py::SQLCompiler.get_group_by",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/sql/compiler.py::SQLCompiler.as_sql",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/query.py::QuerySet.annotate",
+            "django/db/models/sql/query.py::Query.split_exclude",
+            "django/db/models/sql/query.py::Query.build_filter",
+            "django/db/models/sql/query.py::Query.set_group_by",
+            "django/db/models/sql/compiler.py::SQLCompiler.pre_sql_setup",
+            "django/db/models/query.py::QuerySet.resolve_expression"
+          ]
+        },
+        "django__django-12284": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/base.py::ModelBase.__new__",
+            "django/db/models/fields/__init__.py::Field._check_choices",
+            "django/db/models/fields/__init__.py::Field.contribute_to_class",
+            "django/db/models/base.py::Model.serializable_value",
+            "django/forms/models.py::ModelChoiceField.label_from_instance",
+            "django/db/models/options.py::Options._populate_directed_relation_graph",
+            "django/db/models/options.py::Options.get_path_from_parent",
+            "django/db/models/fields/__init__.py::Field.formfield",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__get__",
+            "django/db/models/base.py::Model._get_FIELD_display"
+          ]
+        },
+        "django__django-12308": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/utils.py::display_for_field",
+            "django/forms/fields.py::JSONField.prepare_value",
+            "django/db/models/fields/json.py::JSONField",
+            "django/contrib/admin/helpers.py::<module>",
+            "django/contrib/admin/utils.py::prepare_lookup_value",
+            "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+            "django/contrib/admin/templatetags/admin_list.py::items_for_result",
+            "django/forms/fields.py::JSONField.bound_data",
+            "django/forms/fields.py::JSONField",
+            "django/forms/fields.py::JSONField.to_python"
+          ]
+        },
+        "django__django-12747": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/deletion.py::Collector.delete",
+            "django/db/models/deletion.py::Collector.can_fast_delete",
+            "django/db/models/query.py::QuerySet.delete",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/contrib/admin/utils.py::get_deleted_objects",
+            "django/db/models/query.py::QuerySet._raw_delete",
+            "django/contrib/admin/actions.py::delete_selected",
+            "django/db/models/sql/subqueries.py::DeleteQuery.delete_batch",
+            "django/db/models/query.py::QuerySet.bulk_create",
+            "django/db/backends/mysql/compiler.py::SQLDeleteCompiler.as_sql"
+          ]
+        },
+        "django__django-13321": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/contrib/sessions/backends/base.py::SessionBase._legacy_decode",
+            "django/contrib/sessions/backends/base.py::SessionBase.decode",
+            "django/contrib/sessions/backends/signed_cookies.py::SessionStore.load",
+            "django/contrib/sessions/backends/base.py::SessionBase._get_session",
+            "django/contrib/sessions/backends/cached_db.py::SessionStore.load",
+            "django/contrib/auth/__init__.py::login",
+            "django/contrib/sessions/middleware.py::SessionMiddleware.process_response",
+            "django/contrib/sessions/backends/file.py::SessionStore.load",
+            "django/contrib/auth/__init__.py::_get_user_session_key",
+            "django/contrib/auth/__init__.py::get_user"
+          ]
+        },
+        "django__django-13964": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/base.py::Model._prepare_related_fields_for_save",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__set__",
+            "django/db/models/base.py::Model.save_base",
+            "django/db/models/options.py::Options._prepare",
+            "django/db/models/base.py::Model._save_parents",
+            "django/db/models/fields/related_descriptors.py::ForwardOneToOneDescriptor.__set__",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__get__",
+            "django/db/models/base.py::Model.save",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/db/models/base.py::Model._save_table"
+          ]
+        },
+        "django__django-14667": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/sql/query.py::Query.deferred_to_data",
+            "django/db/models/query.py::QuerySet.defer",
+            "django/db/models/sql/query.py::Query.add_deferred_loading",
+            "django/db/models/query.py::QuerySet.only",
+            "django/db/models/sql/query.py::Query.add_immediate_loading",
+            "django/db/models/sql/compiler.py::SQLCompiler.get_default_columns",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/sql/query.py::Query.get_loaded_field_names",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/query.py::ModelIterable.__iter__"
+          ]
+        },
+        "django__django-14752": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.process_request",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_queryset",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.has_perm",
+            "django/contrib/admin/options.py::ModelAdmin.changelist_view",
+            "django/contrib/admin/checks.py::BaseModelAdminChecks._check_autocomplete_fields_item",
+            "django/contrib/admin/options.py::ModelAdmin._changeform_view",
+            "django/contrib/admin/sites.py::AdminSite.get_urls",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_paginator",
+            "django/contrib/admin/sites.py::AdminSite.admin_view"
+          ]
+        },
+        "django__django-15388": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/core/management/templates.py::TemplateCommand.handle",
+            "django/utils/autoreload.py::WatchmanReloader._watch_glob",
+            "django/utils/translation/reloader.py::watch_for_translation_changes",
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/core/management/__init__.py::ManagementUtility.execute",
+            "django/core/checks/templates.py::<module>",
+            "django/conf/__init__.py::Settings.__init__",
+            "django/core/management/commands/runserver.py::Command.inner_run",
+            "django/template/loaders/filesystem.py::Loader.get_template_sources"
+          ]
+        },
+        "django__django-15695": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/db/migrations/operations/models.py::RenameIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.database_forwards",
+            "django/db/migrations/operations/models.py::RenameIndex.state_forwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_backwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_forwards",
+            "django/db/migrations/operations/models.py::RenameIndex.reduce",
+            "django/db/migrations/operations/models.py::RemoveIndex.database_backwards",
+            "django/db/migrations/operations/models.py::AddIndex.database_backwards",
+            "django/db/migrations/operations/fields.py::RenameField.database_backwards",
+            "django/db/migrations/operations/models.py::AlterTogetherOptionOperation.database_forwards"
+          ]
+        },
+        "django__django-15738": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor._remake_table",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_deleted_models",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._alter_field",
+            "django/db/migrations/autodetector.py::MigrationAutodetector._detect_changes",
+            "django/db/migrations/operations/models.py::AlterUniqueTogether",
+            "django/db/models/base.py::Model._get_unique_checks",
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor.remove_field"
+          ]
+        },
+        "django__django-16820": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._model_indexes_sql",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.create_altered_indexes",
+            "django/db/models/options.py::Options.contribute_to_class",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together",
+            "django/core/management/commands/squashmigrations.py::Command.handle",
+            "django/db/migrations/operations/models.py::AlterIndexTogether",
+            "django/db/migrations/state.py::ModelState.from_model",
+            "django/db/models/base.py::Model._check_indexes",
+            "django/db/models/base.py::Model._check_index_together",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._create_missing_fk_index"
+          ]
+        },
+        "django__django-16873": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/template/defaulttags.py::autoescape",
+            "django/template/defaultfilters.py::join",
+            "django/template/defaulttags.py::do_filter",
+            "django/template/base.py::<module>",
+            "django/template/defaultfilters.py::linenumbers",
+            "django/template/defaultfilters.py::linebreaksbr",
+            "django/template/defaultfilters.py::escape_filter",
+            "django/template/defaultfilters.py::linebreaks_filter",
+            "django/template/defaultfilters.py::urlencode",
+            "django/utils/html.py::format_html_join"
+          ]
+        },
+        "scikit-learn__scikit-learn-10508": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sklearn/preprocessing/label.py::LabelEncoder",
+            "sklearn/preprocessing/label.py::label_binarize",
+            "sklearn/preprocessing/label.py::LabelBinarizer",
+            "sklearn/utils/class_weight.py::compute_class_weight",
+            "sklearn/preprocessing/data.py::CategoricalEncoder.fit",
+            "sklearn/utils/fixes.py::<module>",
+            "sklearn/utils/multiclass.py::type_of_target",
+            "sklearn/preprocessing/data.py::CategoricalEncoder",
+            "sklearn/preprocessing/data.py::OneHotEncoder",
+            "setup.py::<module>"
+          ]
+        },
+        "scikit-learn__scikit-learn-11040": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/neighbors/unsupervised.py::NearestNeighbors",
+            "sklearn/neighbors/classification.py::KNeighborsClassifier",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors",
+            "sklearn/neighbors/regression.py::KNeighborsRegressor",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors_graph",
+            "sklearn/neighbors/base.py::NeighborsBase._fit",
+            "sklearn/neighbors/classification.py::RadiusNeighborsClassifier",
+            "sklearn/neighbors/base.py::RadiusNeighborsMixin.radius_neighbors",
+            "sklearn/neighbors/__init__.py::<module>",
+            "sklearn/manifold/t_sne.py::TSNE._fit"
+          ]
+        },
+        "scikit-learn__scikit-learn-13497": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/feature_selection/mutual_info_.py::_estimate_mi",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_regression",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_classif",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cd",
+            "sklearn/metrics/cluster/supervised.py::adjusted_mutual_info_score",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cc",
+            "sklearn/utils/validation.py::check_array",
+            "sklearn/utils/validation.py::check_X_y",
+            "sklearn/cluster/k_means_.py::k_means",
+            "sklearn/metrics/pairwise.py::pairwise_distances_argmin_min"
+          ]
+        },
+        "scikit-learn__scikit-learn-14087": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV.fit",
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV",
+            "sklearn/linear_model/logistic.py::_logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression",
+            "sklearn/linear_model/logistic.py::_log_reg_scoring_path",
+            "sklearn/linear_model/logistic.py::logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression.fit",
+            "examples/linear_model/plot_logistic_path.py::<module>",
+            "sklearn/svm/base.py::_fit_liblinear",
+            "sklearn/linear_model/sag.py::sag_solver"
+          ]
+        },
+        "scikit-learn__scikit-learn-14092": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation._check_params",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis._validate_params",
+            "sklearn/utils/estimator_checks.py::set_checking_parameters",
+            "sklearn/decomposition/nmf.py::non_negative_factorization",
+            "sklearn/decomposition/nmf.py::NMF",
+            "sklearn/model_selection/_split.py::check_cv",
+            "examples/compose/plot_compare_reduction.py::<module>",
+            "sklearn/utils/validation.py::check_scalar",
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation"
+          ]
+        },
+        "scikit-learn__scikit-learn-15512": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/cluster/_affinity_propagation.py::affinity_propagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.fit",
+            "examples/cluster/plot_affinity_propagation.py::<module>",
+            "sklearn/cluster/_k_means.py::_kmeans_single_lloyd",
+            "sklearn/cluster/_k_means.py::KMeans",
+            "sklearn/cluster/_k_means.py::k_means",
+            "sklearn/cluster/_hierarchical.py::AgglomerativeClustering",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.predict",
+            "sklearn/cluster/_spectral.py::SpectralClustering"
+          ]
+        },
+        "scikit-learn__scikit-learn-25747": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sklearn/utils/_set_output.py::_wrap_data_with_container",
+            "sklearn/utils/_set_output.py::_wrap_in_pandas_container",
+            "sklearn/utils/_set_output.py::_wrap_method_output",
+            "sklearn/pipeline.py::FeatureUnion",
+            "sklearn/utils/estimator_checks.py::check_global_ouptut_transform_pandas",
+            "sklearn/_config.py::set_config",
+            "sklearn/utils/estimator_checks.py::check_set_output_transform_pandas",
+            "sklearn/utils/validation.py::check_array",
+            "sklearn/utils/_set_output.py::_get_output_config",
+            "examples/miscellaneous/plot_set_output.py::<module>"
+          ]
+        },
+        "sympy__sympy-12454": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/matrices/matrices.py::MatrixProperties.is_upper",
+            "sympy/matrices/matrices.py::MatrixShaping.extract",
+            "sympy/matrices/dense.py::DenseMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_upper_hessenberg",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixBase.D",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower_hessenberg",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__init__",
+            "sympy/matrices/matrices.py::MatrixBase._handle_creation_inputs"
+          ]
+        },
+        "sympy__sympy-13043": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/integrals/intpoly.py::decompose",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/integrals/integrals.py::Integral._eval_integral",
+            "sympy/ntheory/factor_.py::factorint",
+            "sympy/polys/polyroots.py::roots",
+            "sympy/core/compatibility.py::ordered",
+            "sympy/polys/polytools.py::decompose",
+            "sympy/integrals/intpoly.py::main_integrate",
+            "sympy/solvers/deutils.py::_desolve"
+          ]
+        },
+        "sympy__sympy-14024": {
+          "mrr@10": 0.1,
+          "chunk_ranking": [
+            "sympy/simplify/powsimp.py::powsimp",
+            "sympy/simplify/simplify.py::posify",
+            "sympy/simplify/powsimp.py::powdenest",
+            "sympy/core/mul.py::Mul.flatten",
+            "sympy/core/exprtools.py::_monotonic_sign",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/core/expr.py::Expr.as_independent",
+            "sympy/core/power.py::Pow._eval_power",
+            "sympy/integrals/rubi/rules/miscellaneous_algebraic.py::miscellaneous_algebraic",
+            "sympy/core/numbers.py::Integer._eval_power"
+          ]
+        },
+        "sympy__sympy-15308": {
+          "mrr@10": 0.14285714285714285,
+          "chunk_ranking": [
+            "sympy/printing/latex.py::latex",
+            "sympy/printing/latex.py::LatexPrinter._print_Function",
+            "sympy/printing/latex.py::LatexPrinter._print_Transpose",
+            "sympy/printing/latex.py::LatexPrinter._hprint_Function",
+            "sympy/printing/latex.py::LatexPrinter._needs_mul_brackets",
+            "sympy/plotting/experimental_lambdify.py::<module>",
+            "sympy/printing/latex.py::LatexPrinter",
+            "sympy/core/basic.py::Basic._subs",
+            "sympy/printing/latex.py::LatexPrinter._print_MatPow",
+            "sympy/interactive/printing.py::init_printing"
+          ]
+        },
+        "sympy__sympy-17630": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.colblocksizes",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._eval_trace",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockadd",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.__new__",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.structurally_equal"
+          ]
+        },
+        "sympy__sympy-18189": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/solvers/diophantine.py::diophantine",
+            "sympy/solvers/diophantine.py::power_representation",
+            "sympy/solvers/diophantine.py::cornacchia",
+            "sympy/solvers/solvers.py::_solve_system",
+            "sympy/solvers/diophantine.py::diop_solve",
+            "sympy/solvers/diophantine.py::diop_linear",
+            "sympy/solvers/diophantine.py::diop_general_pythagorean",
+            "sympy/solvers/diophantine.py::_can_do_sum_of_squares",
+            "sympy/solvers/diophantine.py::diop_DN",
+            "sympy/solvers/diophantine.py::sum_of_three_squares"
+          ]
+        },
+        "sympy__sympy-18199": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/ntheory/residue_ntheory.py::nthroot_mod",
+            "sympy/solvers/solveset.py::_invert_modular",
+            "sympy/ntheory/residue_ntheory.py::sqrt_mod",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/simplify/simplify.py::nthroot",
+            "sympy/ntheory/modular.py::solve_congruence",
+            "sympy/solvers/solveset.py::_solve_modular",
+            "sympy/ntheory/factor_.py::perfect_power",
+            "sympy/functions/elementary/miscellaneous.py::root",
+            "sympy/ntheory/residue_ntheory.py::_sqrt_mod_prime_power"
+          ]
+        },
+        "sympy__sympy-19007": {
+          "mrr@10": 0.14285714285714285,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.transpose",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::deblock",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._entry",
+            "sympy/printing/rust.py::rust_code",
+            "sympy/printing/octave.py::octave_code",
+            "sympy/assumptions/handlers/matrices.py::BM_elements"
+          ]
+        },
+        "sympy__sympy-22840": {
+          "mrr@10": 0.2,
+          "chunk_ranking": [
+            "sympy/simplify/cse_main.py::cse",
+            "sympy/simplify/cse_main.py::cse_release_variables",
+            "sympy/utilities/codegen.py::CodeGen.routine",
+            "sympy/simplify/cse_main.py::_cse_homogeneous",
+            "sympy/simplify/cse_main.py::tree_cse",
+            "sympy/utilities/codegen.py::CCodeGen._declare_locals",
+            "sympy/simplify/cse_main.py::cse_separate",
+            "sympy/printing/codeprinter.py::CodePrinter.doprint",
+            "sympy/polys/benchmarks/bench_groebnertools.py::<module>",
+            "sympy/functions/elementary/trigonometric.py::cos._eval_rewrite_as_sqrt"
+          ]
+        }
+      }
+    },
+    {
+      "rrf_k": 100,
+      "function_summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.3111111111111111,
+          "recall@5": 0.5611111111111111,
+          "recall@10": 0.6666666666666666,
+          "mrr@10": 0.5295238095238095,
+          "hit@1": 0.4,
+          "hit@5": 0.6666666666666666,
+          "hit@10": 0.8
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.3095238095238095,
+          "recall@5": 0.6666666666666667,
+          "recall@10": 0.6904761904761905,
+          "mrr@10": 0.511904761904762,
+          "hit@1": 0.35714285714285715,
+          "hit@5": 0.7142857142857143,
+          "hit@10": 0.7142857142857143
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.2857142857142857,
+          "recall@5": 0.5714285714285714,
+          "recall@10": 0.6428571428571429,
+          "mrr@10": 0.5952380952380952,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.8571428571428571,
+          "hit@10": 0.8571428571428571
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.3333333333333333,
+          "recall@5": 0.3888888888888889,
+          "recall@10": 0.6481481481481481,
+          "mrr@10": 0.5058201058201058,
+          "hit@1": 0.4444444444444444,
+          "hit@5": 0.4444444444444444,
+          "hit@10": 0.8888888888888888
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.2708333333333333,
+          "recall@5": 0.6145833333333334,
+          "recall@10": 0.7291666666666666,
+          "mrr@10": 0.5520833333333334,
+          "hit@1": 0.375,
+          "hit@5": 0.75,
+          "hit@10": 0.8125
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.35714285714285715,
+          "recall@5": 0.5,
+          "recall@10": 0.5952380952380952,
+          "mrr@10": 0.5037414965986394,
+          "hit@1": 0.42857142857142855,
+          "hit@5": 0.5714285714285714,
+          "hit@10": 0.7857142857142857
+        }
+      },
+      "summary": {
+        "overall": {
+          "n": 30.0,
+          "recall@1": 0.6666666666666666,
+          "recall@5": 0.8333333333333334,
+          "recall@10": 0.9,
+          "mrr@10": 0.7481481481481481
+        },
+        "django/django": {
+          "n": 14.0,
+          "recall@1": 0.5714285714285714,
+          "recall@5": 0.7857142857142857,
+          "recall@10": 0.8571428571428571,
+          "mrr@10": 0.6785714285714286
+        },
+        "scikit-learn/scikit-learn": {
+          "n": 7.0,
+          "recall@1": 0.7142857142857143,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.8333333333333333
+        },
+        "sympy/sympy": {
+          "n": 9.0,
+          "recall@1": 0.7777777777777778,
+          "recall@5": 0.7777777777777778,
+          "recall@10": 0.8888888888888888,
+          "mrr@10": 0.7901234567901234
+        },
+        "category 1": {
+          "n": 16.0,
+          "recall@1": 0.6875,
+          "recall@5": 0.875,
+          "recall@10": 0.875,
+          "mrr@10": 0.7708333333333334
+        },
+        "category 2": {
+          "n": 14.0,
+          "recall@1": 0.6428571428571429,
+          "recall@5": 0.7857142857142857,
+          "recall@10": 0.9285714285714286,
+          "mrr@10": 0.7222222222222222
+        }
+      },
+      "instances": {
+        "django__django-11583": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/utils/autoreload.py::iter_all_python_module_files",
+            "django/utils/autoreload.py::StatReloader.snapshot_files",
+            "django/utils/autoreload.py::start_django",
+            "django/utils/autoreload.py::StatReloader.tick",
+            "django/utils/autoreload.py::BaseReloader.watched_files",
+            "django/utils/autoreload.py::<module>",
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/utils/autoreload.py::sys_path_directories",
+            "django/utils/autoreload.py::run_with_reloader"
+          ]
+        },
+        "django__django-11797": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/models/sql/compiler.py::SQLCompiler.get_group_by",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/sql/compiler.py::SQLCompiler.as_sql",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/query.py::QuerySet.annotate",
+            "django/db/models/sql/query.py::Query.split_exclude",
+            "django/db/models/sql/query.py::Query.build_filter",
+            "django/db/models/sql/query.py::Query.set_group_by",
+            "django/db/models/sql/compiler.py::SQLCompiler.pre_sql_setup",
+            "django/db/models/query.py::QuerySet.resolve_expression"
+          ]
+        },
+        "django__django-12284": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/base.py::ModelBase.__new__",
+            "django/db/models/fields/__init__.py::Field._check_choices",
+            "django/db/models/fields/__init__.py::Field.contribute_to_class",
+            "django/db/models/base.py::Model.serializable_value",
+            "django/forms/models.py::ModelChoiceField.label_from_instance",
+            "django/db/models/options.py::Options._populate_directed_relation_graph",
+            "django/db/models/options.py::Options.get_path_from_parent",
+            "django/db/models/fields/__init__.py::Field.formfield",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__get__",
+            "django/forms/models.py::ModelChoiceField._get_choices"
+          ]
+        },
+        "django__django-12308": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/utils.py::display_for_field",
+            "django/forms/fields.py::JSONField.prepare_value",
+            "django/db/models/fields/json.py::JSONField",
+            "django/contrib/admin/helpers.py::<module>",
+            "django/contrib/admin/utils.py::prepare_lookup_value",
+            "django/contrib/admin/helpers.py::AdminReadonlyField.contents",
+            "django/contrib/admin/templatetags/admin_list.py::items_for_result",
+            "django/forms/fields.py::JSONField.bound_data",
+            "django/forms/fields.py::JSONField",
+            "django/forms/fields.py::JSONField.to_python"
+          ]
+        },
+        "django__django-12747": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/deletion.py::Collector.delete",
+            "django/db/models/deletion.py::Collector.can_fast_delete",
+            "django/db/models/query.py::QuerySet.delete",
+            "django/db/models/deletion.py::Collector.collect",
+            "django/contrib/admin/utils.py::get_deleted_objects",
+            "django/db/models/query.py::QuerySet._raw_delete",
+            "django/contrib/admin/actions.py::delete_selected",
+            "django/db/models/sql/subqueries.py::DeleteQuery.delete_batch",
+            "django/db/backends/mysql/compiler.py::SQLDeleteCompiler.as_sql",
+            "django/db/models/query.py::QuerySet.bulk_create"
+          ]
+        },
+        "django__django-13321": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/contrib/sessions/backends/base.py::SessionBase._legacy_decode",
+            "django/contrib/sessions/backends/base.py::SessionBase.decode",
+            "django/contrib/sessions/backends/signed_cookies.py::SessionStore.load",
+            "django/contrib/sessions/backends/base.py::SessionBase._get_session",
+            "django/contrib/sessions/backends/cached_db.py::SessionStore.load",
+            "django/contrib/auth/__init__.py::login",
+            "django/contrib/sessions/backends/file.py::SessionStore.load",
+            "django/contrib/sessions/middleware.py::SessionMiddleware.process_response",
+            "django/contrib/auth/__init__.py::_get_user_session_key",
+            "django/contrib/auth/__init__.py::get_user"
+          ]
+        },
+        "django__django-13964": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/db/models/base.py::Model._prepare_related_fields_for_save",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__set__",
+            "django/db/models/base.py::Model.save_base",
+            "django/db/models/options.py::Options._prepare",
+            "django/db/models/base.py::Model._save_parents",
+            "django/db/models/fields/related_descriptors.py::ForwardOneToOneDescriptor.__set__",
+            "django/db/models/fields/related_descriptors.py::ForwardManyToOneDescriptor.__get__",
+            "django/db/models/base.py::Model.save",
+            "django/db/models/fields/related.py::ForeignKey.__init__",
+            "django/db/models/deletion.py::Collector.collect"
+          ]
+        },
+        "django__django-14667": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "django/db/models/sql/query.py::Query.deferred_to_data",
+            "django/db/models/query.py::QuerySet.defer",
+            "django/db/models/sql/query.py::Query.add_deferred_loading",
+            "django/db/models/query.py::QuerySet.only",
+            "django/db/models/sql/query.py::Query.add_immediate_loading",
+            "django/db/models/sql/compiler.py::SQLCompiler.get_default_columns",
+            "django/db/models/sql/query.py::Query.__init__",
+            "django/db/models/sql/query.py::Query.get_loaded_field_names",
+            "django/db/models/sql/query.py::Query.get_aggregation",
+            "django/db/models/query.py::ModelIterable.__iter__"
+          ]
+        },
+        "django__django-14752": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.process_request",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_queryset",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.has_perm",
+            "django/contrib/admin/options.py::ModelAdmin.changelist_view",
+            "django/contrib/admin/checks.py::BaseModelAdminChecks._check_autocomplete_fields_item",
+            "django/contrib/admin/options.py::ModelAdmin._changeform_view",
+            "django/contrib/admin/sites.py::AdminSite.get_urls",
+            "django/contrib/admin/views/autocomplete.py::AutocompleteJsonView.get_paginator",
+            "django/contrib/admin/sites.py::AdminSite.admin_view"
+          ]
+        },
+        "django__django-15388": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/utils/autoreload.py::WatchmanReloader._watch_root",
+            "django/utils/autoreload.py::WatchmanReloader._watch_glob",
+            "django/core/management/templates.py::TemplateCommand.handle",
+            "django/utils/translation/reloader.py::watch_for_translation_changes",
+            "django/utils/autoreload.py::iter_modules_and_files",
+            "django/core/management/__init__.py::ManagementUtility.execute",
+            "django/core/checks/templates.py::<module>",
+            "django/conf/__init__.py::Settings.__init__",
+            "django/core/management/commands/runserver.py::Command.inner_run",
+            "django/template/loaders/filesystem.py::Loader.get_template_sources"
+          ]
+        },
+        "django__django-15695": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/db/migrations/operations/models.py::RenameIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.database_forwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.state_forwards",
+            "django/db/migrations/operations/models.py::RenameModel.database_forwards",
+            "django/db/migrations/operations/models.py::RemoveIndex.database_backwards",
+            "django/db/migrations/operations/models.py::AddIndex.database_backwards",
+            "django/db/migrations/operations/models.py::RenameIndex.reduce",
+            "django/db/migrations/operations/fields.py::RenameField.database_backwards",
+            "django/db/migrations/operations/fields.py::RenameField.database_forwards"
+          ]
+        },
+        "django__django-15738": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor._remake_table",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_deleted_models",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._delete_composed_index",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.generate_created_models",
+            "django/db/migrations/autodetector.py::MigrationAutodetector._detect_changes",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._alter_field",
+            "django/db/migrations/operations/models.py::AlterUniqueTogether",
+            "django/db/models/base.py::Model._get_unique_checks",
+            "django/db/backends/sqlite3/schema.py::DatabaseSchemaEditor.remove_field"
+          ]
+        },
+        "django__django-16820": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor._model_indexes_sql",
+            "django/db/migrations/autodetector.py::MigrationAutodetector.create_altered_indexes",
+            "django/db/models/options.py::Options.contribute_to_class",
+            "django/db/backends/base/schema.py::BaseDatabaseSchemaEditor.alter_index_together",
+            "django/core/management/commands/squashmigrations.py::Command.handle",
+            "django/db/migrations/state.py::ModelState.from_model",
+            "django/db/migrations/operations/models.py::AlterIndexTogether",
+            "django/db/models/base.py::Model._check_indexes",
+            "django/db/models/base.py::Model._check_index_together",
+            "django/db/backends/mysql/schema.py::DatabaseSchemaEditor._create_missing_fk_index"
+          ]
+        },
+        "django__django-16873": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "django/template/defaulttags.py::autoescape",
+            "django/template/defaultfilters.py::join",
+            "django/template/defaulttags.py::do_filter",
+            "django/template/base.py::<module>",
+            "django/template/defaultfilters.py::linenumbers",
+            "django/template/defaultfilters.py::linebreaksbr",
+            "django/template/defaultfilters.py::escape_filter",
+            "django/template/defaultfilters.py::urlencode",
+            "django/template/defaultfilters.py::linebreaks_filter",
+            "django/template/defaulttags.py::regroup"
+          ]
+        },
+        "scikit-learn__scikit-learn-10508": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sklearn/preprocessing/label.py::LabelEncoder",
+            "sklearn/preprocessing/label.py::label_binarize",
+            "sklearn/preprocessing/label.py::LabelBinarizer",
+            "sklearn/preprocessing/data.py::CategoricalEncoder.fit",
+            "sklearn/utils/class_weight.py::compute_class_weight",
+            "sklearn/utils/fixes.py::<module>",
+            "sklearn/utils/multiclass.py::type_of_target",
+            "sklearn/preprocessing/data.py::CategoricalEncoder",
+            "sklearn/preprocessing/data.py::OneHotEncoder",
+            "setup.py::<module>"
+          ]
+        },
+        "scikit-learn__scikit-learn-11040": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/neighbors/unsupervised.py::NearestNeighbors",
+            "sklearn/neighbors/classification.py::KNeighborsClassifier",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors",
+            "sklearn/neighbors/regression.py::KNeighborsRegressor",
+            "sklearn/neighbors/base.py::KNeighborsMixin.kneighbors_graph",
+            "sklearn/neighbors/base.py::NeighborsBase._fit",
+            "sklearn/neighbors/classification.py::RadiusNeighborsClassifier",
+            "sklearn/neighbors/__init__.py::<module>",
+            "sklearn/neighbors/base.py::RadiusNeighborsMixin.radius_neighbors",
+            "sklearn/manifold/t_sne.py::TSNE._fit"
+          ]
+        },
+        "scikit-learn__scikit-learn-13497": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/feature_selection/mutual_info_.py::_estimate_mi",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_regression",
+            "sklearn/feature_selection/mutual_info_.py::mutual_info_classif",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cd",
+            "sklearn/metrics/cluster/supervised.py::adjusted_mutual_info_score",
+            "sklearn/feature_selection/mutual_info_.py::_compute_mi_cc",
+            "sklearn/utils/validation.py::check_array",
+            "sklearn/utils/validation.py::check_X_y",
+            "sklearn/cluster/k_means_.py::k_means",
+            "sklearn/metrics/pairwise.py::pairwise_distances_argmin_min"
+          ]
+        },
+        "scikit-learn__scikit-learn-14087": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV.fit",
+            "sklearn/linear_model/logistic.py::LogisticRegressionCV",
+            "sklearn/linear_model/logistic.py::_logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression",
+            "sklearn/linear_model/logistic.py::_log_reg_scoring_path",
+            "sklearn/linear_model/logistic.py::logistic_regression_path",
+            "sklearn/linear_model/logistic.py::LogisticRegression.fit",
+            "examples/linear_model/plot_logistic_path.py::<module>",
+            "sklearn/svm/base.py::_fit_liblinear",
+            "sklearn/linear_model/sag.py::sag_solver"
+          ]
+        },
+        "scikit-learn__scikit-learn-14092": {
+          "mrr@10": 0.3333333333333333,
+          "chunk_ranking": [
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation._check_params",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis",
+            "sklearn/neighbors/nca.py::NeighborhoodComponentsAnalysis._validate_params",
+            "sklearn/utils/estimator_checks.py::set_checking_parameters",
+            "sklearn/model_selection/_split.py::check_cv",
+            "sklearn/decomposition/nmf.py::non_negative_factorization",
+            "sklearn/decomposition/nmf.py::NMF",
+            "examples/compose/plot_compare_reduction.py::<module>",
+            "sklearn/utils/validation.py::check_scalar",
+            "sklearn/decomposition/online_lda.py::LatentDirichletAllocation"
+          ]
+        },
+        "scikit-learn__scikit-learn-15512": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sklearn/cluster/_affinity_propagation.py::affinity_propagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation",
+            "sklearn/cluster/_affinity_propagation.py::AffinityPropagation.fit",
+            "examples/cluster/plot_affinity_propagation.py::<module>",
+            "sklearn/cluster/_k_means.py::_kmeans_single_lloyd",
+            "sklearn/cluster/_k_means.py::KMeans",
+            "sklearn/cluster/_k_means.py::k_means",
+            "sklearn/cluster/_hierarchical.py::AgglomerativeClustering",
+            "sklearn/cluster/_spectral.py::SpectralClustering",
+            "sklearn/cluster/_spectral.py::discretize"
+          ]
+        },
+        "scikit-learn__scikit-learn-25747": {
+          "mrr@10": 0.5,
+          "chunk_ranking": [
+            "sklearn/utils/_set_output.py::_wrap_data_with_container",
+            "sklearn/utils/_set_output.py::_wrap_in_pandas_container",
+            "sklearn/utils/_set_output.py::_wrap_method_output",
+            "sklearn/pipeline.py::FeatureUnion",
+            "sklearn/utils/estimator_checks.py::check_global_ouptut_transform_pandas",
+            "sklearn/utils/estimator_checks.py::check_set_output_transform_pandas",
+            "sklearn/_config.py::set_config",
+            "sklearn/utils/validation.py::check_array",
+            "sklearn/utils/estimator_checks.py::check_transformer_get_feature_names_out_pandas",
+            "sklearn/utils/_set_output.py::_get_output_config"
+          ]
+        },
+        "sympy__sympy-12454": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/matrices/matrices.py::MatrixProperties.is_upper",
+            "sympy/matrices/matrices.py::MatrixShaping.extract",
+            "sympy/matrices/dense.py::DenseMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_upper_hessenberg",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__getitem__",
+            "sympy/matrices/matrices.py::MatrixBase.D",
+            "sympy/matrices/matrices.py::_MinimalMatrix.__init__",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower",
+            "sympy/matrices/matrices.py::MatrixProperties._eval_is_lower_hessenberg",
+            "sympy/matrices/matrices.py::MatrixBase._handle_creation_inputs"
+          ]
+        },
+        "sympy__sympy-13043": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/integrals/intpoly.py::decompose",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/integrals/integrals.py::Integral._eval_integral",
+            "sympy/ntheory/factor_.py::factorint",
+            "sympy/polys/polyroots.py::roots",
+            "sympy/core/compatibility.py::ordered",
+            "sympy/polys/polytools.py::decompose",
+            "sympy/integrals/intpoly.py::main_integrate",
+            "sympy/solvers/deutils.py::_desolve"
+          ]
+        },
+        "sympy__sympy-14024": {
+          "mrr@10": 0.1,
+          "chunk_ranking": [
+            "sympy/simplify/powsimp.py::powsimp",
+            "sympy/simplify/simplify.py::posify",
+            "sympy/simplify/powsimp.py::powdenest",
+            "sympy/core/mul.py::Mul.flatten",
+            "sympy/core/exprtools.py::_monotonic_sign",
+            "sympy/solvers/solvers.py::_solve",
+            "sympy/integrals/rubi/rules/miscellaneous_algebraic.py::miscellaneous_algebraic",
+            "sympy/core/expr.py::Expr.as_independent",
+            "sympy/core/power.py::Pow._eval_power",
+            "sympy/core/numbers.py::Integer._eval_power"
+          ]
+        },
+        "sympy__sympy-15308": {
+          "mrr@10": 0.14285714285714285,
+          "chunk_ranking": [
+            "sympy/printing/latex.py::latex",
+            "sympy/printing/latex.py::LatexPrinter._print_Function",
+            "sympy/printing/latex.py::LatexPrinter._print_Transpose",
+            "sympy/printing/latex.py::LatexPrinter._hprint_Function",
+            "sympy/printing/latex.py::LatexPrinter._needs_mul_brackets",
+            "sympy/plotting/experimental_lambdify.py::<module>",
+            "sympy/printing/latex.py::LatexPrinter",
+            "sympy/core/basic.py::Basic._subs",
+            "sympy/printing/latex.py::LatexPrinter._print_MatPow",
+            "sympy/interactive/printing.py::init_printing"
+          ]
+        },
+        "sympy__sympy-17630": {
+          "mrr@10": 0.0,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockmul",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.colblocksizes",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._eval_trace",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix._blockadd",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.structurally_equal",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.__new__"
+          ]
+        },
+        "sympy__sympy-18189": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/solvers/diophantine.py::diophantine",
+            "sympy/solvers/diophantine.py::power_representation",
+            "sympy/solvers/diophantine.py::cornacchia",
+            "sympy/solvers/solvers.py::_solve_system",
+            "sympy/solvers/diophantine.py::diop_linear",
+            "sympy/solvers/diophantine.py::diop_general_pythagorean",
+            "sympy/solvers/diophantine.py::diop_solve",
+            "sympy/solvers/diophantine.py::_can_do_sum_of_squares",
+            "sympy/solvers/diophantine.py::diop_DN",
+            "sympy/solvers/diophantine.py::sum_of_three_squares"
+          ]
+        },
+        "sympy__sympy-18199": {
+          "mrr@10": 1.0,
+          "chunk_ranking": [
+            "sympy/ntheory/residue_ntheory.py::nthroot_mod",
+            "sympy/ntheory/residue_ntheory.py::sqrt_mod",
+            "sympy/solvers/solveset.py::_invert_modular",
+            "sympy/solvers/solvers.py::solve",
+            "sympy/simplify/simplify.py::nthroot",
+            "sympy/ntheory/modular.py::solve_congruence",
+            "sympy/ntheory/factor_.py::perfect_power",
+            "sympy/solvers/solveset.py::_solve_modular",
+            "sympy/functions/elementary/miscellaneous.py::root",
+            "sympy/ntheory/residue_ntheory.py::_sqrt_mod_prime_power"
+          ]
+        },
+        "sympy__sympy-19007": {
+          "mrr@10": 0.14285714285714285,
+          "chunk_ranking": [
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::block_collapse",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix.transpose",
+            "sympy/matrices/expressions/blockmatrix.py::BlockDiagMatrix",
+            "sympy/matrices/expressions/blockmatrix.py::bc_matmul",
+            "sympy/matrices/expressions/blockmatrix.py::deblock",
+            "sympy/matrices/expressions/blockmatrix.py::BlockMatrix._entry",
+            "sympy/printing/rust.py::rust_code",
+            "sympy/printing/octave.py::octave_code",
+            "sympy/assumptions/handlers/matrices.py::BM_elements"
+          ]
+        },
+        "sympy__sympy-22840": {
+          "mrr@10": 0.16666666666666666,
+          "chunk_ranking": [
+            "sympy/simplify/cse_main.py::cse",
+            "sympy/simplify/cse_main.py::cse_release_variables",
+            "sympy/utilities/codegen.py::CodeGen.routine",
+            "sympy/simplify/cse_main.py::_cse_homogeneous",
+            "sympy/utilities/codegen.py::CCodeGen._declare_locals",
+            "sympy/simplify/cse_main.py::tree_cse",
+            "sympy/simplify/cse_main.py::cse_separate",
+            "sympy/printing/codeprinter.py::CodePrinter.doprint",
+            "sympy/polys/benchmarks/bench_groebnertools.py::<module>",
+            "sympy/functions/elementary/trigonometric.py::cos._eval_rewrite_as_sqrt"
+          ]
+        }
+      }
+    }
+  ]
+}
