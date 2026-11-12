@@ -1071,6 +1071,20 @@ review before the deep-dive:
   texts in that snapshot (370,217 tokens, truncated to 32,768; 38,193; 16,660) embedded
   in 58 s. The 47,100 vectors cached before the crash were kept (the cache commits per
   batch); the run is restarted from them.
+- The restarted run then stalled on the first sympy snapshot: no progress for over 20
+  minutes, 11 of 12 GB swap used, about 10.6 GB wired (GPU) memory, the worker at 0 to
+  15% CPU. Root cause: the first fix bounded only the quadratic attention mask
+  (len(batch) × longest²), but most of the memory grows with padded tokens
+  (len(batch) × longest), so 16 texts of 8k tokens (128k padded tokens) were still one
+  batch; PyTorch's MPS allocator also keeps freed memory cached. Measured on MPS, model
+  included: one 32,768-token text 4.13 GiB; 4 × 8k (32.6k padded) 4.13 GiB; 16 × 2k
+  (34.0k) 4.23 GiB; 8 × 8k (65.2k) 7.23 GiB. Fix: `padded_batches` now caps padded tokens
+  at 32,768 per batch (which also bounds the mask, since no text exceeds the limit), and
+  `torch.mps.empty_cache()` runs after each embedding call. Checked: 200 texts, including
+  the 100 longest cached sympy texts, re-embed to cosine 1.000000 against the cache; the
+  256 longest sympy texts (586,140 tokens) peaked at 5.14 GiB and took 336 s (about
+  1,700 tokens/s), with no growth in swap. Lesson, twice: the probe measured one text,
+  not a batch; measure the case the real run produces.
 - An earlier session's background `semantic-qwen` run stopped when that Claude Code
   session ended (23,983 vectors cached). Long runs now go in the user's own terminal.
 - Voyage probe run failed on the first request with `RateLimitError`: without a payment
