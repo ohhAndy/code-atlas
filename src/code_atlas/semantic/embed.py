@@ -69,9 +69,38 @@ def token_batches(token_counts: Sequence[int], max_texts: int, max_tokens: int) 
     return batches
 
 
+def padded_batches(lengths: Sequence[int], max_texts: int, max_cells: int) -> list[list[int]]:
+    """Group text indices into batches for a transformer, longest texts first.
+
+    A batch is padded to its longest text, and attention builds a (length x length) mask
+    per text, so a batch costs about len(batch) * longest**2 cells. Each batch keeps that
+    at or under `max_cells` and holds at most `max_texts` texts; a single text is always
+    allowed. Every index appears exactly once.
+    """
+    order = sorted(range(len(lengths)), key=lambda i: (-lengths[i], i))
+    batches: list[list[int]] = []
+    for i in order:
+        if batches:
+            current = batches[-1]
+            longest = lengths[current[0]]  # sorted longest first
+            if len(current) < max_texts and (len(current) + 1) * longest**2 <= max_cells:
+                current.append(i)
+                continue
+        batches.append([i])
+    return batches
+
+
+# Attention-mask cells per batch: 32,768**2, the size of one text at Qwen's input limit
+# (1 GiB at one byte per cell). 16 such texts in one batch needed 16 GiB and crashed MPS.
+QWEN_MAX_CELLS = 32_768**2
+
+
 class QwenEmbedder:
     """Qwen3-Embedding-0.6B, run locally with sentence-transformers (MPS on Apple silicon
-    when available). Queries get `query_prompt` prepended; documents get nothing."""
+    when available). Queries get `query_prompt` prepended; documents get nothing.
+
+    Texts are batched by padded size (`padded_batches`), not by a fixed count, so a batch
+    of long texts never exceeds the memory of one text at the input limit."""
 
     def __init__(
         self,
@@ -94,14 +123,20 @@ class QwenEmbedder:
         self.query_prompt = query_prompt
 
     def _encode(self, texts: Sequence[str], prompt: str) -> Vectors:
-        vectors = self.model.encode(
-            list(texts),
-            prompt=prompt,
-            batch_size=self.batch_size,
-            convert_to_numpy=True,
-            normalize_embeddings=False,
-        )
-        return np.asarray(vectors, dtype=np.float32)
+        prompt_tokens = len(self.model.tokenizer(prompt, add_special_tokens=False)["input_ids"])
+        lengths = [min(n + prompt_tokens, self.max_tokens) for n in self.count_tokens(texts)]
+        rows: list[Vectors] = [np.zeros(0, dtype=np.float32)] * len(texts)
+        for batch in padded_batches(lengths, self.batch_size, QWEN_MAX_CELLS):
+            vectors = self.model.encode(
+                [texts[i] for i in batch],
+                prompt=prompt,
+                batch_size=len(batch),  # one forward pass; the batch is already sized
+                convert_to_numpy=True,
+                normalize_embeddings=False,
+            )
+            for i, vector in zip(batch, vectors, strict=True):
+                rows[i] = np.asarray(vector, dtype=np.float32)
+        return np.stack(rows)
 
     def embed_documents(self, texts: Sequence[str]) -> Vectors:
         return self._encode(texts, prompt="")
