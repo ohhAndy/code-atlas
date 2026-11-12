@@ -779,16 +779,45 @@ review before the deep-dive:
     drive two misses (22840, 14024); bare traceback line numbers did not decide any miss.
   - Prediction for Phase 3, to check there: semantic search helps the 3 vocabulary-mismatch
     misses (15388, 14024, 19007) more than the 5 query-noise misses.
-  - Two of the four "right class" cases (10508, 19007) lose to the class chunk; the class
-    chunk policy (no method bodies, docstring kept) makes the docstring's usage example
-    compete with the methods it describes.
+  - In 2 misses (10508, 19007) the top hit is the class chunk of the gold method's own
+    class: the class chunk policy (no method bodies, docstring kept) lets the docstring's
+    usage example compete with the methods it describes.
   - First pass written by me, then checked against the tables in review: 6 / 13 were right
     on the main cause; 12284 was wrong (blamed common words; the words were rare and the
     winners matched the pasted model), and 10508, 19007 had no answer. Lesson: name the
     winners' top tokens and where in the issue they come from before naming a type.
+- `bm25` on test (final, logged below; k1 1.2, b 0.75, k = 10, commit `485a31a`,
+  `results/bm25_test_20261112T023215Z.json`), next to the baselines' logged test runs. All
+  70 instances have function-level gold.
+
+  | Level | Method | n | R@1 | R@5 | R@10 | MRR@10 | Hit@1 | Hit@5 | Hit@10 |
+  |---|---|---|---|---|---|---|---|---|---|
+  | function | `bm25` | 70 | 0.140 | 0.367 | 0.438 | 0.262 | 0.157 | 0.414 | 0.500 |
+  | function | `rg-chunks` | 70 | 0.071 | 0.150 | 0.214 | 0.117 | 0.071 | 0.157 | 0.229 |
+  | file (from chunks) | `bm25` | 70 | 0.571 | 0.771 | 0.771 | 0.641 | | | |
+  | file | `rg` | 70 | 0.371 | 0.557 | 0.643 | 0.454 | | | |
+
+  - Function-level MRR@10 per category: cat 1 0.296 (n = 38), cat 2 0.221 (n = 32);
+    `rg-chunks` was 0.175 / 0.049. Per repo: django 0.377 (n = 32), scikit-learn 0.265
+    (n = 16), sympy 0.092 (n = 22; R@1 0.000).
+  - Function-level MRR@10 is 0.290 on dev and 0.262 on test, so the dev number held up
+    within about 0.03.
+  - BM25 beats both baselines on every metric at both levels on test. Function-level
+    MRR@10 is 2.2× `rg-chunks` (0.262 vs 0.117); Hit@10 goes from 0.229 to 0.500.
+  - Cat 1 is above cat 2 on test (0.296 vs 0.221), the reverse of dev (0.231 vs 0.357).
+    So the dev-based hypothesis that tracebacks dilute cat-1 queries is not supported at
+    the category level; the dev order was within split noise (n = 14–38 per group). The
+    query-noise misses on dev remain a per-instance observation, not a category effect.
+  - Sympy is the weakest repo at function level on test (MRR@10 0.092, no gold chunk at
+    rank 1 in 22 instances). Hypothesis, untested (no failure analysis on test, by design):
+    sympy issues are REPL sessions with math expressions and short variable names, the
+    pattern behind the sympy dev misses (14024, 22840).
 
 ### Test-split runs
--
+- 2026-11-12, commit `485a31a`, `bm25`, `results/bm25_test_20261112T023215Z.json`. Why:
+  final Phase 2 result, run after the tuning sweep and the dev failure analysis. `bm25`
+  (tokenizer, indexed text, k1 1.2, b 0.75) is frozen from here; any change is a new
+  method with its own logged test run.
 
 ### Problems and dead ends
 - First tokenizer used `[A-Za-z0-9_]+` for words: `naïve_parse` gave `na, ve_parse`, a
