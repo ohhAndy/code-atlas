@@ -81,6 +81,10 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
     # BM25 over chunks (path + qualified name + text), k1 1.2, b 0.75; indexes cached on disk.
     "bm25": _bm25,
+    # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
+    "bm25-with-tests": lambda repo_dir: BM25Retriever(
+        repo_dir, cache_dir=INDEX_CACHE_DIR, include_tests=True
+    ),
     # Dev-only measurement of indexing path and qualified name; never a method to compare.
     "bm25-text-only": lambda repo_dir: BM25Retriever(
         repo_dir, with_path_and_name=False, cache_dir=INDEX_CACHE_DIR
@@ -97,7 +101,9 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "hybrid": lambda repo_dir: HybridRetriever(_bm25(repo_dir), _semantic(repo_dir), rrf_k=10),
 }
 # Methods that exist only to measure one choice on dev; the CLI refuses them on test.
-DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only", "semantic-voyage-with-tests"})
+DEV_ONLY = frozenset(
+    {"rg-with-tests", "bm25-with-tests", "bm25-text-only", "semantic-voyage-with-tests"}
+)
 
 
 @dataclass(frozen=True)

@@ -57,3 +57,11 @@ def test_path_is_searchable_only_when_indexed(tmp_path: Path) -> None:
     assert [h.id for h in BM25Retriever(tmp_path).search("widgets", k=10)] == ["widgets.py::f"]
     text_only = BM25Retriever(tmp_path, with_path_and_name=False)
     assert text_only.search("widgets", k=10) == []
+
+
+def test_test_files_are_indexed_only_when_asked(tmp_path: Path) -> None:
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_w.py").write_text("def test_frobnicate():\n    pass\n")
+    assert BM25Retriever(tmp_path).search("frobnicate", k=10) == []
+    hits = BM25Retriever(tmp_path, include_tests=True).search("frobnicate", k=10)
+    assert [h.id for h in hits] == ["tests/test_w.py::test_frobnicate"]

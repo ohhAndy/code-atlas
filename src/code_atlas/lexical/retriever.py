@@ -22,10 +22,12 @@ def document_tokens(chunk: Chunk, with_path_and_name: bool = True) -> list[str]:
     return tokenize(full_text)
 
 
-def build_snapshot_index(repo_dir: Path, with_path_and_name: bool = True) -> InvertedIndex:
+def build_snapshot_index(
+    repo_dir: Path, with_path_and_name: bool = True, *, include_tests: bool = False
+) -> InvertedIndex:
     """Chunk every corpus file under `repo_dir` and index the chunks' tokens."""
     docs: dict[str, list[str]] = {}
-    for path, source in iter_corpus_files(repo_dir):
+    for path, source in iter_corpus_files(repo_dir, include_tests=include_tests):
         for chunk in chunk_file(path, source):
             docs[chunk.id] = document_tokens(chunk, with_path_and_name)
     return build_index(docs)
@@ -36,7 +38,9 @@ class BM25Retriever:
     loads it from `cache_dir`, if given); `search` only scores against it.
 
     `with_path_and_name=False` indexes chunk text alone. It exists only to measure how much
-    indexing paths and qualified names changes the scores.
+    indexing paths and qualified names changes the scores. `include_tests=True` also
+    indexes files in `tests` directories; it exists only to measure what excluding them
+    changes.
     """
 
     level: Level = "chunk"
@@ -49,17 +53,20 @@ class BM25Retriever:
         *,
         with_path_and_name: bool = True,
         cache_dir: Path | None = None,
+        include_tests: bool = False,
     ) -> None:
         self.k1 = k1
         self.b = b
 
         def build() -> InvertedIndex:
-            return build_snapshot_index(repo_dir, with_path_and_name)
+            return build_snapshot_index(repo_dir, with_path_and_name, include_tests=include_tests)
 
         if cache_dir is None:
             self.index = build()
         else:
             variant = "path-name-text" if with_path_and_name else "text"
+            if include_tests:
+                variant += "-with-tests"
             self.index = load_or_build(repo_dir, variant, build, cache_dir)
 
     def search(self, query: str, k: int) -> list[Hit]:
