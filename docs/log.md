@@ -949,7 +949,12 @@ review before the deep-dive:
   - Wrong: read sympy-15308's rank-1 hit as finding the insertion point. The hit is the
     class chunk, gold only by the labeling rule (see Findings).
 - `HybridRetriever.search` written. Registered as `hybrid`: RRF of `bm25` and
-  `semantic-voyage`, k = 60 until the sweep picks one.
+  `semantic-voyage`, k = 10 after the sweep.
+- Check before seeing the sweep: first guessed k = 60 with no reason. After working out
+  1/(k + 1) against 2/(k + 5) at k = 10 and 100, reasoned that a smaller k lets the
+  stronger list's #1 count for more, so k = 10 should come closest. Right, and confirmed
+  by the sweep. Missed until shown: the ratio stays below 1 at every k in the grid, so
+  no k lets voyage's lone #1 beat agreement.
 - `codeatlas sweep-rrf` (`code_atlas.eval.rrf_sweep`): builds and searches each retriever
   once per dev instance (top 100) and fuses the two lists for each k in {10, 30, 60, 100}
   under ADR 007's rule. A search memo keeps it to one Voyage query embedding per
@@ -1145,6 +1150,29 @@ review before the deep-dive:
   - Qwen loses 2 instances that `bm25` found: django-12308 (6 → >10) and
     sklearn-25747 (5 → >10). Small as these are, they are the cases a hybrid could
     win back for Qwen. For voyage, a hybrid has no `bm25`-only wins to recover on dev.
+- RRF k sweep on dev (`results/hybrid-sweep_dev_20261112T220543Z.json`, commit
+  `7da957e`, clean; `bm25` + `semantic-voyage`, depth 100). Function level:
+
+  | | MRR@10 | Hit@10 |
+  |---|---|---|
+  | `semantic-voyage` alone | **0.767** | **0.900** |
+  | hybrid k = 10 | 0.614 | 0.867 |
+  | hybrid k = 30 | 0.546 | 0.867 |
+  | hybrid k = 60 | 0.531 | 0.800 |
+  | hybrid k = 100 | 0.530 | 0.800 |
+
+  - ADR 007 rule: k = 10 is chosen (+0.083 over k = 60). The hybrid is 0.153 below
+    voyage alone, so fusion did not help, and `semantic-voyage` is the headline method.
+  - The hybrid is below voyage in every repo and both categories (k = 10: django 0.548
+    vs 0.643, sklearn 0.750 vs 0.929, sympy 0.611 vs 0.833, cat 1 0.641 vs 0.812, cat 2
+    0.583 vs 0.714). At file level the gap is smaller (0.797 vs 0.819 MRR@10).
+  - Per instance at k = 10 against voyage: 2 better (django-12747 2 → 1, django-14667
+    4 → 3) and 11 worse. 9 of the 11 lose a rank-1 hit, and django-16820 falls from 4 to
+    outside the top 10.
+  - Predicted before seeing the numbers: the smallest k comes closest and no k beats
+    voyage alone, because a lone #1 scores 1/(k + 1), below a chunk both lists put 5th,
+    2/(k + 5), for every k in the grid. Both parts held. The mechanism is measured only
+    in aggregate; individual instances were not traced to specific outvoting chunks.
 
 ### Test-split runs
 -
@@ -1212,9 +1240,9 @@ review before the deep-dive:
   hypothesis that cannot be tested here: django, scikit-learn and sympy are probably in
   both models' training data, which may raise semantic scores against `bm25` in
   general.
-- Does fusion help when one input is far ahead? `bm25` is 0.477 MRR@10 behind voyage
-  on dev and finds no instance that voyage misses. Equal-weight RRF could then pull
-  voyage down rather than up. ADR 007's sweep answers this on dev.
+- ~~Does fusion help when one input is far ahead?~~ No, not with equal-weight RRF on
+  dev: the best hybrid is 0.153 MRR@10 below voyage alone (see Findings). Weighted RRF
+  parked in `docs/later.md`.
 - ~~During long embedding runs, progress prints once per 256 chunks, so a batch of long
   texts looked stuck for minutes.~~ Not fixed: it only hurt Qwen, which is no longer
   used. voyage-code-4 embeds a 256-chunk batch in seconds.

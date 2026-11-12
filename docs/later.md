@@ -1,3 +1,12 @@
+## Weighted RRF (parked 2026-11-12, Phase 3)
+
+Give each ranking its own weight in RRF: score = sum of w_i / (k + rank_i). Why it might
+help: on dev the equal-weight hybrid scored 0.153 MRR@10 below voyage-code-4 alone,
+because BM25's weak list outvotes voyage's rank-1 hits. A low BM25 weight could keep
+voyage's top results and still let BM25 add exact identifier matches. Cost: about one
+session, plus a weight grid on 30 dev queries, which is one more chance to fit noise. It
+is a new method under a new ADR, not a change to ADR 007. See ADR 007's Outcome.
+
 
 ## Min-max score fusion (parked 2026-11-12, Phase 3)
 

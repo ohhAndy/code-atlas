@@ -1,7 +1,7 @@
 # ADR 007: Fusion method
 
-**Status:** Accepted (the protocol; the chosen `k` and the hybrid's result go under
-Outcome after the dev sweep)
+**Status:** Accepted; k = 10 chosen on dev, and the hybrid did not beat semantic search
+(see Outcome)
 **Date:** 2026-11-12
 
 ## Context
@@ -74,5 +74,29 @@ different kind of query.
   runs.
 
 ## Outcome
-*To be filled after the dev sweep: MRR@10 per k, the chosen k, and the hybrid against
-BM25 and semantic search on dev.*
+**Fusion did not help on this data. The headline method is `semantic-voyage`.**
+
+Sweep: `results/hybrid-sweep_dev_20261112T220543Z.json` (commit `7da957e`, clean), RRF
+of `bm25` and `semantic-voyage`, depth 100.
+
+| Function level, dev (n = 30) | MRR@10 | Hit@10 |
+|---|---|---|
+| `bm25` | 0.290 | 0.567 |
+| `semantic-voyage` | **0.767** | **0.900** |
+| hybrid, k = 10 | 0.614 | 0.867 |
+| hybrid, k = 30 | 0.546 | 0.867 |
+| hybrid, k = 60 | 0.531 | 0.800 |
+| hybrid, k = 100 | 0.530 | 0.800 |
+
+- Chosen k: 10. It beats the default 60 by 0.083, over the 0.02 margin.
+- The hybrid at k = 10 is 0.153 *below* `semantic-voyage`, and below it in every repo and
+  both categories. Under this ADR's rule it is not the headline method.
+- Why: RRF weights both lists equally, and on dev BM25 is much weaker than voyage-code-4
+  and finds no instance that voyage misses. A chunk ranked 1st by voyage alone scores
+  1/(k + 1), less than a chunk both lists put around 5th (2/(k + 5)), for every k in the
+  grid. A smaller k only narrows that gap, which is why k = 10 does best.
+- Per instance at k = 10 against voyage alone: 2 instances improve and 11 get worse.
+  9 of the 11 lose a rank-1 hit, and django-16820 drops out of the top 10.
+- The hybrid stays registered as `hybrid` (k = 10) so it can be reported next to the
+  single methods. Weighted fusion, which this ADR did not include, is parked (see
+  `docs/later.md`).
