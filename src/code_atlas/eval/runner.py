@@ -32,6 +32,7 @@ from code_atlas.eval.metrics import (
     recall_at_k,
     reciprocal_rank_at_k,
 )
+from code_atlas.fusion.hybrid import HybridRetriever
 from code_atlas.lexical.cache import INDEX_CACHE_DIR
 from code_atlas.lexical.retriever import BM25Retriever
 from code_atlas.semantic.cache import EMBEDDING_CACHE_DIR
@@ -60,6 +61,15 @@ def _voyage() -> VoyageEmbedder:
     return VoyageEmbedder()
 
 
+def _bm25(repo_dir: Path) -> BM25Retriever:
+    return BM25Retriever(repo_dir, cache_dir=INDEX_CACHE_DIR)
+
+
+def _semantic(repo_dir: Path) -> SemanticRetriever:
+    """Semantic search with the embedding model chosen on dev (voyage-code-4)."""
+    return SemanticRetriever(repo_dir, _voyage(), cache_dir=EMBEDDING_CACHE_DIR)
+
+
 # Method name -> how to build a retriever for one snapshot directory.
 RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "rg": RipgrepRetriever,
@@ -68,7 +78,7 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
     "rg-with-tests": lambda repo_dir: RipgrepRetriever(repo_dir, include_tests=True),
     # BM25 over chunks (path + qualified name + text), k1 1.2, b 0.75; indexes cached on disk.
-    "bm25": lambda repo_dir: BM25Retriever(repo_dir, cache_dir=INDEX_CACHE_DIR),
+    "bm25": _bm25,
     # Dev-only measurement of indexing path and qualified name; never a method to compare.
     "bm25-text-only": lambda repo_dir: BM25Retriever(
         repo_dir, with_path_and_name=False, cache_dir=INDEX_CACHE_DIR
@@ -77,9 +87,9 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
     "semantic-qwen": lambda repo_dir: SemanticRetriever(
         repo_dir, _qwen(), cache_dir=EMBEDDING_CACHE_DIR
     ),
-    "semantic-voyage": lambda repo_dir: SemanticRetriever(
-        repo_dir, _voyage(), cache_dir=EMBEDDING_CACHE_DIR
-    ),
+    "semantic-voyage": lambda repo_dir: _semantic(repo_dir),
+    # RRF of bm25 and semantic-voyage (the embedding model chosen on dev), top 100 each.
+    "hybrid": lambda repo_dir: HybridRetriever(_bm25(repo_dir), _semantic(repo_dir), rrf_k=60),
 }
 # Methods that exist only to measure one choice on dev; the CLI refuses them on test.
 DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only"})
@@ -134,6 +144,41 @@ def function_scores(ranking: Sequence[str], gold: set[str]) -> dict[str, float]:
     }
 
 
+def score_instance(
+    inst: Instance,
+    hits: Sequence[Hit],
+    level: Level,
+    gold: set[str],
+    gold_chunks: set[str] | None,
+    *,
+    category: int | None,
+    build_seconds: float = 0.0,
+    search_seconds: float = 0.0,
+) -> InstanceResult:
+    """Score one instance's hits at file level, and at function level when the retriever
+    ranks chunks (`gold_chunks` is then the function gold; None for file retrievers)."""
+    ranking = file_ranking(hits, level)
+    chunk_ranking: list[str] | None = None
+    fn_scores: dict[str, float] | None = None
+    if level == "chunk":
+        chunk_ranking = [hit.id for hit in hits]
+        if gold_chunks:
+            fn_scores = function_scores(chunk_ranking, gold_chunks)
+    return InstanceResult(
+        instance_id=inst.instance_id,
+        repo=inst.repo,
+        category=category,
+        gold_files=sorted(gold),
+        ranking=ranking,
+        scores=file_scores(ranking, gold),
+        gold_chunks=sorted(gold_chunks) if gold_chunks is not None else None,
+        chunk_ranking=chunk_ranking,
+        function_scores=fn_scores,
+        build_seconds=build_seconds,
+        search_seconds=search_seconds,
+    )
+
+
 def evaluate(
     instances: Sequence[Instance],
     make_retriever: Callable[[Path], Retriever],
@@ -157,25 +202,14 @@ def evaluate(
         hits = retriever.search(inst.problem_statement, K)
         searched = time.perf_counter()
 
-        ranking = file_ranking(hits, retriever.level)
-        gold_chunks: set[str] | None = None
-        chunk_ranking: list[str] | None = None
-        fn_scores: dict[str, float] | None = None
-        if retriever.level == "chunk":
-            gold_chunks = function_gold(inst.patch, repo_dir)
-            chunk_ranking = [hit.id for hit in hits]
-            if gold_chunks:
-                fn_scores = function_scores(chunk_ranking, gold_chunks)
-        result = InstanceResult(
-            instance_id=inst.instance_id,
-            repo=inst.repo,
+        gold_chunks = function_gold(inst.patch, repo_dir) if retriever.level == "chunk" else None
+        result = score_instance(
+            inst,
+            hits,
+            retriever.level,
+            gold,
+            gold_chunks,
             category=categories.get(inst.instance_id),
-            gold_files=sorted(gold),
-            ranking=ranking,
-            scores=file_scores(ranking, gold),
-            gold_chunks=sorted(gold_chunks) if gold_chunks is not None else None,
-            chunk_ranking=chunk_ranking,
-            function_scores=fn_scores,
             build_seconds=round(built - start, 4),
             search_seconds=round(searched - built, 4),
         )

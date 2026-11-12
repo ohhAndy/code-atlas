@@ -80,6 +80,28 @@ def sweep_bm25() -> None:
     print(f"Wrote {path}")
 
 
+def sweep_rrf() -> None:
+    """Grid-search the hybrid's RRF k on dev; write a results JSON and print the grid."""
+    from code_atlas.eval import categories, rrf_sweep, runner
+
+    splits = read_split()
+    wanted = [inst for inst in load_instances() if splits.get(inst.instance_id) == "dev"]
+    methods = ("bm25", "semantic-voyage")
+    results = rrf_sweep.sweep(
+        wanted,
+        lambda inst: snapshot(inst.repo, inst.base_commit),
+        runner.RETRIEVERS[methods[0]],
+        runner.RETRIEVERS[methods[1]],
+        {iid: label["category"] for iid, label in categories.load_labels().items()},
+    )
+    per_k, chosen = rrf_sweep.summarize_sweep(results)
+    path = rrf_sweep.write_sweep("dev", methods, results, per_k, chosen)
+    print(f"\nFunction level on dev, RRF of {' + '.join(methods)}")
+    print(rrf_sweep.format_grid(per_k))
+    print(f"\nChosen: k={chosen}  (default {rrf_sweep.DEFAULT_K}, margin {rrf_sweep.MARGIN})")
+    print(f"Wrote {path}")
+
+
 def label(split: str) -> None:
     """Hand-label query categories for every instance in `split` (resumable)."""
     from code_atlas.eval import categories
@@ -112,6 +134,7 @@ def main() -> None:
     e.add_argument("--final", action="store_true", help="required to run the test split")
 
     commands.add_parser("sweep-bm25", help="grid-search BM25 k1 and b on the dev split")
+    commands.add_parser("sweep-rrf", help="grid-search the hybrid's RRF k on the dev split")
 
     lab = commands.add_parser("label", help="hand-label query categories")
     lab.add_argument("--split", choices=["dev", "test", "all"], default="all")
@@ -123,5 +146,7 @@ def main() -> None:
         evaluate(args.method, args.split, args.final)
     elif args.command == "sweep-bm25":
         sweep_bm25()
+    elif args.command == "sweep-rrf":
+        sweep_rrf()
     elif args.command == "label":
         label(args.split)
