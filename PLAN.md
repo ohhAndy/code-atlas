@@ -284,16 +284,16 @@ Tracebacks leak file paths and inflate lexical scores, so results are always rep
 
 **Tasks**
 
-- [ ] Choose an embedding model (ADR 006):
+- [x] Choose an embedding model (ADR 006):
   - At most 2 candidates, e.g. one local open model and one API such as Cohere Embed.
   - Compare dev quality, cost, speed and reproducibility.
-- [ ] Decide what text gets embedded per chunk (path, qualified name, code) and how to handle the model's input-length limit.
-- [ ] Build an embedding cache keyed by a hash of (chunk text, model id). Most functions are unchanged across commits of the same repo, so this cache matters.
-- [ ] Brute-force vector search: normalize the vectors, do a matrix-vector product, use `argpartition` for top-k.
-- [ ] RRF fusion of BM25 and semantic results, with `k` tuned on dev (ADR 007). Comparing against min-max score fusion is optional.
+- [x] Decide what text gets embedded per chunk (path, qualified name, code) and how to handle the model's input-length limit.
+- [x] Build an embedding cache keyed by a hash of (chunk text, model id). Most functions are unchanged across commits of the same repo, so this cache matters.
+- [x] Brute-force vector search: normalize the vectors, do a matrix-vector product, use `argpartition` for top-k.
+- [x] RRF fusion of BM25 and semantic results, with `k` tuned on dev (ADR 007). Comparing against min-max score fusion is optional.
 - [ ] Optional: a reranker on the top N results, only if time allows.
-- [ ] Final test-set run.
-- [ ] Write the results table, the per-category breakdown and the analysis with examples in the README.
+- [x] Final test-set run.
+- [x] Write the results table, the per-category breakdown and the analysis with examples in the README.
 
 **Done when**
 

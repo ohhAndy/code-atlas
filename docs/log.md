@@ -960,6 +960,19 @@ review before the deep-dive:
   under ADR 007's rule. A search memo keeps it to one Voyage query embedding per
   instance. The runner's per-instance scoring moved into `score_instance`, shared by
   `eval` and the sweep. 6 tests in `tests/eval/test_rrf_sweep.py` (selection rule, memo).
+- Weighted RRF parked in `docs/later.md`.
+- `include_tests` added to the corpus filter (`iter_corpus_files`), `SemanticRetriever` and
+  `BM25Retriever` (its own cache variant). Registered `semantic-voyage-with-tests` and
+  `bm25-with-tests` as dev-only methods. The `bm25` with-tests run was also owed, from
+  Phase 2. 3 tests added.
+- `benchmarks/semantic_bench.py`: snapshot load time, matrix size, and query latency split
+  into Voyage query embedding, `top_k`, and full hybrid search.
+- Final test runs for `semantic-voyage` and `hybrid` (see Test-split runs). Dev runs for
+  both with-tests methods, the benchmark, and a clean re-run of `bm25` on dev.
+- README: results table (function and file level), per-category and per-repo breakdown,
+  analysis with test examples, speed and memory, and how to reproduce the semantic runs.
+- Still open for the phase: the end-of-phase quiz (PLAN §8 Phase 3 questions plus new
+  ones), and a check that the pipeline reproduces from a clean clone.
 
 ### Decisions
 - `top_k` selects with `np.argpartition` on the float scores, not a full sort. Why: a full
@@ -1169,15 +1182,99 @@ review before the deep-dive:
   - Per instance at k = 10 against voyage: 2 better (django-12747 2 → 1, django-14667
     4 → 3) and 11 worse. 9 of the 11 lose a rank-1 hit, and django-16820 falls from 4 to
     outside the top 10.
-  - Predicted before seeing the numbers: the smallest k comes closest and no k beats
-    voyage alone, because a lone #1 scores 1/(k + 1), below a chunk both lists put 5th,
-    2/(k + 5), for every k in the grid. Both parts held. The mechanism is measured only
-    in aggregate; individual instances were not traced to specific outvoting chunks.
+  - Prediction written before the numbers were shown: the smallest k comes closest and
+    no k beats voyage alone, because a lone #1 scores 1/(k + 1), below a chunk both
+    lists put 5th, 2/(k + 5), for every k in the grid. Both parts held. The mechanism is
+    measured only in aggregate; individual instances were not traced to specific
+    outvoting chunks.
+- Test files included, dev only (owed since Phase 0 under ADR 002). Function / file
+  MRR@10, tests excluded → included:
+
+  | Method | Function MRR@10 | Function Recall@10 | Hit@10 | File MRR@10 | Results file (included) |
+  |---|---|---|---|---|---|
+  | `rg` (Phase 0) | | | | 0.419 → 0.239 | `rg-with-tests_dev_20261109T011552Z.json` |
+  | `bm25` | 0.290 → 0.261 | 0.461 → 0.344 | 0.567 → 0.433 | 0.604 → 0.500 | `bm25-with-tests_dev_20261112T223549Z.json` |
+  | `semantic-voyage` | 0.767 → 0.767 | 0.828 → 0.794 | 0.900 → 0.900 | 0.819 → 0.819 | `semantic-voyage-with-tests_dev_20261112T223149Z.json` |
+
+  Both runs are from clean commits (`0006cd0`, `6a4db4e`). The `bm25` reference is the
+  re-run at `d2b4164`, which matches Phase 2 exactly.
+  - Excluding test files was worth a lot for the lexical methods. With tests included,
+    `bm25` changes on 9 of 30 instances (1 up, 8 down), and 86 of its 300 top-10 slots
+    are test chunks.
+  - Voyage barely notices. Its rankings change on 21 of 30 instances, and 39 of its 300
+    top-10 slots are test chunks, but in every instance the test chunks land below the
+    first gold chunk. MRR@10 and Hit@10 are unchanged. Only function Recall@10 drops,
+    on 2 instances with more than one gold chunk.
+  - Hypothesis, not tested: tests repeat the identifiers and literal values of the code
+    they test, so they collide with lexical queries. An embedding of a test ("assert this
+    call returns that") sits further from a bug report's meaning than the function
+    itself does.
+- Semantic and hybrid benchmark (`results/semantic_bench_20261112T223245Z.json`, commit
+  `65d5968`, clean; M4 Pro 24 GB; largest dev snapshot, sympy-22840, 31,502 chunks;
+  30 dev queries):
+
+  | | p50 | p95 | max |
+  |---|---|---|---|
+  | Query embedding (voyage-code-4 API) | 140 ms | 191 ms | 374 ms |
+  | `top_k`, k = 10, 31,502 × 1,024 | 2.24 ms | 2.62 ms | 2.84 ms |
+  | `hybrid` search (BM25 top 100 + embed + top 100 + RRF) | 211 ms | 278 ms | 301 ms |
+
+  - The matrix is 129,032,192 bytes (float32), exactly rows × dims × 4. Loading a
+    snapshot from the warm embedding cache takes 3.06 s (median of 3): chunking, SQLite
+    reads, stacking and normalizing.
+  - The network call is about 98% of a semantic query. Brute force at this size is not
+    the bottleneck.
+  - `top_k` takes 2.2 ms here, but the earlier scratch timing was 0.49 ms at d = 768.
+    The two numbers differ in dimension and in method, since the scratch run was not a
+    logged benchmark. Only the logged number is quoted.
+- Final test results (n = 70; function level, MRR@10 / Hit@10):
+
+  | | overall | cat 1 (38) | cat 2 (32) | django (32) | sklearn (16) | sympy (22) |
+  |---|---|---|---|---|---|---|
+  | `rg-chunks` | 0.117 / 0.229 | 0.175 | 0.049 | 0.151 | 0.156 | 0.039 |
+  | `bm25` | 0.262 / 0.500 | 0.296 | 0.221 | 0.377 | 0.265 | 0.092 |
+  | `semantic-voyage` | **0.603 / 0.871** | **0.641** | **0.559** | **0.601** | **0.735** | **0.511** |
+  | `hybrid` (k = 10) | 0.486 / 0.800 | 0.558 | 0.401 | 0.544 | 0.550 | 0.355 |
+
+  File level, MRR@10: `rg` 0.454, `bm25` 0.641, `semantic-voyage` 0.880, `hybrid` 0.798.
+  - Test confirms the dev order: semantic search > hybrid > BM25 on every slice.
+  - Semantic search drops from 0.767 on dev to 0.603 on test. Some of that is
+    selection: the model was picked on the same 30 dev queries. BM25 moved less (0.290 to
+    0.262), and it had fewer choices made on dev.
+  - Unlike dev, BM25 does contribute something on test. It ranks gold above voyage on
+    6 / 70 issues, and the hybrid beats voyage on 8. But the hybrid is worse on 29, so
+    equal-weight fusion still loses overall (0.486 vs 0.603).
+  - The hybrid loses most on category 2 (0.559 → 0.401), where BM25 is weakest (0.221).
+    This fits the mechanism: the weaker list drags the fused ranking down more. But
+    n = 32, so it's a direction, not a finding.
+  - Examples, from the test rankings:
+    - django-15851: voyage 1st, BM25 miss. The issue's words ("dbshell", "psql",
+      "before dbname") never name `settings_to_cmd_args_env`.
+    - django-15902: BM25 1st, voyage 9th. The title names `ManagementForm`, the gold
+      class. Voyage ranks general rendering code higher, because it matches the topic.
+    - sympy-17139: BM25 4th, voyage 5th, hybrid 1st. Agreement wins.
+- Per-category gap on test: no category favors BM25 on this data, and semantic search
+  leads in both. Category 1 is
+  higher for every method. The gap between voyage and BM25 is about the same in both
+  categories (+0.345 in category 1, +0.338 in category 2), so the dev hint that
+  traceback issues gain more from semantic search did not hold on test.
 
 ### Test-split runs
--
+- 2026-11-12, commit `3b5b6cd`, `semantic-voyage`,
+  `results/semantic-voyage_test_20261112T221938Z.json`. Why: final Phase 3 semantic
+  result, after ADR 006 chose the model on dev. `semantic-voyage` (voyage-code-4, embedded
+  text, truncation at 32k) is frozen from here.
+- 2026-11-12, commit `39aac02`, `hybrid`, `results/hybrid_test_20261112T222406Z.json`.
+  Why: final Phase 3 hybrid result, after ADR 007's sweep chose k = 10 on dev. Reported
+  next to the single methods although it lost on dev, as ADR 007 requires. `hybrid` is
+  frozen from here.
 
 ### Problems and dead ends
+- Adding `include_tests` to `parse/files.py` changed the BM25 code fingerprint, so every
+  cached BM25 index was rebuilt on the next run. That's intended (the cache must not
+  outlive the code), and the default corpus is unchanged: `bm25` on dev at `d2b4164`
+  reproduces Phase 2 exactly (0.290 function / 0.604 file MRR@10,
+  `results/bm25_dev_20261112T223710Z.json`).
 - First full `semantic-qwen` dev run crashed at instance 22 (the first sympy snapshot)
   with `RuntimeError: Invalid buffer size: 16.00 GiB` on MPS. Root cause: Qwen was batched
   16 texts at a time, a batch is padded to its longest text, and attention builds a
