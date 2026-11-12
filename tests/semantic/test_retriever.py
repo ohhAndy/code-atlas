@@ -95,3 +95,11 @@ def test_second_build_reads_the_cache(repo: Path, tmp_path: Path) -> None:
     cached = SemanticRetriever(repo, embedder, cache_dir=cache_dir)
     assert embedder.documents_embedded == []
     assert [h.id for h in cached.search("the header is broken", k=1)] == ["c.py::parse_header"]
+
+
+def test_test_files_are_excluded_unless_asked(repo: Path) -> None:
+    (repo / "tests").mkdir()
+    (repo / "tests" / "test_a.py").write_text("def test_f():\n    assert frobnicate()\n")
+    assert "tests/test_a.py::test_f" not in SemanticRetriever(repo, FakeEmbedder()).ids
+    with_tests = SemanticRetriever(repo, FakeEmbedder(), include_tests=True)
+    assert "tests/test_a.py::test_f" in with_tests.ids

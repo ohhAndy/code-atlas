@@ -15,16 +15,21 @@ def is_test_file(path: str) -> bool:
     return "tests" in path.split("/")[:-1]
 
 
-def iter_corpus_files(repo_dir: Path) -> Iterator[tuple[str, bytes]]:
+def iter_corpus_files(
+    repo_dir: Path, *, include_tests: bool = False
+) -> Iterator[tuple[str, bytes]]:
     """Yield (repo-relative path, raw bytes) for every corpus .py file, sorted by path.
 
-    Corpus = .py files outside test directories and outside `.git`. Bytes are returned
-    undecoded, because the parser works on bytes and some repos contain files that are not
-    valid UTF-8. Symlinks are skipped so a file is never read twice under two paths.
+    Corpus = .py files outside test directories and outside `.git`. `include_tests=True`
+    keeps test directories; it exists only to measure what excluding them changes.
+
+    Bytes are returned undecoded, because the parser works on bytes and some repos contain
+    files that are not valid UTF-8. Symlinks are skipped so a file is never read twice
+    under two paths.
     """
     for file in sorted(repo_dir.rglob("*.py")):
         rel = file.relative_to(repo_dir).as_posix()
-        if ".git" in rel.split("/") or is_test_file(rel):
+        if ".git" in rel.split("/") or (not include_tests and is_test_file(rel)):
             continue
         if file.is_symlink() or not file.is_file():
             continue

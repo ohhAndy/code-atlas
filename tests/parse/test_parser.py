@@ -70,6 +70,19 @@ def test_iter_corpus_files(tmp_path: Path) -> None:
     ]
 
 
+def test_iter_corpus_files_can_include_tests(tmp_path: Path) -> None:
+    (tmp_path / "pkg" / "tests").mkdir(parents=True)
+    (tmp_path / ".git").mkdir()
+    (tmp_path / "pkg" / "a.py").write_bytes(b"a = 1\n")
+    (tmp_path / "pkg" / "tests" / "test_a.py").write_bytes(b"t = 1\n")
+    (tmp_path / ".git" / "hook.py").write_bytes(b"h = 1\n")
+
+    assert [p for p, _ in iter_corpus_files(tmp_path, include_tests=True)] == [
+        "pkg/a.py",
+        "pkg/tests/test_a.py",
+    ]
+
+
 def test_iter_corpus_files_keeps_invalid_utf8(tmp_path: Path) -> None:
     (tmp_path / "latin1.py").write_bytes(b"s = '\xe9'\n")  # not valid UTF-8
     assert list(iter_corpus_files(tmp_path)) == [("latin1.py", b"s = '\xe9'\n")]

@@ -65,9 +65,11 @@ def _bm25(repo_dir: Path) -> BM25Retriever:
     return BM25Retriever(repo_dir, cache_dir=INDEX_CACHE_DIR)
 
 
-def _semantic(repo_dir: Path) -> SemanticRetriever:
+def _semantic(repo_dir: Path, *, include_tests: bool = False) -> SemanticRetriever:
     """Semantic search with the embedding model chosen on dev (voyage-code-4)."""
-    return SemanticRetriever(repo_dir, _voyage(), cache_dir=EMBEDDING_CACHE_DIR)
+    return SemanticRetriever(
+        repo_dir, _voyage(), cache_dir=EMBEDDING_CACHE_DIR, include_tests=include_tests
+    )
 
 
 # Method name -> how to build a retriever for one snapshot directory.
@@ -88,12 +90,14 @@ RETRIEVERS: dict[str, Callable[[Path], Retriever]] = {
         repo_dir, _qwen(), cache_dir=EMBEDDING_CACHE_DIR
     ),
     "semantic-voyage": lambda repo_dir: _semantic(repo_dir),
+    # Dev-only measurement of the test-file exclusion; never a method to compare or tune.
+    "semantic-voyage-with-tests": lambda repo_dir: _semantic(repo_dir, include_tests=True),
     # RRF of bm25 and semantic-voyage (the embedding model chosen on dev), top 100 each;
     # k = 10, chosen by the dev sweep.
     "hybrid": lambda repo_dir: HybridRetriever(_bm25(repo_dir), _semantic(repo_dir), rrf_k=10),
 }
 # Methods that exist only to measure one choice on dev; the CLI refuses them on test.
-DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only"})
+DEV_ONLY = frozenset({"rg-with-tests", "bm25-text-only", "semantic-voyage-with-tests"})
 
 
 @dataclass(frozen=True)

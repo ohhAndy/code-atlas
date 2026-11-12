@@ -23,15 +23,27 @@ class SemanticRetriever:
     """Chunk-level retriever. The constructor chunks every corpus file, embeds each chunk's
     text (through the on-disk cache when `cache_dir` is given) and stores the unit-normalized
     matrix, row i = chunk `ids[i]`. `search` only embeds the query and scores against it.
+
+    `include_tests=True` also indexes files in `tests` directories; it exists only to
+    measure what excluding them changes.
     """
 
     level: Level = "chunk"
 
     def __init__(
-        self, repo_dir: Path, embedder: Embedder, *, cache_dir: Path | None = None
+        self,
+        repo_dir: Path,
+        embedder: Embedder,
+        *,
+        cache_dir: Path | None = None,
+        include_tests: bool = False,
     ) -> None:
         self.embedder = embedder
-        chunks = [c for path, src in iter_corpus_files(repo_dir) for c in chunk_file(path, src)]
+        chunks = [
+            c
+            for path, src in iter_corpus_files(repo_dir, include_tests=include_tests)
+            for c in chunk_file(path, src)
+        ]
         self.ids = [c.id for c in chunks]
         texts = [embedded_text(c) for c in chunks]
         if cache_dir is None:
