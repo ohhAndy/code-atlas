@@ -1053,6 +1053,77 @@ review before the deep-dive:
       billing. The dev fill (about 24 M tokens) uses about 12% of the 200 M free tokens.
     - Qwen: 2,687 tokens/s, against 2,488 in the first run on the same sample: about 8%
       run-to-run variation in throughput.
+- Semantic dev runs. Both are clean: `semantic-voyage`
+  (`results/semantic-voyage_dev_20261112T180754Z.json`, commit `49c700d`) and
+  `semantic-qwen` (`results/semantic-qwen_dev_20261112T214911Z.json`, commit `ee1c31e`).
+  BM25 reference: `results/bm25_dev_20261111T230214Z.json` (the Phase 2 dev run, commit
+  `cf95774`, marked dirty).
+
+  | Function level, dev | n | `bm25` MRR@10 | `semantic-qwen` | `semantic-voyage` | `bm25` Hit@10 | qwen | voyage |
+  |---|---|---|---|---|---|---|---|
+  | overall | 30 | 0.290 | 0.454 | **0.767** | 0.567 | 0.767 | **0.900** |
+  | django | 14 | 0.233 | 0.337 | **0.643** | 0.571 | 0.643 | **0.857** |
+  | scikit-learn | 7 | 0.402 | 0.619 | **0.929** | 0.714 | 0.857 | **1.000** |
+  | sympy | 9 | 0.290 | 0.509 | **0.833** | 0.444 | **0.889** | **0.889** |
+  | category 1 | 16 | 0.231 | 0.489 | **0.812** | 0.625 | 0.812 | **0.875** |
+  | category 2 | 14 | 0.357 | 0.415 | **0.714** | 0.500 | 0.714 | **0.929** |
+
+  | File level, dev | `bm25` MRR@10 | qwen | voyage | `bm25` Recall@10 | qwen | voyage |
+  |---|---|---|---|---|---|---|
+  | overall | 0.604 | 0.697 | **0.819** | 0.800 | 0.900 | **0.933** |
+
+  - ADR 006 rule applied: voyage-code-4 beats Qwen by +0.313 function-level MRR@10
+    (margin 0.02), so voyage-code-4 is the semantic method from here on.
+  - Both models beat `bm25` on function-level MRR@10 overall, in every repo and in both
+    categories. Group sizes are 7 to 16, so only the overall gap is large enough to
+    matter. The per-group numbers are directions, not findings.
+  - Category 1 (traceback) gains more than category 2 for both models (voyage +0.581 vs
+    +0.357 over `bm25`). This fits the Phase 2 idea that pasted tracebacks and code
+    dilute BM25's query. It is a hypothesis: n = 16 and 14, and the hybrid and query
+    cleanup runs are what would test it.
+  - Mean search time per query: `bm25` 0.022 s, `semantic-qwen` 0.165 s,
+    `semantic-voyage` 0.140 s, read from the per-instance `search_seconds`. Both semantic
+    times include embedding the query (on the GPU for Qwen, a network call for Voyage).
+    This is not a controlled benchmark. Build times are not comparable: both runs mixed
+    cached and fresh vectors, and the Qwen run was restarted twice.
+- Phase 2 prediction checked: "semantic search helps the 3 vocabulary-mismatch misses
+  more than the 5 query-noise misses". Rank of the first gold function in the top 10
+  (">10" = not in the top 10; `bm25` missed all 13):
+
+  | Phase 2 miss type | Instance | qwen | voyage |
+  |---|---|---|---|
+  | vocabulary mismatch | django-15388 | >10 | 1 |
+  | | sympy-14024 | 8 | 2 |
+  | | sympy-19007 | 6 | 1 |
+  | query noise | django-12284 | >10 | 2 |
+  | | django-15738 | >10 | >10 |
+  | | django-16873 | 1 | 1 |
+  | | sklearn-14092 | 1 | 1 |
+  | | sympy-22840 | 7 | 1 |
+  | symptom ≠ fix | django-11797 | 5 | >10 |
+  | | django-16820 | >10 | 4 |
+  | | sympy-17630 | >10 | >10 |
+  | right class, wrong chunk | sklearn-10508 | 2 | 1 |
+  | gold-label artifact | sympy-15308 | 7 | 1 |
+
+  - voyage-code-4 finds all 3 vocabulary-mismatch misses (rank 1, 2, 1) and 4 of 5
+    query-noise misses. Qwen finds 2 of 3 and 3 of 5.
+  - So the prediction holds only in part. Semantic search does fix the vocabulary
+    mismatches, but it fixes query noise almost as often, so "more than" is not
+    supported. Both rates come from groups of 3 and 5.
+  - Symptom ≠ fix stays the hardest group: each model finds 1 of 3, and not the same
+    one. This fits the Phase 2 guess that the issue's words never describe the fix
+    location, whatever the method.
+  - sympy-15308 is found at rank 1 by voyage, although its gold is the chunks next to
+    where the fix inserts a new method. The model ranks the `Trace`-related printer
+    code first, which happens to be the gold neighbor. This is not evidence of
+    understanding the fix.
+- Regressions against `bm25`: function-level rank, `bm25` → model.
+  - Voyage loses none of the 17 instances `bm25` found. Its 3 misses (11797, 15738,
+    17630) were `bm25` misses too.
+  - Qwen loses 2 instances that `bm25` found: django-12308 (6 → >10) and
+    sklearn-25747 (5 → >10). Small as these are, they are the cases a hybrid could
+    win back for Qwen. For voyage, a hybrid has no `bm25`-only wins to recover on dev.
 
 ### Test-split runs
 -
@@ -1112,5 +1183,17 @@ review before the deep-dive:
 - ~~Which Voyage code model?~~ Resolved: `voyage-code-4` (released 2026-08).
 - ~~Chunk length distribution in model tokens?~~ Resolved: measured (see Findings).
 - ~~Qwen query instruction?~~ Resolved: written for this task (see Decisions).
-- Phase 2 prediction to check: semantic search helps the 3 vocabulary-mismatch misses
-  (django-15388, sympy-14024, sympy-19007) more than the 5 query-noise misses.
+- ~~Phase 2 prediction to check: semantic search helps the 3 vocabulary-mismatch misses
+  (django-15388, sympy-14024, sympy-19007) more than the 5 query-noise misses.~~
+  Checked: partly. It fixes both groups at similar rates (see Findings).
+- Why does voyage-code-4 beat Qwen by 0.31? Model size, code-only training and query
+  format all differ (ADR 006 Consequences), so this setup cannot tell. Another
+  hypothesis that cannot be tested here: django, scikit-learn and sympy are probably in
+  both models' training data, which may raise semantic scores against `bm25` in
+  general.
+- Does fusion help when one input is far ahead? `bm25` is 0.477 MRR@10 behind voyage
+  on dev and finds no instance that voyage misses. Equal-weight RRF could then pull
+  voyage down rather than up. ADR 007's sweep answers this on dev.
+- During long embedding runs, progress prints once per 256 chunks, so a batch of long
+  texts looked stuck for minutes. A progress line per embedding call would tell slow
+  from stuck. It's support code, to add when no run is in progress.

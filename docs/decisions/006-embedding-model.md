@@ -1,7 +1,6 @@
 # ADR 006: Embedding model
 
-**Status:** Accepted (the candidates and the selection rule; the chosen model is filled
-in under Outcome after the two dev runs)
+**Status:** Accepted; voyage-code-4 chosen on dev (see Outcome)
 **Date:** 2026-11-11
 
 ## Context
@@ -106,5 +105,22 @@ BM25's `b` corrects for.
   on a leaderboard can still be chosen if it is better on dev.
 
 ## Outcome
-*To be filled after the two dev runs: MRR@10 for each candidate, the gap, and the model
-chosen by the rule.*
+**Chosen: voyage-code-4.** One dev run each, both from clean commits:
+`results/semantic-qwen_dev_20261112T214911Z.json` (commit `ee1c31e`) and
+`results/semantic-voyage_dev_20261112T180754Z.json` (commit `49c700d`). The commits
+differ only in how Qwen batches its inputs; re-embedding with the final batching gave
+cosine 1.000000 against the cached vectors, so the Qwen vectors are the same.
+
+| Function level, dev (n = 30) | MRR@10 | Recall@1 | Recall@10 | Hit@10 |
+|---|---|---|---|---|
+| Qwen3-Embedding-0.6B | 0.454 | 0.228 | 0.661 | 0.767 |
+| voyage-code-4 | **0.767** | 0.489 | 0.828 | 0.900 |
+
+- Gap: +0.313 MRR@10 for voyage-code-4, against a margin of 0.02. The rule picks
+  voyage-code-4.
+- voyage-code-4 is ahead in all three repos and both categories (see the Phase 3 log
+  for the per-group tables).
+- Cost accepted with this choice: reproducing the semantic and hybrid results needs a
+  Voyage API key. Qwen's numbers stay in the log as the free, local reference.
+- As stated under Consequences, this result cannot say *why* voyage-code-4 wins: model
+  size, code-only training and the API vs local setup all differ at once.
