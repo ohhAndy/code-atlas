@@ -937,6 +937,24 @@ review before the deep-dive:
   the repo. Not registered as a method until ADR 006 picks the embedding model.
 - Voyage account: payment method added (needed for the rate limits); 200 M free tokens
   shown on the dashboard, against about 24 M for the dev fill.
+- Dev runs for both embedding candidates done; voyage-code-4 chosen under the ADR 006
+  rule (see Findings and the ADR's Outcome). Explain-back check on the results:
+  - Right: with equal-weight RRF, a gold chunk ranked 1st by voyage and 80th by BM25
+    (1/61 + 1/140 ≈ 0.0235) loses to a chunk both rank 5th (2/65 ≈ 0.0308), because RRF
+    treats both lists as equally good.
+  - Gap: changing k does not fix that (at k = 10 it is still 0.102 vs 0.133). k sets how
+    steeply the votes fall off with rank, not how much each list counts.
+  - Partly right on why the result cannot be credited to code training. Missed that Qwen
+    is trained on code too, and that size, local vs API and query format also differ.
+  - Wrong: read sympy-15308's rank-1 hit as finding the insertion point. The hit is the
+    class chunk, gold only by the labeling rule (see Findings).
+- `HybridRetriever.search` written. Registered as `hybrid`: RRF of `bm25` and
+  `semantic-voyage`, k = 60 until the sweep picks one.
+- `codeatlas sweep-rrf` (`code_atlas.eval.rrf_sweep`): builds and searches each retriever
+  once per dev instance (top 100) and fuses the two lists for each k in {10, 30, 60, 100}
+  under ADR 007's rule. A search memo keeps it to one Voyage query embedding per
+  instance. The runner's per-instance scoring moved into `score_instance`, shared by
+  `eval` and the sweep. 6 tests in `tests/eval/test_rrf_sweep.py` (selection rule, memo).
 
 ### Decisions
 - `top_k` selects with `np.argpartition` on the float scores, not a full sort. Why: a full
@@ -1197,6 +1215,6 @@ review before the deep-dive:
 - Does fusion help when one input is far ahead? `bm25` is 0.477 MRR@10 behind voyage
   on dev and finds no instance that voyage misses. Equal-weight RRF could then pull
   voyage down rather than up. ADR 007's sweep answers this on dev.
-- During long embedding runs, progress prints once per 256 chunks, so a batch of long
-  texts looked stuck for minutes. A progress line per embedding call would tell slow
-  from stuck. It's support code, to add when no run is in progress.
+- ~~During long embedding runs, progress prints once per 256 chunks, so a batch of long
+  texts looked stuck for minutes.~~ Not fixed: it only hurt Qwen, which is no longer
+  used. voyage-code-4 embeds a 256-chunk batch in seconds.
