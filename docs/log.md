@@ -846,3 +846,230 @@ review before the deep-dive:
 - What worked: hand-computed test values caught real bugs (a typo, two regex regressions)
   before any eval run, and fixing the tuning protocol before seeing results kept the dev
   number honest: 0.290 on dev, 0.262 on test.
+
+## Phase 3: Semantic and Hybrid Search
+
+**Status:** in progress (started 2026-11-11)
+
+### Work done
+- Plan for the phase, one session each:
+  1. Reading before any design decision (Phase 2 retro): embeddings, unit vectors and
+     cosine similarity, brute force vs approximate nearest neighbor search, RRF.
+  2. `normalize` and `top_k` (stubs and tests ready).
+  3. ADR 006: at most 2 embedding model candidates; what text is embedded per chunk; the
+     oversized-chunk rule deferred from Phase 1 (input-length limit).
+  4. Embedding client and cache keyed by hash of (chunk text, model id).
+  5. Semantic retriever, dev run per candidate, choose the model.
+  6. `rrf` (stub and tests ready), hybrid retriever, fusion protocol fixed before any
+     run (ADR 007), tune RRF `k` on dev.
+  7. Dev-only semantic run with test files included (owed since Phase 0, see Decisions
+     there), benchmark (embedding time, query latency, memory).
+  8. Final test runs, README table and analysis, quiz.
+- Added `numpy` (2.5.4) as a direct dependency.
+- Stubs `code_atlas.semantic.search.normalize` / `top_k` and `code_atlas.fusion.rrf.rrf`,
+  bodies not written. Contracts are in the docstrings: `top_k` takes already-normalized
+  inputs and returns (row index, score) pairs, ties broken by lower row index, `k < 1`
+  raises; `rrf` takes rankings of ids only (no scores), returns id -> fused score, ranks
+  1-based, raises on `k < 0` or a duplicate id in a ranking.
+- Tests: 12 in `tests/semantic/test_search.py` (hand-computed 2-d example, ties, `k` past
+  the row count, input not mutated, a 1000-row random case against a full sort, length vs
+  direction) and 9 in `tests/fusion/test_rrf.py` (hand-computed two-list example, 1-based
+  ranks, how `k` trades one strong vote against agreement, empty input, duplicates).
+  Checked against a throwaway reference implementation outside the repo: all pass. They
+  fail in the repo until the stubs are written, so CI is red until then.
+- Reading session (2026-11-11), four check questions answered. Right: dot product grows
+  with vector length while cosine does not; `argpartition` output is unordered; RRF
+  sidesteps incompatible score scales; truncation keeps only the head of a long chunk.
+  Gaps to close: assumed a longer text gives a longer vector (embedding size is fixed by
+  the model); did not say why only the k selected items are sorted (cost); did not name
+  what RRF discards (the size of score gaps).
+- `normalize` and `top_k` written; 2 more tests added (997 rows tied at the cutoff, empty
+  matrix), 14 in `tests/semantic/test_search.py`, all passing.
+- `normalize` raises on a zero vector (test added, 15 in `tests/semantic/test_search.py`).
+- `rrf` written: one pass over each ranking, duplicate check per ranking. All 9 tests in
+  `tests/fusion/test_rrf.py` pass; full suite green again (251 tests).
+- ADR 006 (embedding model) written and accepted. Explain-back check on it: right that
+  local is free and reproducible, that a gap under 0.02 can be one query's rank change,
+  and that a longer function dilutes its one vector. Gaps: two models that differ in
+  everything are confounded, so a win cannot be credited to code training without models
+  identical except for it; "compare properly" needed the reason (same input, so any gap
+  is the method); why a 32k limit does not settle long chunks (one fixed-size vector per
+  chunk).
+
+- Added `sentence-transformers` 6.3.0 (pulls in torch 2.15.0) and `voyageai` 0.6.0.
+- `code_atlas.semantic.embed`: `embedded_text(chunk)` (the BM25 text), an `Embedder`
+  interface (embed documents, embed a query, count tokens), `QwenEmbedder` (local,
+  pinned to Hugging Face revision `97b0c61`, MPS when available) and `VoyageEmbedder`
+  (`voyage-code-4`, requests split to at most 1,000 texts / 120k tokens, billed tokens
+  counted). Both return raw float32 vectors; callers normalize. 11 tests in
+  `tests/semantic/test_embed.py`, no download or key needed (Voyage against a fake API).
+- `benchmarks/embed_probe.py`: dev workload size, token counts per model, texts over the
+  input limit, throughput. Run once without a Voyage key (see Findings).
+- `code_atlas.semantic.cache`: `EmbeddingCache` (one SQLite file per model) and
+  `embed_with_cache` (looks up every text, embeds only the missing ones in batches,
+  commits after each batch). 10 tests in `tests/semantic/test_cache.py`, with a fake
+  embedder (`tests/semantic/fakes.py`, bag of words over three tokens plus a constant).
+- Stub `code_atlas.semantic.retriever.SemanticRetriever`: the constructor chunks every
+  corpus file, embeds through the cache and normalizes the matrix once; `search` not
+  written yet. 9 tests with hand-computed cosines in `tests/semantic/test_retriever.py`,
+  checked against a throwaway implementation outside the repo. Registered as
+  `semantic-qwen` and `semantic-voyage`; each process loads a model once.
+- `SemanticRetriever.search` written: embed the query with `embed_query`, normalize it,
+  `top_k` against the matrix, map rows to chunk ids. Returns early on an empty corpus
+  without embedding the query. All 9 retriever tests pass; suite 282 passed.
+- ADR 007 (fusion) written and accepted; min-max fusion parked in `docs/later.md`.
+- Stub `code_atlas.fusion.hybrid.HybridRetriever(first, second, rrf_k, depth)`: fuses two
+  already-built chunk retrievers; `search` not written yet. 9 tests with fixed fake
+  rankings in `tests/fusion/test_hybrid.py` (hand-computed fusion, depth vs k, near-miss
+  rescue, depth cut-off, ties by id), checked against a throwaway implementation outside
+  the repo. Not registered as a method until ADR 006 picks the embedding model.
+- Voyage account: payment method added (needed for the rate limits); 200 M free tokens
+  shown on the dashboard, against about 24 M for the dev fill.
+
+### Decisions
+- `top_k` selects with `np.argpartition` on the float scores, not a full sort. Why: a full
+  sort is O(N log N); partition to find the k-th best score, then a stable sort of the c
+  rows scoring at least that much, is O(N + c log c), with c = k plus rows tied at the
+  cutoff. Scratch timing at 31,502 rows, d = 768 (not a logged benchmark): `top_k` 0.49 ms,
+  of which the matrix product is 0.43 ms; the full sort alone was 1.42 ms. Cost: if many
+  rows tie (identical chunk text gives identical vectors), c approaches N and the sort is
+  O(N log N) again.
+- Ties at the cutoff: every row scoring at least the k-th best score is a candidate, so a
+  tie is never cut arbitrarily; `flatnonzero` returns candidates in row order and the
+  stable sort keeps lower rows first.
+- `normalize` raises `ValueError` on a zero vector instead of leaving it as zero. Why: no
+  chunk has empty text (Phase 2: 0 of 43,920), so a zero vector means an upstream bug,
+  such as a preallocated matrix row that was never filled. Left as zero, that chunk would
+  score 0 on every query and recall would drop silently. Same rule as the metrics: raise
+  on input that can only be a caller bug. Test in `tests/semantic/test_search.py`.
+- RRF's tradeoff, from the reading check: it sees only ranks, so 30 vs 5 and 10.1 vs 10.0
+  look the same. That loses a method's confidence (hurts when BM25 is very sure, as with an
+  exact function name from a traceback) but needs no calibration between BM25 and cosine
+  scales. Fusion method itself decided in ADR 007.
+- Embedding model selection protocol, fixed on 2026-11-11 before any embedding run:
+  - Two candidates, one dev run each: a local model (Qwen3-Embedding-0.6B) and an API
+    model trained on code (voyage-code-4). voyage-4-nano (free, open weights, general)
+    was considered as the local model and not chosen. See
+    [ADR 006](decisions/006-embedding-model.md).
+  - Dev split only. Metric: function-level MRR@10, the same as the BM25 tuning.
+  - Rule: use the local model unless the API model beats it by >= 0.02 MRR@10. Why the
+    default favors local: it reproduces from a clean clone with no API key or cost and
+    cannot be retired by a provider; on 30 queries a smaller gap cannot be told apart
+    from noise (same margin as `k1` / `b`).
+  - Both candidates get the same chunks, the same embedded text and the same k. Each
+    model's query format (Qwen's query instruction, Voyage's query / document input type)
+    is set from its documentation before the run and not changed after seeing results.
+  - The rule, metric and candidates are not changed after seeing results. The losing
+    model's dev numbers stay in the log. Only the chosen model goes to the test split.
+- Qwen query instruction, fixed on 2026-11-12 before any retrieval run:
+  `Instruct: Given a GitHub issue describing a bug, retrieve the Python code that must be
+  changed to fix it\nQuery:`. Documents get no instruction. Why: the documented default
+  describes web search for passages; the queries here are bug reports and the documents
+  are code, and Qwen's docs recommend describing the actual task. It keeps the model's
+  `Instruct: <task>\nQuery:` format; a role ("You are a code retriever") was considered
+  and not used, because the model is trained on task descriptions, not roles. Written
+  once, not tuned: no variants are tried on dev, and changing it is a new method with its
+  own runs. Cost: Qwen gets a task-specific instruction while Voyage only gets
+  `input_type="query"`; each model is used the way its docs recommend, and the
+  comparison states it. The instruction carries no information from any instance or gold.
+- Voyage spend: dev only, estimated about $3 (24.0 M billed tokens at the unverified
+  $0.12 / M). Voyage runs on test only if it wins the selection rule.
+- Embedding cache key = sha256(model id with pinned version, NUL, embedded text), not the
+  chunk id or the commit. Why: 77% of dev chunks repeat unchanged across commits (see
+  Findings), and a text key reuses one vector for all of them; a chunk id can point at
+  different text in different commits. Storage: one SQLite file per model rather than one
+  `.npy` file per text (90k small files) or one matrix per snapshot (no sharing across
+  commits). Commit after every batch, so a crash in a multi-hour fill keeps finished
+  work. Only document vectors are cached; queries are embedded on every search.
+- The matrix is normalized once in the constructor, not per search: each search is then
+  one matrix-vector product, and `normalize` raises on a zero row while building rather
+  than during an eval.
+- Fusion protocol, fixed on 2026-11-12 before any semantic or hybrid result was seen
+  (the first `semantic-qwen` dev run was still filling its cache). See
+  [ADR 007](decisions/007-fusion.md):
+  - RRF over BM25 and the ADR 006 winner only, not both models.
+  - Each method contributes its top 100; ties in the fused score broken by chunk id.
+  - `k` in {10, 30, 60, 100}, default 60; another k only if it beats 60 by >= 0.02
+    function-level MRR@10 on dev; tie for best -> smaller k.
+  - The hybrid is the headline method only if it beats the better of BM25 and semantic
+    search by >= 0.02 MRR@10 on dev; otherwise fusion is reported as not helping. All
+    three are reported per category either way, since each may win on different queries.
+  - Min-max score fusion not built; parked in `docs/later.md`.
+  - Agreed with the reasoning for fused methods, depth and the k grid, but without
+    restating it. Restate the depth argument (a near-miss at ranks 15 and 12 is
+    invisible at depth 10) for the end-of-phase quiz.
+- Embedded text per chunk = path + qualified name + chunk text, the same text BM25
+  indexes. Why: a semantic vs BM25 difference then comes from the method, not from
+  different input. Cost: same as for BM25, path tokens may help cat 1 queries.
+
+### Findings
+- Embedding workload and token counts on dev (`benchmarks/embed_probe.py`,
+  `results/embed_probe_20261112T045504Z.json`, commit `69d7a67` plus uncommitted Phase 3
+  code; Apple M4 Pro, 24 GB, macOS, Python 3.12.15, torch 2.15.0, sentence-transformers
+  6.3.0, Qwen on MPS):
+  - 391,422 chunks over the 30 dev snapshots, 90,532 distinct texts (23.1%). An embedding
+    cache keyed by text embeds about a quarter of the chunks; most chunks repeat
+    unchanged across commits of the same repo.
+  - Tokens per distinct text:
+
+    | Model | p50 | p95 | max | mean | total | over limit (tokens past it) |
+    |---|---|---|---|---|---|---|
+    | Qwen3-Embedding-0.6B (limit 32,768) | 111 | 927 | 443,167 | 313.7 | 28.4 M | 43 (4.31 M) |
+    | voyage-code-4 (limit 32,000) | 110 | 926 | 443,166 | 312.7 | 28.3 M | 43 (4.34 M) |
+
+  - The two tokenizers count within 0.3% of each other in total.
+  - Every chunk over the limit is generated code: the sympy `rubi` integration rule
+    files (one function per file, up to 443k tokens), one `rubi/constraints.py` module
+    chunk, and `bench_solvers.py::eqs_165x165` (a 165×165 benchmark system). 43 of 90,532
+    texts, 0.05%; they hold 15% of all tokens.
+  - Dev gold chunks (43) are short: p50 302 tokens, max 2,758
+    (`LogisticRegressionCV.fit`); 2 over 2,048, none over 8,192. Truncating at 32k touches
+    no dev gold chunk. Gold was looked at for length only.
+  - Qwen throughput: 2,488 tokens/s on 200 random distinct texts (43,788 tokens, 17.6 s,
+    1024-dimensional vectors). The probe's estimate for all dev texts is 3.2 hours. It is
+    optimistic: the sample's mean length (219 tokens) is below the workload's (314), and
+    attention cost grows faster than length. The longest text alone (truncated to 32,768)
+    took 25.2 s, about 1,300 tokens/s.
+  - voyage-code-4: not timed in this run (no API key yet). Estimated cost for the dev
+    texts $3.40 from the third-party price ($0.12 / M); the API truncates at 32k, so
+    about 24.0 M tokens would be billed, about $2.90. Estimates, not billed amounts.
+  - Second probe run with the API key (`results/embed_probe_20261112T165359Z.json`, same
+    commit plus uncommitted code, same sample of 200 texts):
+    - voyage-code-4: 12,798 tokens/s through the API (one request at a time), 3.4 s for
+      the sample; estimate for all dev texts 0.6 hours. Billed 43,248 tokens against
+      43,588 counted locally (0.8% fewer), so the local count is a sound estimate of
+      billing. The dev fill (about 24 M tokens) uses about 12% of the 200 M free tokens.
+    - Qwen: 2,687 tokens/s, against 2,488 in the first run on the same sample: about 8%
+      run-to-run variation in throughput.
+
+### Test-split runs
+-
+
+### Problems and dead ends
+- Voyage probe run failed on the first request with `RateLimitError`: without a payment
+  method on the account, the limits are 3 requests and 10k tokens per minute, and the
+  probe's 200-text request was about 44k tokens. At 10k tokens per minute the 24 M-token
+  dev fill would take about 40 hours, so a payment method is required. Voyage's error says
+  free tokens still apply once one is added (200 M for the series-3 models; the allowance
+  for voyage-code-4 is on their pricing page). Nothing was billed.
+- The probe's peak RSS (2,028 MiB) did not change while Qwen embedded, not even for a
+  32k-token input. On Apple silicon, memory the GPU (MPS) allocates appears not to be
+  counted in the process's RSS, so this number does not measure the model's memory use.
+  Measure GPU memory with `torch.mps` if the benchmark needs it.
+- First `argpartition` version partitioned a structured array of (negated score, row
+  index) keys. It kept the tie rule but took 7.5 ms per query at 31,502 rows, 5× slower
+  than the full sort it replaced (scratch timing). Root cause: structured arrays have no
+  fast sort path, so every comparison goes field by field through generic code; plain
+  floats partitioned in 0.03 ms. Lesson: a better big-O does not make code faster at a
+  given size; time it. Replaced by partition on float scores plus a score threshold.
+
+### Open questions
+- ~~Long chunks past the model's input limit?~~ Resolved by the ADR 006 rule: 43 of
+  90,532 dev texts (0.05%) are over the limit, all generated code, none a dev gold chunk,
+  so truncate at the limit (see Findings). Whether one vector per long chunk is good
+  enough is still open; only the dev results can answer it.
+- ~~Which Voyage code model?~~ Resolved: `voyage-code-4` (released 2026-08).
+- ~~Chunk length distribution in model tokens?~~ Resolved: measured (see Findings).
+- ~~Qwen query instruction?~~ Resolved: written for this task (see Decisions).
+- Phase 2 prediction to check: semantic search helps the 3 vocabulary-mismatch misses
+  (django-15388, sympy-14024, sympy-19007) more than the 5 query-noise misses.
