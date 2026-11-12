@@ -1058,6 +1058,21 @@ review before the deep-dive:
 -
 
 ### Problems and dead ends
+- First full `semantic-qwen` dev run crashed at instance 22 (the first sympy snapshot)
+  with `RuntimeError: Invalid buffer size: 16.00 GiB` on MPS. Root cause: Qwen was batched
+  16 texts at a time, a batch is padded to its longest text, and attention builds a
+  length × length mask per text, so one 32,768-token chunk in a batch makes
+  16 × 32,768² bytes = 16 GiB. The probe had embedded the longest text alone (1 GiB) and
+  never tried a long text inside a batch, so it missed this. Fix: `padded_batches` groups
+  texts longest first and keeps len(batch) × longest² within 32,768² cells, so a text at
+  the limit is embedded alone and short texts still go 16 at a time. Checked on the real
+  model: 200 cached texts re-embedded with the new batching give cosine 1.000000 against
+  their cached vectors, so the method and the cache are unchanged; the three longest
+  texts in that snapshot (370,217 tokens, truncated to 32,768; 38,193; 16,660) embedded
+  in 58 s. The 47,100 vectors cached before the crash were kept (the cache commits per
+  batch); the run is restarted from them.
+- An earlier session's background `semantic-qwen` run stopped when that Claude Code
+  session ended (23,983 vectors cached). Long runs now go in the user's own terminal.
 - Voyage probe run failed on the first request with `RateLimitError`: without a payment
   method on the account, the limits are 3 requests and 10k tokens per minute, and the
   probe's 200-text request was about 44k tokens. At 10k tokens per minute the 24 M-token
