@@ -1,4 +1,12 @@
 
+## Min-max score fusion (parked 2026-11-12, Phase 3)
+
+Rescale BM25 and cosine scores to [0, 1] per query and add them, as an alternative to RRF.
+Why it might help: it keeps the size of score gaps, which RRF discards, so a query where
+one method is very confident would count more. Cost: about one session, plus a weight to
+tune on 30 dev queries. Risk: one outlier score compresses the rest towards 0. The plan
+lists it as optional; RRF needs no calibration. See ADR 007.
+
 ## Query cleanup for lexical search (parked 2026-11-11, Phase 2)
 
 Strip pasted code, REPL output and tracebacks from the issue text, or weight the title
