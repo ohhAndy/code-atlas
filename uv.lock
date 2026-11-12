@@ -381,6 +381,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "datasets" },
+    { name = "numpy" },
     { name = "tree-sitter" },
     { name = "tree-sitter-python" },
     { name = "unidiff" },
@@ -398,6 +399,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "datasets", specifier = ">=5.1.0" },
+    { name = "numpy", specifier = ">=2.5.4" },
     { name = "tree-sitter", specifier = ">=0.26.0" },
     { name = "tree-sitter-python", specifier = ">=0.25.0" },
     { name = "unidiff", specifier = ">=1.0.1" },
